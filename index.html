@@ -20,14 +20,16 @@
     </defs>
   </svg>
 
-  <!-- 多層次科技背景：漂浮流光球 + 粒子連線畫布 + 精密座標格線 -->
+  <!-- 多層次科技背景：漂浮流光球 + 3D 透視地平線網格 + 三層景深數位代碼畫布 + 景深暗角 -->
   <div class="ambient-stage" aria-hidden="true">
     <div class="ambient-orb orb-cyan"></div>
     <div class="ambient-orb orb-violet"></div>
     <div class="ambient-orb orb-emerald"></div>
   </div>
+  <div class="cyber-perspective-grid" aria-hidden="true"></div>
   <canvas id="tech-canvas" aria-hidden="true"></canvas>
   <div class="bg-grid" aria-hidden="true"></div>
+  <div class="dof-foreground-hud" aria-hidden="true"></div>
 
   <!-- 頂部半透明玻璃指揮列 -->
   <header class="hud-bar glass-surface">
@@ -115,6 +117,10 @@
       <div class="projects" aria-label="作品清單">
         <!-- SYS-01 AutoQA -->
         <article class="project-card glass-panel" data-category="automation" data-sys="01" data-accent="cyan">
+          <span class="corner-bracket tl" aria-hidden="true"></span>
+          <span class="corner-bracket tr" aria-hidden="true"></span>
+          <span class="corner-bracket bl" aria-hidden="true"></span>
+          <span class="corner-bracket br" aria-hidden="true"></span>
           <div class="glass-ripple-layer" aria-hidden="true"></div>
           <div class="glass-prism-sweep" aria-hidden="true"></div>
           <a class="project-link" href="./04-pocket-qa/index.html">
@@ -144,6 +150,10 @@
 
         <!-- SYS-02 Relay -->
         <article class="project-card glass-panel" data-category="workflow" data-sys="02" data-accent="violet">
+          <span class="corner-bracket tl" aria-hidden="true"></span>
+          <span class="corner-bracket tr" aria-hidden="true"></span>
+          <span class="corner-bracket bl" aria-hidden="true"></span>
+          <span class="corner-bracket br" aria-hidden="true"></span>
           <div class="glass-ripple-layer" aria-hidden="true"></div>
           <div class="glass-prism-sweep" aria-hidden="true"></div>
           <a class="project-link" href="./01-relay/index.html">
@@ -173,6 +183,10 @@
 
         <!-- SYS-03 PMO-Slack -->
         <article class="project-card glass-panel" data-category="automation" data-sys="03" data-accent="sky">
+          <span class="corner-bracket tl" aria-hidden="true"></span>
+          <span class="corner-bracket tr" aria-hidden="true"></span>
+          <span class="corner-bracket bl" aria-hidden="true"></span>
+          <span class="corner-bracket br" aria-hidden="true"></span>
           <div class="glass-ripple-layer" aria-hidden="true"></div>
           <div class="glass-prism-sweep" aria-hidden="true"></div>
           <a class="project-link" href="./02-pmo-slack/index.html">
@@ -202,6 +216,10 @@
 
         <!-- SYS-04 KOL Payroll -->
         <article class="project-card glass-panel" data-category="settlement" data-sys="04" data-accent="emerald">
+          <span class="corner-bracket tl" aria-hidden="true"></span>
+          <span class="corner-bracket tr" aria-hidden="true"></span>
+          <span class="corner-bracket bl" aria-hidden="true"></span>
+          <span class="corner-bracket br" aria-hidden="true"></span>
           <div class="glass-ripple-layer" aria-hidden="true"></div>
           <div class="glass-prism-sweep" aria-hidden="true"></div>
           <a class="project-link" href="./03-excel-payroll/index.html">

@@ -9,9 +9,9 @@
   --text-muted: #94a3b8;
   --text-soft: #cbd5e1;
 
-  --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.025) 100%);
-  --glass-solid: rgba(11, 17, 32, 0.56);
-  --glass-border: rgba(255, 255, 255, 0.14);
+  --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.085) 0%, rgba(255, 255, 255, 0.02) 100%);
+  --glass-solid: rgba(8, 14, 28, 0.44);
+  --glass-border: rgba(255, 255, 255, 0.15);
   --glass-highlight: rgba(255, 255, 255, 0.28);
   --glass-shadow: 0 24px 56px -14px rgba(2, 6, 23, 0.78);
 
@@ -125,11 +125,52 @@ html[data-theme="light"] .ambient-orb { opacity: 0.55; }
   -webkit-mask-image: radial-gradient(ellipse at 50% 30%, black 35%, transparent 90%);
 }
 
+/* 3D 數位世界透視地平線網格 */
+.cyber-perspective-grid {
+  position: fixed;
+  left: -25%;
+  right: -25%;
+  bottom: -18vh;
+  height: 62vh;
+  z-index: -3;
+  pointer-events: none;
+  transform: perspective(560px) rotateX(68deg);
+  transform-origin: center bottom;
+  background-image:
+    linear-gradient(to right, rgba(34, 211, 238, 0.14) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(34, 211, 238, 0.18) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.75) 42%, black 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.75) 42%, black 100%);
+  animation: cyberGridScroll 8s linear infinite;
+}
+html[data-theme="light"] .cyber-perspective-grid {
+  background-image:
+    linear-gradient(to right, rgba(2, 132, 199, 0.14) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(2, 132, 199, 0.18) 1px, transparent 1px);
+}
+@keyframes cyberGridScroll {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 56px; }
+}
+
+/* 景深暗角與前景光學呼吸層 */
+.dof-foreground-hud {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 45%, transparent 56%, rgba(3, 6, 15, 0.58) 100%);
+}
+html[data-theme="light"] .dof-foreground-hud {
+  background: radial-gradient(ellipse at 50% 45%, transparent 62%, rgba(148, 163, 184, 0.22) 100%);
+}
+
 /* Glassmorphism Base */
 .glass-surface, .glass-panel {
   background: var(--glass-bg), var(--glass-solid);
-  backdrop-filter: blur(22px) saturate(185%);
-  -webkit-backdrop-filter: blur(22px) saturate(185%);
+  backdrop-filter: blur(18px) saturate(190%);
+  -webkit-backdrop-filter: blur(18px) saturate(190%);
   border: 1px solid var(--glass-border);
   box-shadow:
     inset 0 1px 0 var(--glass-highlight),
@@ -289,6 +330,10 @@ html[data-theme="light"] .ambient-orb { opacity: 0.55; }
   color: var(--text-soft);
   line-height: 1.78;
   font-size: 15.5px;
+  text-shadow: 0 2px 14px rgba(6, 9, 19, 0.85);
+}
+html[data-theme="light"] .lead {
+  text-shadow: none;
 }
 
 /* Interactive Trait Glass Cards */
@@ -692,7 +737,30 @@ html[data-theme="light"] .ambient-orb { opacity: 0.55; }
   color: var(--text-soft);
 }
 
-/* 立體浮起視窗預覽區 */
+/* 精密科技準星導角（第二層景深 Z=18px） */
+.corner-bracket {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  z-index: 5;
+  pointer-events: none;
+  border-color: var(--ink);
+  border-style: solid;
+  border-width: 0;
+  opacity: 0.45;
+  transform: translateZ(18px);
+  transition: opacity 0.25s ease, transform 0.3s ease;
+}
+.corner-bracket.tl { top: 8px; left: 8px; border-top-width: 2px; border-left-width: 2px; border-top-left-radius: 6px; }
+.corner-bracket.tr { top: 8px; right: 8px; border-top-width: 2px; border-right-width: 2px; border-top-right-radius: 6px; }
+.corner-bracket.bl { bottom: 8px; left: 8px; border-bottom-width: 2px; border-left-width: 2px; border-bottom-left-radius: 6px; }
+.corner-bracket.br { bottom: 8px; right: 8px; border-bottom-width: 2px; border-right-width: 2px; border-bottom-right-radius: 6px; }
+.project-card:hover .corner-bracket {
+  opacity: 1;
+  transform: translateZ(26px);
+}
+
+/* 立體浮起視窗預覽區（第三層景深 Z=44px） */
 .project-viewport {
   position: relative;
   aspect-ratio: 16 / 9;
@@ -700,13 +768,14 @@ html[data-theme="light"] .ambient-orb { opacity: 0.55; }
   border-radius: 12px;
   overflow: hidden;
   border: 1px solid var(--glass-border);
-  background: rgba(15, 23, 42, 0.35);
-  transform: translateZ(18px);
-  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.32s ease;
+  background: rgba(15, 23, 42, 0.42);
+  transform: translateZ(24px);
+  box-shadow: 0 14px 28px rgba(2, 6, 23, 0.4);
+  transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.34s ease;
 }
 .project-card:hover .project-viewport {
-  transform: translateZ(28px) rotateX(1.5deg);
-  box-shadow: 0 16px 32px rgba(2, 6, 23, 0.45);
+  transform: translateZ(44px) rotateX(1.8deg);
+  box-shadow: 0 28px 54px rgba(2, 6, 23, 0.72);
 }
 .project-viewport img {
   width: 100%;
@@ -738,18 +807,19 @@ html[data-theme="light"] .ambient-orb { opacity: 0.55; }
   color: #fff;
   padding: 8px 16px;
   border-radius: 999px;
-  background: rgba(15, 23, 42, 0.78);
+  background: rgba(15, 23, 42, 0.82);
   border: 1px solid var(--ink);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
+  transform: translateZ(16px);
 }
 
-/* Card Copy */
+/* Card Copy（第二／四層景深） */
 .project-copy {
   display: flex;
   flex: 1;
   flex-direction: column;
   padding: 18px 20px 20px;
-  transform: translateZ(12px);
+  transform: translateZ(18px);
 }
 .project-copy h3 {
   margin: 0 0 12px;
