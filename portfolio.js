@@ -322,7 +322,7 @@
   const WIN_CONTACT_PROFILE = {
     name: '曹家贏 (Win)',
     islandIdleText: 'CONNECTING · WIN',
-    role: '軟體 QA 工程師｜金融服務 × AI 協作工具',
+    role: '軟體 QA 工程師',
     phone: '0936-936-939',
     email: 'st25580209@gmail.com',
     resumeUrl: '#resume',

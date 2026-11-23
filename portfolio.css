@@ -1191,7 +1191,9 @@ body.modal-open .projects {
   color: #ffffff;
 }
 .iphone-role {
+  width: 100%;
   margin: 0;
+  text-align: center;
   font-size: 13px;
   color: #bae6fd;
   opacity: 0.9;
