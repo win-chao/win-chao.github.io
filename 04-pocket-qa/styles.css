@@ -185,3 +185,21 @@ dialog::backdrop { background: #26342e58; }
 }
 @media (max-width: 380px) { .top-actions { justify-content: flex-start; } .view-toolbar nav { max-width: 100%; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }
+
+/* Real PocketQA.swift controls & failure diagnostic table styles */
+.segments.compact button { padding: 4px 10px; font-size: 12px; }
+.top-select { padding: 5px 8px; border: 1px solid var(--line); border-radius: 7px; background: #fff; font: inherit; font-size: 12px; }
+.otp-banner { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 10px 20px; background: #fff4e5; border-bottom: 1px solid #f4d3a1; color: #7c3f00; font-size: 13px; }
+.otp-banner code { background: #ffe4c2; padding: 1px 6px; border-radius: 4px; font-weight: 700; }
+.queue-params { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+.env-warn { font-size: 11px; color: #b45309; background: #fef3c7; padding: 1px 6px; border-radius: 999px; }
+.param-form { display: grid; gap: 12px; }
+.param-form label { display: grid; gap: 4px; font-size: 12.5px; font-weight: 600; }
+.param-form input { padding: 7px 9px; border: 1px solid var(--line); border-radius: 6px; font: inherit; }
+.settings-block { display: grid; gap: 8px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: #fafcfb; }
+.diag-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 6px; }
+.diag-table th, .diag-table td { border: 1px solid var(--line); padding: 6px 8px; text-align: left; }
+.diag-table th { background: #f6f8f8; }
+.diag-table .fail { color: #b91c1c; font-weight: 700; }
+.diag-table .pass { color: #15803d; font-weight: 700; }
+.diag-console { background: #1e293b; color: #e2e8f0; padding: 10px 12px; border-radius: 7px; font-size: 12px; overflow-x: auto; margin: 6px 0 0; }

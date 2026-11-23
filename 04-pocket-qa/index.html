@@ -20,18 +20,37 @@
       <div><strong>Pocket QA</strong><span>Desktop · 測試工作台</span></div>
     </div>
     <div class="top-actions">
-      <span class="environment">Demo 環境</span>
-      <span class="browser-label"><span data-icon="Monitor"></span><span id="browser-name">瀏覽器</span></span>
+      <div class="segments compact" role="group" aria-label="測試環境">
+        <button type="button" data-env="uat" aria-current="true">UAT</button>
+        <button type="button" data-env="staging">Staging</button>
+      </div>
+      <div class="segments compact" id="otp-picker" role="group" aria-label="簡訊驗證方式" hidden>
+        <button type="button" data-otp="cms" aria-current="true">自動otp</button>
+        <button type="button" data-otp="manual">手動otp</button>
+      </div>
+      <select id="browser-select" class="top-select" aria-label="測試瀏覽器">
+        <option value="chrome">Chrome</option>
+        <option value="safari">Safari</option>
+      </select>
+      <button type="button" class="icon-button" id="open-settings" aria-label="執行設定" title="執行設定">
+        <span data-icon="SlidersHorizontal"></span>
+      </button>
       <a class="button" href="../index.html"><span data-icon="ArrowLeft"></span>作品集</a>
       <button class="button primary" id="start" type="button"><span data-icon="Play"></span><span id="start-label">開始測試</span></button>
       <button class="button" id="pause" type="button" hidden></button>
       <button class="button danger" id="stop" type="button" hidden><span data-icon="Square"></span>停止</button>
     </div>
   </header>
+
+  <div class="otp-banner" id="otp-banner" hidden>
+    <strong>等待輸入簡訊驗證碼</strong>
+    <span>請在下方「測試瀏覽器」的簡訊驗證碼欄位輸入 6 碼（示範驗證碼：<code>888666</code>）。</span>
+  </div>
+
   <div class="workspace">
     <aside class="library" aria-labelledby="library-heading">
       <h2 id="library-heading">測試流程</h2>
-      <label class="search"><span data-icon="Search"></span><input id="search" type="search" placeholder="搜尋流程" aria-label="搜尋流程" autocomplete="off"></label>
+      <label class="search"><span data-icon="Search"></span><input id="search" type="search" placeholder="搜尋 26 個測試流程" aria-label="搜尋流程" autocomplete="off"></label>
       <div id="catalog"></div>
     </aside>
     <main>
@@ -44,15 +63,20 @@
         <div class="execution-options">
           <label><input id="with-report" type="checkbox" checked>產生 HTML 報告</label>
           <label><input id="keep-browser" type="checkbox" checked>結束後保留測試瀏覽器</label>
+          <label id="parallel-wrap"><input id="parallel-flows" type="checkbox">並行執行（實驗）</label>
         </div>
       </div>
 
       <section id="view-plan" class="view" aria-labelledby="plan-heading">
         <div class="section-head">
           <div class="heading-group"><h1 id="plan-heading">本次執行</h1><span id="queue-count" class="muted"></span></div>
-          <div class="actions"><label class="preset"><span data-icon="ListChecks"></span><select id="preset" aria-label="常用組合"><option value="">常用組合</option><option value="all">全部示範流程</option><option value="healthy">正常流程</option><option value="failure">只跑故障示範</option></select></label><button type="button" id="clear-queue" class="icon-button" aria-label="清空清單" title="清空清單"><span data-icon="Trash2"></span></button></div>
+          <div class="actions">
+            <label class="preset"><span data-icon="ListChecks"></span><select id="preset" aria-label="常用組合"><option value="">常用組合</option><option value="smoke">官網與 ETF 回歸</option><option value="account">線上開戶＋四審</option><option value="failure">故障診斷示範</option><option value="all">全部 26 個流程</option></select></label>
+            <button type="button" class="button" id="save-preset">儲存常用組合</button>
+            <button type="button" id="clear-queue" class="icon-button" aria-label="清空清單" title="清空清單"><span data-icon="Trash2"></span></button>
+          </div>
         </div>
-        <p class="view-hint">從左側加入流程，或直接執行清單。選「故障示範」可查看失敗報告與原圖。</p>
+        <p class="view-hint">從左側 5 大分類（26 個真實測試流程）加入清單，可調整順序、複製或編輯參數。選「故障診斷示範」可查看 4 大診斷證據與完整原圖。</p>
         <ol id="queue" class="queue"></ol>
       </section>
 
@@ -63,7 +87,7 @@
           <div class="result-detail">
             <div id="result-log"></div>
             <section id="test-browser" class="test-browser" aria-labelledby="fixture-heading" hidden>
-              <div class="test-browser-bar"><span data-icon="Monitor"></span><h2 id="fixture-heading">測試瀏覽器</h2><span class="muted">本機示範頁</span></div>
+              <div class="test-browser-bar"><span data-icon="Monitor"></span><h2 id="fixture-heading">測試瀏覽器</h2><span class="muted" id="browser-env-label">UAT · Chrome</span></div>
               <div id="test-page" class="test-page"></div>
             </section>
           </div>
@@ -76,7 +100,7 @@
       </section>
     </main>
   </div>
-  <footer class="statusbar"><span class="live-dot" aria-hidden="true"></span><span>本機展示執行器已就緒</span><span id="status-message" role="status" aria-live="polite"></span><span class="status-count" id="catalog-count"></span></footer>
+  <footer class="statusbar"><span class="live-dot" aria-hidden="true"></span><span>本機執行器已連線（Demo 模擬環境）</span><span id="status-message" role="status" aria-live="polite"></span><span class="status-count" id="catalog-count"></span></footer>
   <dialog id="detail-dialog" aria-labelledby="dialog-heading"></dialog>
 </body>
 </html>

@@ -15,52 +15,129 @@
   <header class="page-header">
     <div class="page-header-inner">
       <a href="../index.html" class="back-link">← 作品集</a>
-      <span class="demo-label">Demo · 模擬資料</span>
+      <span class="demo-label">三段式整合 Demo · Chrome 擴充 + macOS 原生 App + Slack 私訊</span>
       <button type="button" id="reset" class="secondary">重置 Demo</button>
     </div>
   </header>
   <main>
-    <h1>PMO 測試完成後的 Slack 通知</h1>
-    <p class="intro">在左側選好卡片與收件人，將狀態改為「測試完成」並儲存。右側會顯示收到的私訊。</p>
-    <div class="workspace">
-      <section class="panel notifier" aria-labelledby="notifier-heading">
-        <div class="notifier-head">
-          <span class="notifier-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.93 3.16a1 1 0 0 1 .89 1.26l-4.66 16a1 1 0 0 1-1.6.49l-4.4-3.84-2.53 2.51a.7.7 0 0 1-1.19-.5v-4.52L2.6 12.28a1 1 0 0 1 .06-1.85L20.48 3.24a1 1 0 0 1 .45-.08Zm-3.4 3.67-8.6 6.2.87.5 7.73-6.7Z"/></svg></span>
-          <div><h2 id="notifier-heading">PMO 驗收通知</h2><p class="muted">Slack 驗收通知 · 模擬卡片</p></div>
-          <button type="button" class="secondary small" id="settings-open">設定</button>
-        </div>
-        <form id="task-form">
-          <div class="form-grid">
-            <label>PMO 卡片<select name="card" id="task-card" aria-label="PMO 卡片"></select></label>
-            <label>狀態<select name="status" id="task-status"><option>測試中</option><option>測試完成</option></select></label>
-            <label class="full">卡片標題<input name="title" maxlength="100" required></label>
-            <label class="full">卡片網址<input type="url" name="url" autocomplete="off" required></label>
-            <label>需求單位<select name="unit" id="task-unit"><option value="（未指定）">（未指定）</option><option>產品企劃</option><option>營運支援</option><option>需求驗證</option></select></label>
-            <label>收件人<select name="recipient" id="recipient" aria-label="收件人"></select></label>
-            <label class="full">通知內容<textarea id="message" name="message" rows="3" maxlength="300"></textarea></label>
+    <h1>PMO 自動化與 Slack 驗收通知</h1>
+    <p class="intro">模擬實際架構：左側 <strong>PMO 甘特圖</strong> 儲存「測試完成」→ <strong>Chrome 擴充「PMO 驗收通知」</strong> 讀取異動紀錄並查母卡需求單位 → 經由 <strong>macOS 原生「Slack 驗收通知.app」</strong> 送達右側 <strong>Slack 私訊</strong>。</p>
+
+    <div class="three-col">
+      <!-- Part 1: PMO Gantt WBS + Chrome Extension Popup -->
+      <section class="panel pmo-panel" aria-labelledby="pmo-heading">
+        <div class="pmo-topbar">
+          <div>
+            <span class="pmo-badge">1. 網頁端 · PMO 專案甘特圖</span>
+            <h2 id="pmo-heading">專案 WBS 与任務狀態</h2>
           </div>
-          <div class="task-actions"><button type="submit" name="action" value="save" class="primary">儲存異動</button><button type="submit" name="action" value="send" class="secondary">模擬送出</button></div>
-          <p class="task-message" id="task-message" role="status"></p>
-          <details class="automation-panel">
-            <summary>自動通知規則</summary>
-            <div class="extension">
-              <header><h2>PMO 自動通知</h2><span id="state"></span></header>
-              <p>由 win 儲存「測試完成」時觸發，需求單位空白則沿用母卡。</p>
-              <div class="form-grid">
-                <label>操作人<select id="actor" name="actor"><option value="win">win</option><option value="demo-qa">其他示範帳號</option></select></label>
-                <label>母卡需求單位<input id="parent-unit" type="text" readonly></label>
-              </div>
-              <div class="actions"><button id="toggle" type="button">暫停自動通知</button><button id="check" type="button">檢查 PMO 連線</button><button id="replay" type="button" disabled>重新讀取異動</button></div>
-              <p id="check-result" role="status" hidden></p>
+          <div class="pmo-toolbar" role="toolbar" aria-label="甘特圖工具列">
+            <button type="button" class="tool-btn is-active" id="btn-wbs">WBS</button>
+            <button type="button" class="tool-btn is-active" id="btn-mine" aria-pressed="true">✓ 只看我的</button>
+            <span class="filter-chip" id="filter-chip">篩選條件：顯示 5 / 5 筆任務</span>
+            <button type="button" class="tool-btn" id="btn-audit" aria-expanded="false">異動紀錄</button>
+          </div>
+        </div>
+
+        <div class="wbs-table-wrap">
+          <table class="wbs-table" aria-label="PMO WBS 任務樹">
+            <thead>
+              <tr>
+                <th>任務名稱</th>
+                <th>需求單位</th>
+                <th>狀態</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="wbs-body"></tbody>
+          </table>
+        </div>
+
+        <aside class="audit-drawer" id="audit-drawer" aria-label="異動紀錄" hidden>
+          <div class="audit-head">
+            <strong>異動紀錄（供 Chrome 擴充核對）</strong>
+            <span class="muted">僅採計 win 儲存的「測試完成」</span>
+          </div>
+          <ul id="audit-list" class="audit-list"></ul>
+        </aside>
+
+        <p class="task-message" id="task-message" role="status"></p>
+
+        <!-- Embedded Chrome Extension Popup -->
+        <div class="ext-wrapper">
+          <div class="ext-caption">2. Chrome 擴充功能 · <code>PMO 自動通知</code></div>
+          <div class="extension">
+            <header>
+              <h2>PMO 驗收通知</h2>
+              <span id="state">已啟用</span>
+            </header>
+            <p>你以 win 在甘特圖儲存「測試完成」時，會通知 App 設定的需求單位收件人（子卡未填需求單位時自動沿用母卡）。</p>
+            <div class="actions">
+              <button id="toggle" type="button">暫停自動通知</button>
+              <button id="check" type="button">檢查 PMO 連線</button>
+              <button id="replay" type="button" disabled>重新讀取異動</button>
             </div>
-          </details>
-        </form>
+            <p id="check-result" role="status" hidden></p>
+          </div>
+        </div>
       </section>
 
+      <!-- Part 2: macOS Native App (Slack 驗收通知.app) -->
+      <section class="panel mac-app" aria-labelledby="macapp-heading">
+        <div class="mac-titlebar">
+          <div class="mac-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+          <span class="mac-window-title">Slack 驗收通知.app</span>
+          <span class="pmo-badge">3. macOS 原生桌面端</span>
+        </div>
+
+        <div class="mac-body">
+          <div class="notifier-head">
+            <span class="notifier-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.93 3.16a1 1 0 0 1 .89 1.26l-4.66 16a1 1 0 0 1-1.6.49l-4.4-3.84-2.53 2.51a.7.7 0 0 1-1.19-.5v-4.52L2.6 12.28a1 1 0 0 1 .06-1.85L20.48 3.24a1 1 0 0 1 .45-.08Zm-3.4 3.67-8.6 6.2.87.5 7.73-6.7Z"/></svg>
+            </span>
+            <div>
+              <h2 id="macapp-heading">Slack 驗收通知</h2>
+              <p class="muted">手動補發或設定部門預設收件人</p>
+            </div>
+            <button type="button" class="secondary small" id="settings-open">⚙ 設定</button>
+          </div>
+
+          <form id="manual-form">
+            <label>
+              需求單位／收件人
+              <select name="recipient" id="manual-recipient"></select>
+            </label>
+            <label>
+              卡片網址（多筆請換行，每行一筆）
+              <textarea id="manual-urls" name="urls" rows="3" placeholder="貼上 PMO 或 Taiga 卡片網址"></textarea>
+            </label>
+            <label>
+              內容
+              <textarea id="manual-message" name="message" rows="3" maxlength="300"></textarea>
+              <span class="field-hint">內容會自動儲存。送出時會附上卡片網址。</span>
+            </label>
+
+            <div class="mac-divider"></div>
+
+            <div class="mac-footer">
+              <span class="slack-link-status">🔗 Slack 連線 · Win</span>
+              <button type="submit" class="mac-send-btn" id="manual-send">✈ 送出</button>
+            </div>
+            <p class="task-message" id="manual-result" role="status" hidden></p>
+          </form>
+        </div>
+      </section>
+
+      <!-- Part 3: Right Slack DM Inbox -->
       <section class="panel inbox" aria-labelledby="preview-heading">
         <div class="inbox-head">
-          <span class="inbox-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 5h16v11h-9l-4 4v-4H4z"/><path stroke-linecap="round" d="M8 9h8m-8 3h5"/></svg></span>
-          <div><h2 id="preview-heading">Slack 私訊</h2><p>模擬收件匣</p></div>
+          <span class="inbox-symbol" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 5h16v11h-9l-4 4v-4H4z"/><path stroke-linecap="round" d="M8 9h8m-8 3h5"/></svg>
+          </span>
+          <div>
+            <h2 id="preview-heading">Slack 私訊</h2>
+            <p>需求單位實際收到的驗收通知</p>
+          </div>
           <span class="inbox-count" id="sent-count">0 則</span>
         </div>
         <div class="inbox-layout">
@@ -70,13 +147,33 @@
       </section>
     </div>
   </main>
+
   <dialog id="settings-dialog" aria-labelledby="settings-title">
     <form id="settings-form">
-      <div class="panel-head"><h2 id="settings-title">設定</h2><button type="button" class="secondary small" data-close aria-label="關閉設定">×</button></div>
-      <section class="settings-group"><h3>Slack 發送者</h3><p class="muted">PMO 驗收通知 · 模擬連線</p></section>
-      <section class="settings-group"><h3>自動通知測試</h3><label class="switch"><input type="checkbox" name="testMode">測試模式只傳給示範帳號</label><button type="button" id="test-send" class="secondary small">發測試私訊給示範帳號</button></section>
-      <section class="settings-group"><h3>需求單位收件人</h3><div id="recipients"></div></section>
-      <div class="dialog-actions"><button type="button" class="secondary" data-close>取消</button><button type="submit" class="primary">完成</button></div>
+      <div class="panel-head">
+        <h2 id="settings-title">設定</h2>
+        <button type="button" class="secondary small" data-close aria-label="關閉設定">×</button>
+      </div>
+      <section class="settings-group">
+        <h3>Slack 發送者</h3>
+        <p class="muted">Demo 證券 · Win · 既有 Slack 連線</p>
+      </section>
+      <section class="settings-group">
+        <h3>自動通知測試</h3>
+        <label class="switch"><input type="checkbox" name="testMode">測試模式只傳給自己（示範帳號）</label>
+        <button type="button" id="test-send" class="secondary small">發測試私訊給自己</button>
+      </section>
+      <section class="settings-group">
+        <div class="settings-dept-head">
+          <h3>需求單位收件人</h3>
+          <button type="button" class="secondary small" id="add-dept">＋ 新增部門</button>
+        </div>
+        <div id="recipients"></div>
+      </section>
+      <div class="dialog-actions">
+        <button type="button" class="secondary" data-close>取消</button>
+        <button type="submit" class="primary">完成</button>
+      </div>
     </form>
   </dialog>
 </body>

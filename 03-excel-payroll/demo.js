@@ -1,6 +1,17 @@
 'use strict';
 
-const { months, demoKols, initialRows, reportsFor, settlementName, money } = window.kolSettlement;
+const {
+  months,
+  demoKols,
+  initialRows,
+  initialImports,
+  initialMetabase,
+  reportsFor,
+  settlementName,
+  effectivePocketAt,
+  effectivePaymentAt,
+  money
+} = window.kolSettlement;
 const { filename: sampleFilename, base64: sampleData } = window.kolDemoWorkbook;
 const labels = { upload: '上傳月報', kols: 'KOL 維護', overview: 'KOL 總覽', reports: '報表下載', ledger: '畸零數紀錄' };
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -10,17 +21,40 @@ const sourceMonth = months.at(-1);
 const safe = (value) => String(value ?? '').replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
 const sampleBytes = () => Uint8Array.from(atob(sampleData), (character) => character.charCodeAt(0));
 const getKol = (code) => state.kols.find((kol) => kol.code === code);
-const getReports = () => state.kols.map((kol) => reportsFor(kol, state.records).find((report) => report.month === state.month));
+const activeKols = () => state.kols.filter((kol) => !kol.deleted);
+const deletedKols = () => state.kols.filter((kol) => kol.deleted);
+const getReports = () => activeKols().map((kol) => reportsFor(kol, state.records, state.overrides).find((report) => report.month === state.month));
 const badge = (report) => `<span class="demo-badge ${report.status}">${report.label}</span>`;
-const routes = { upload: renderUpload, kols: renderKols, overview: renderOverview, reports: renderReports, ledger: renderLedger };
 
 let state = defaults();
 let toastTimer;
 let preview;
 let version = 0;
 
+function cloneKol(kol) {
+  return {
+    ...kol,
+    pocketChanges: (kol.pocketChanges || []).map((c) => ({ ...c })),
+    paymentChanges: (kol.paymentChanges || []).map((c) => ({ ...c }))
+  };
+}
+
 function defaults() {
-  return { view: 'upload', month: '2026-05', kols: demoKols.map((kol) => ({ ...kol })), records: { ...initialRows }, file: null, upload: null, query: '', filter: 'all' };
+  return {
+    view: 'upload',
+    month: '2026-05',
+    kols: demoKols.map(cloneKol),
+    records: { ...initialRows },
+    imports: Object.fromEntries(Object.entries(initialImports).map(([k, v]) => [k, { ...v }])),
+    overrides: {},
+    metabaseSynced: { '2026-04': true, '2026-05': true, '2026-06': false },
+    showDeletedKols: false,
+    file: null,
+    upload: null,
+    query: '',
+    filter: 'all',
+    nextChangeId: 10
+  };
 }
 
 function notify(message, error = false) {
@@ -33,13 +67,13 @@ function notify(message, error = false) {
 }
 
 function heading(title, description, actions) {
-  return `<div class="page-heading"><div><h1>${title}</h1><p class="subtitle">${description}</p></div>${actions || `<div class="month-chip">資料月份 <strong>${state.month}</strong></div>`}</div>`;
+  return `<div class="page-heading"><div><div class="eyebrow">KOL BONUS WORKSPACE</div><h1>${title}</h1><p class="subtitle">${description}</p></div>${actions || `<div class="month-chip">資料月份 <strong>${state.month}</strong></div>`}</div>`;
 }
 
 function statistics() {
   const reports = getReports();
   const entries = [
-    ['已建立 KOL', state.kols.length, '人', '每個行銷碼僅保留一筆', '◉'],
+    ['已建立 KOL', activeKols().length, '人', '每個行銷碼僅保留一筆', '◉'],
     ['可下載報表', reports.filter((row) => row.status === 'ready').length, '份', '依所選月份結算', '↓'],
     ['待季末結算', reports.filter((row) => row.status === 'partial').length, '份', '季末資料匯入後結算', '＋'],
     ['需要確認', reports.filter((row) => row.status === 'error').length, '筆', '來源核對或出帳金額異常', '!']
@@ -47,6 +81,23 @@ function statistics() {
   return `<div class="stats">${entries.map(([label, value, unit, detail, icon], index) =>
     `<div class="stat ${index > 1 ? 'warm' : ''}"><span class="stat-label">${label}</span><span class="stat-icon" aria-hidden="true">${icon}</span><div class="stat-value">${value}<small>${unit}</small></div><p class="stat-note">${detail}</p></div>`
   ).join('')}</div>`;
+}
+
+function renderImportHistoryCard() {
+  const list = Object.values(state.imports).sort((a, b) => b.month.localeCompare(a.month));
+  return `<section class="card import-history-card">
+    <div class="card-head"><div><h2>匯入紀錄（已匯入月份清單）</h2><p>支援保留原始檔版本、刪除該月來源並連動重算後續結餘。</p></div><span class="small-label">${list.length} 期</span></div>
+    ${list.length ? `<div class="table-wrap"><table><thead><tr><th>資料月份</th><th>來源檔案</th><th>KOL 筆數</th><th>上傳時間</th><th>狀態</th><th></th></tr></thead><tbody>
+      ${list.map((item) => `<tr>
+        <td><strong>${safe(item.month)}</strong></td>
+        <td>${safe(item.filename)}</td>
+        <td>${item.count} 筆</td>
+        <td class="muted">${safe(item.uploadedAt)}</td>
+        <td><span class="demo-badge ready">${safe(item.status)}</span></td>
+        <td><button type="button" class="btn text danger" data-delete-import="${safe(item.month)}">刪除來源</button></td>
+      </tr>`).join('')}
+    </tbody></table></div>` : '<div class="empty"><strong>目前沒有已匯入的月報</strong></div>'}
+  </section>`;
 }
 
 function renderUpload() {
@@ -73,7 +124,7 @@ function renderUpload() {
       <div class="step"><div class="step-content"><h3>核對獎金與結餘</h3><p>依月結或季結及 A／B／A+B 結算。</p></div></div>
       <div class="step"><div class="step-content"><h3>查看報表</h3><p>在瀏覽器預覽，並下載該期 Excel。</p></div></div>
     </div></aside>
-  </div>`;
+  </div>` + renderImportHistoryCard();
 }
 
 function controls(hasPeriod = true, types = []) {
@@ -94,25 +145,77 @@ function table(headers, rows, className = '') {
 }
 
 function kolsTable() {
-  const rows = state.kols.filter(matchesSearch).map((kol) => `<tr data-code="${kol.code}">
-    <td><strong>${kol.code}</strong></td><td>${safe(kol.name)}</td><td>${settlementName(kol)}</td><td>${kol.payment}</td><td class="number">${money(kol.pocket)}</td><td class="number">${money(kol.opening)}</td><td><button type="button" class="btn" data-edit="${kol.code}">編輯</button></td>
-  </tr>`);
-  return table([['行銷碼'], ['KOL 姓名'], ['結算方式'], ['出帳方式'], ['口袋出帳（目前）', true], ['期初結餘', true], ['操作']], rows);
+  const source = state.showDeletedKols ? deletedKols() : activeKols();
+  const rows = source.filter(matchesSearch).map((kol) => {
+    const pocketNow = effectivePocketAt(kol, state.month);
+    const paymentNow = effectivePaymentAt(kol, state.month);
+    const coop = (kol.coopStart || kol.coopEnd) ? `${safe(kol.coopStart || '未填')} ～ ${safe(kol.coopEnd || '未填')}` : '<span class="muted">尚未填寫</span>';
+    const actions = state.showDeletedKols
+      ? `<button type="button" class="btn" data-restore-kol="${kol.code}">恢復 KOL</button>`
+      : `<button type="button" class="btn text" data-edit="${kol.code}">編輯 →</button><button type="button" class="btn text danger" data-delete-kol="${kol.code}">刪除</button>`;
+    return `<tr data-code="${kol.code}">
+      <td><strong>${kol.code}</strong></td>
+      <td>${kol.name ? safe(kol.name) : '<span class="muted">尚未填寫</span>'}</td>
+      <td>${coop}</td>
+      <td>${settlementName(kol)}</td>
+      <td>${paymentNow}</td>
+      <td class="number">${paymentNow === 'B' ? '—' : money(pocketNow)}</td>
+      <td class="number">${money(kol.opening)}</td>
+      <td class="muted">${safe(kol.openingMonth || '2026-04')}</td>
+      <td><div class="actions">${actions}</div></td>
+    </tr>`;
+  });
+  return table([
+    ['行銷碼'], ['KOL 姓名'], ['合作期間（民國）'], ['結算方式'], ['出帳方式'],
+    ['口袋出帳（目前）', true], ['期初結餘', true], ['期初適用月份'], ['操作']
+  ], rows);
 }
 
 function renderKols() {
-  return heading('KOL 維護', '設定每位 KOL 的結算方式、出帳方式及合作金額。') + controls(false) + `<section class="card" id="data-table">${kolsTable()}</section>`;
+  const deletedCount = deletedKols().length;
+  const actions = `<div class="actions">
+    <button type="button" class="btn" id="toggle-deleted-kols">${state.showDeletedKols ? '返回使用中 KOL' : `已刪除 KOL (${deletedCount})`}</button>
+    <button type="button" class="btn primary" id="add-kol-btn">＋ 新增 KOL</button>
+  </div>`;
+  return heading(state.showDeletedKols ? '已刪除 KOL' : 'KOL 維護', state.showDeletedKols ? '原有設定與歷史資料保留。可隨時按「恢復 KOL」。' : '設定每位 KOL 的合作期間（民國）、結算方式、出帳方式及按月生效異動。', actions)
+    + controls(false)
+    + `<section class="card" id="data-table">${kolsTable()}</section>`;
 }
 
 function overviewTable() {
-  const rows = getReports().filter(matchesSearch).map((report) => `<tr data-code="${report.code}">
-    <td><strong>${report.code}</strong></td><td>${safe(report.name)}</td><td>${settlementName(report)} · ${report.payment}</td><td class="number">${money(report.sourceTotal)}</td><td class="number">${money(report.pocketPaid)}</td><td class="number">${money(report.otherPaid)}</td><td class="number">${money(report.closing)}</td><td>${badge(report)}</td>
-  </tr>`);
-  return table([['行銷碼'], ['KOL 姓名'], ['結算與出帳'], ['來源獎金', true], ['口袋出帳', true], ['金尉出帳', true], ['期末結餘', true], ['狀態']], rows, 'demo-overview');
+  const synced = Boolean(state.metabaseSynced[state.month]);
+  const monthMeta = initialMetabase[state.month] || {};
+  const rows = getReports().filter(matchesSearch).map((report) => {
+    const mb = synced ? monthMeta[report.code] : null;
+    return `<tr data-code="${report.code}">
+      <td><strong>${report.code}</strong></td>
+      <td>${safe(report.name)}</td>
+      <td>${settlementName(report)} · ${report.payment}</td>
+      <td class="number">${mb ? money(mb.opened) : '<span class="muted">未同步</span>'}</td>
+      <td class="number">${mb ? money(mb.total) : '<span class="muted">未同步</span>'}</td>
+      <td class="number">${money(report.sourceTotal)}</td>
+      <td class="number">${money(report.pocketPaid)}</td>
+      <td class="number">${money(report.otherPaid)}</td>
+      <td class="number">${money(report.closing)}</td>
+      <td>${badge(report)}</td>
+    </tr>`;
+  });
+  return table([
+    ['行銷碼'], ['KOL 姓名'], ['結算與出帳'], ['當月開戶數', true], ['總客戶數', true],
+    ['來源獎金', true], ['口袋出帳', true], ['金尉出帳', true], ['期末結餘', true], ['狀態']
+  ], rows, 'demo-overview');
 }
 
 function renderOverview() {
-  return heading('KOL 總覽', '按月份查看來源獎金、出帳金額及期末結餘。') + controls() + `<section class="card" id="data-table">${overviewTable()}</section>`;
+  const synced = Boolean(state.metabaseSynced[state.month]);
+  const actions = `<div class="actions">
+    <button type="button" class="btn" id="sync-metabase">${synced ? '↻ 重新同步台股人數（Metabase）' : '↻ 同步台股人數（Metabase）'}</button>
+    <button type="button" class="btn primary" id="export-overview">↓ 匯出總覽 Excel</button>
+  </div>`;
+  return heading('KOL 總覽', '按月份查看 Metabase 台股開戶數、來源獎金、出帳金額及期末結餘。', actions)
+    + controls()
+    + `<section class="card" id="data-table">${overviewTable()}</section>
+       <p class="ledger-note">總客戶數取 Metabase 台股同月客戶總數；未同步時顯示未同步，可點右上角「同步台股人數」取得該月開戶數據。</p>`;
 }
 
 function reportTable() {
@@ -131,18 +234,29 @@ function renderReports() {
 }
 
 function ledgerTable() {
-  const rows = state.kols.filter(matchesSearch).map((kol) => {
-    const periods = reportsFor(kol, state.records);
+  const rows = activeKols().filter(matchesSearch).map((kol) => {
+    const periods = reportsFor(kol, state.records, state.overrides);
     return `<tr data-code="${kol.code}"><td><strong>${kol.code}</strong></td><td>${safe(kol.name)}</td><td>${settlementName(kol)}</td><td class="number">${money(kol.opening)}</td>
-      ${periods.map((period) => `<td class="number">${money(period.closing)}</td>`).join('')}
+      ${periods.map((period) => `<td class="number">${money(period.closing)}${period.override ? '<span class="manual-flag">人工調整</span>' : ''}</td>`).join('')}
     </tr>`;
   });
   return table([['行銷碼'], ['KOL 姓名'], ['結算方式'], ['期初結餘', true], ...months.map((month) => [month, true])], rows);
 }
 
 function renderLedger() {
-  return heading('畸零數紀錄', '查看 A 的超額或未發放結餘，以及 B、A+B 的畸零數。') + controls(false) + `<section class="card" id="data-table">${ledgerTable()}</section>`;
+  const overridesList = Object.entries(state.overrides);
+  const actions = `<div class="actions">
+    <button type="button" class="btn" id="adjust-opening-btn">修正首次期初結餘</button>
+    <button type="button" class="btn" id="adjust-closing-btn">設定指定月份期末結餘</button>
+    <button type="button" class="btn primary" id="export-ledger-btn">↓ 下載結餘 Excel</button>
+  </div>`;
+  return heading('畸零數紀錄', '同時管理 A 的超額／未發放結餘，以及 B、A+B 的畸零數，支援人工調整與連動重算。', actions)
+    + controls(false)
+    + `<section class="card" id="data-table">${ledgerTable()}</section>`
+    + (overridesList.length ? `<section class="card adjustment-card"><div class="card-head"><h2>期末結餘人工調整</h2><span class="small-label">保留調整紀錄，連動重算</span></div><div class="table-wrap"><table><thead><tr><th>KOL</th><th>期末結餘所屬月份</th><th class="number">調整後金額</th><th>原因</th><th></th></tr></thead><tbody>${overridesList.map(([key, o]) => `<tr><td>${safe(o.code)}</td><td>${safe(o.month)}</td><td class="number">${money(o.amount)}</td><td>${safe(o.note || '人工設定')}</td><td><button type="button" class="btn text danger" data-remove-override="${safe(key)}">還原自動計算</button></td></tr>`).join('')}</tbody></table></div></section>` : '');
 }
+
+const routes = { upload: renderUpload, kols: renderKols, overview: renderOverview, reports: renderReports, ledger: renderLedger };
 
 function render() {
   document.querySelectorAll('[data-view]').forEach((button) => {
@@ -174,9 +288,12 @@ function navigate(view) {
 
 function chooseFile(file) {
   state.file = file ?? null;
-  $('#file-title').textContent = state.file?.name || '拖曳檔案到這裡，或選擇檔案';
-  $('#upload-submit').disabled = !state.file;
-  $('#upload-error').hidden = true;
+  const titleEl = $('#file-title');
+  const submitEl = $('#upload-submit');
+  const errEl = $('#upload-error');
+  if (titleEl) titleEl.textContent = state.file?.name || '拖曳檔案到這裡，或選擇檔案';
+  if (submitEl) submitEl.disabled = !state.file;
+  if (errEl) errEl.hidden = true;
 }
 
 async function readSample(file) {
@@ -212,6 +329,13 @@ async function importFile(form) {
     if (version !== targetVersion) return;
     const replaced = Boolean(state.records[month]);
     state.records[month] = rows;
+    state.imports[month] = {
+      month,
+      filename: file.name,
+      uploadedAt: new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }).format(Date.now()),
+      count: rows.length,
+      status: replaced ? '已更新' : '已匯入'
+    };
     state.month = month;
     state.upload = { month, count: rows.length, replaced };
     render();
@@ -231,21 +355,77 @@ function showModal(title, contents, actions = '<button type="button" class="btn"
   if (!modal.open) modal.showModal();
 }
 
+function pocketHistoryBlock(kol) {
+  const changes = kol.pocketChanges || [];
+  const items = changes.map((c) => `<li class="pocket-history-item ${c.superseded || c.deleted ? 'superseded' : ''}">
+    <div><strong>${safe(c.month)} ${c.deleted ? '異動已刪除' : `起：${money(c.amount)} 元`}</strong>${c.superseded ? ' <span class="muted">（已取代）</span>' : ''}</div>
+    <small>${safe(c.actor || '系統')}・${safe(c.createdAt)}${c.note ? '・' + safe(c.note) : ''}</small>
+    ${!c.superseded && !c.deleted ? `<button type="button" class="btn text" data-pocket-correct="${safe(kol.code)}" data-change-id="${c.id}">更正</button><button type="button" class="btn text danger" data-pocket-delete="${safe(kol.code)}" data-change-id="${c.id}">刪除異動</button>` : ''}
+  </li>`).join('');
+  return `<div class="pocket-history-section full">
+    <div class="pocket-amount-line">
+      <span>目前有效口袋出帳（${safe(state.month)}）：<strong>${kol.payment === 'B' ? '—' : money(effectivePocketAt(kol, state.month)) + ' 元'}</strong></span>
+      <button type="button" class="btn text" data-pocket-add="${safe(kol.code)}">＋ 新增異動</button>
+    </div>
+    <details class="pocket-history" open><summary>口袋出帳異動紀錄 (${changes.length})</summary>
+      <div class="pocket-history-content"><ul>${items}<li class="pocket-history-item"><strong>初始金額：${money(kol.pocket)} 元</strong></li></ul></div>
+    </details>
+    <div id="pocket-change-panel"></div>
+  </div>`;
+}
+
+function paymentHistoryBlock(kol) {
+  const changes = kol.paymentChanges || [];
+  const items = changes.map((c) => `<li class="pocket-history-item ${c.superseded ? 'superseded' : ''}">
+    <div><strong>${safe(c.month)} 起：${safe(c.previous)} → ${safe(c.mode)}</strong></div>
+    <small>${safe(c.createdAt)} · ${safe(c.actor)}</small>
+  </li>`).join('');
+  return `<div class="payment-change-section full">
+    <div class="pocket-amount-line">
+      <span>出帳方式異動（按生效年月分段切換）</span>
+      <button type="button" class="btn text" data-payment-add="${safe(kol.code)}">＋ 新增出帳方式異動</button>
+    </div>
+    <details class="pocket-history" ${changes.length ? 'open' : ''}><summary>出帳方式異動紀錄 (${changes.length})</summary>
+      <div class="pocket-history-content"><ul>${items}<li class="pocket-history-item">初始方式：${safe(kol.payment)}</li></ul></div>
+    </details>
+    <div id="payment-change-panel"></div>
+  </div>`;
+}
+
 function editKol(code) {
   const kol = getKol(code);
   const paymentOptions = [['A', '固定口袋出帳'], ['B', '金尉出帳'], ['A+B', '由兩方出帳']];
   showModal('編輯 KOL', `<form id="kol-form" class="demo-settings" data-code="${code}">
     <p class="modal-intro">${code} · 儲存後重算示範期間的歷史報表。</p>
     <div class="form-grid">
-      <label class="field"><span>KOL 姓名</span><input name="name" required maxlength="24" value="${safe(kol.name)}"></label>
+      <label class="field"><span>KOL 姓名</span><input name="name" maxlength="24" value="${safe(kol.name)}"></label>
       <label class="field"><span>結算方式</span><select name="settlement"><option value="monthly" ${kol.settlement === 'monthly' ? 'selected' : ''}>月結</option><option value="quarterly" ${kol.settlement === 'quarterly' ? 'selected' : ''}>季結</option></select></label>
-      <label class="field"><span>口袋出帳（元）</span><input name="pocket" type="number" required min="0" max="1000000" step="1" value="${kol.pocket}" ${kol.payment === 'B' ? 'disabled' : ''}></label>
+      <label class="field"><span>合作起日（民國）</span><input name="coopStart" placeholder="115/01/01" value="${safe(kol.coopStart || '')}"></label>
+      <label class="field"><span>合作迄日（民國）</span><input name="coopEnd" placeholder="115/12/31" value="${safe(kol.coopEnd || '')}"></label>
+      <label class="field"><span>初始口袋出帳（元）</span><input name="pocket" type="number" required min="0" max="1000000" step="1" value="${kol.pocket}" ${kol.payment === 'B' ? 'disabled' : ''}></label>
       <label class="field"><span>期初結餘（元）</span><input name="opening" type="number" required min="-1000000" max="1000000" step="1" value="${kol.opening}"></label>
     </div>
     <fieldset class="payment-field"><legend>出帳方式</legend><div class="payment-options">${paymentOptions.map(([id, label]) =>
       `<label class="payment-option"><input name="payment" type="radio" value="${id}" ${id === kol.payment ? 'checked' : ''}><span><strong>${id}</strong><small>${label}</small></span></label>`
     ).join('')}</div></fieldset>
+    ${pocketHistoryBlock(kol)}
+    ${paymentHistoryBlock(kol)}
     </form>`, '<button type="button" class="btn" data-close>取消</button><button type="submit" class="btn primary" form="kol-form">儲存</button>');
+}
+
+function openAddKolModal() {
+  showModal('新增 KOL', `<form id="add-kol-form" class="demo-settings">
+    <div class="form-grid">
+      <label class="field"><span>行銷碼 *</span><input name="code" required maxlength="20" placeholder="例如 DEMO-104"></label>
+      <label class="field"><span>KOL 姓名</span><input name="name" maxlength="24" placeholder="選填"></label>
+      <label class="field"><span>結算方式</span><select name="settlement"><option value="monthly">月結</option><option value="quarterly">季結</option></select></label>
+      <label class="field"><span>出帳方式</span><select name="payment"><option value="A">A · 固定口袋</option><option value="B">B · 金尉出帳</option><option value="A+B">A+B · 兩方出帳</option></select></label>
+      <label class="field"><span>合作起日（民國）</span><input name="coopStart" value="115/01/01"></label>
+      <label class="field"><span>合作迄日（民國）</span><input name="coopEnd" value="115/12/31"></label>
+      <label class="field"><span>口袋出帳（元）</span><input name="pocket" type="number" min="0" value="10000"></label>
+      <label class="field"><span>期初結餘（元）</span><input name="opening" type="number" value="0"></label>
+    </div>
+  </form>`, '<button type="button" class="btn" data-close>取消</button><button type="submit" class="btn primary" form="add-kol-form">建立 KOL</button>');
 }
 
 function settlementDetail(report) {
@@ -301,6 +481,20 @@ function resizePreview() {
   size.style.width = paperWidth * preview.scale + 'px';
   size.style.height = paper.offsetHeight * preview.scale + 'px';
   $('#zoom-level', modal).textContent = Math.round(preview.scale * 100) + '%';
+}
+
+async function downloadWorkbook(filename, sheetName, headerRow, dataRows) {
+  const workbook = new ExcelJS.Workbook();
+  const sheet = workbook.addWorksheet(sheetName);
+  sheet.addRow(headerRow);
+  dataRows.forEach((r) => sheet.addRow(r));
+  const buffer = await workbook.xlsx.writeBuffer();
+  const objectUrl = URL.createObjectURL(new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
+  const anchor = document.createElement('a');
+  anchor.href = objectUrl;
+  anchor.download = filename;
+  anchor.click();
+  setTimeout(() => URL.revokeObjectURL(objectUrl), 1200);
 }
 
 async function downloadExcel(button) {
@@ -372,6 +566,71 @@ main.addEventListener('click', (event) => {
     state.month = button.dataset.month;
     render();
   }
+  if (button.dataset.deleteImport) {
+    const m = button.dataset.deleteImport;
+    delete state.records[m];
+    delete state.imports[m];
+    if (state.upload?.month === m) state.upload = null;
+    render();
+    notify(`已刪除 ${m} 來源月報，並重算後續期間結餘。`);
+  }
+  if (button.id === 'toggle-deleted-kols') {
+    state.showDeletedKols = !state.showDeletedKols;
+    render();
+  }
+  if (button.id === 'add-kol-btn') openAddKolModal();
+  if (button.dataset.deleteKol) {
+    const k = getKol(button.dataset.deleteKol);
+    if (k) { k.deleted = true; render(); notify(`已刪除 ${k.code}（可於「已刪除 KOL」隨時恢復）`); }
+  }
+  if (button.dataset.restoreKol) {
+    const k = getKol(button.dataset.restoreKol);
+    if (k) { k.deleted = false; state.showDeletedKols = false; render(); notify(`已恢復 ${k.code}`); }
+  }
+  if (button.id === 'sync-metabase') {
+    state.metabaseSynced[state.month] = true;
+    render();
+    notify(`已完成 ${state.month} Metabase 台股開戶數同步（模擬）。`);
+  }
+  if (button.id === 'export-overview') {
+    const synced = Boolean(state.metabaseSynced[state.month]);
+    const monthMeta = initialMetabase[state.month] || {};
+    const rows = getReports().map((r) => [
+      r.code, r.name, `${settlementName(r)}・${r.payment}`,
+      synced ? (monthMeta[r.code]?.opened ?? 0) : '未同步',
+      synced ? (monthMeta[r.code]?.total ?? 0) : '未同步',
+      r.sourceTotal ?? 0, r.pocketPaid ?? 0, r.otherPaid ?? 0, r.closing ?? 0
+    ]);
+    void downloadWorkbook(`KOL總覽_${state.month}.xlsx`, 'KOL總覽', ['行銷碼', 'KOL 姓名', '結算與出帳', '當月開戶數', '總客戶數', '來源獎金', '口袋出帳', '金尉出帳', '期末結餘'], rows);
+    notify('已匯出 KOL 總覽 Excel');
+  }
+  if (button.id === 'export-ledger-btn') {
+    const rows = activeKols().map((k) => {
+      const periods = reportsFor(k, state.records, state.overrides);
+      return [k.code, k.name, settlementName(k), k.opening, ...periods.map((p) => p.closing ?? '')];
+    });
+    void downloadWorkbook('畸零數結餘總表.xlsx', '畸零數紀錄', ['行銷碼', 'KOL 姓名', '結算方式', '期初結餘', ...months], rows);
+    notify('已下載畸零數結餘 Excel');
+  }
+  if (button.id === 'adjust-opening-btn') {
+    showModal('修正首次期初結餘', `<form id="opening-form" class="demo-settings"><div class="form-grid">
+      <label class="field"><span>選擇 KOL</span><select name="code">${activeKols().map((k) => `<option value="${k.code}">${k.code} · ${safe(k.name)}</option>`).join('')}</select></label>
+      <label class="field"><span>期初結餘（元）</span><input name="opening" type="number" required value="${activeKols()[0]?.opening ?? 0}"></label>
+    </div></form>`, '<button type="button" class="btn" data-close>取消</button><button type="submit" class="btn primary" form="opening-form">儲存重算</button>');
+  }
+  if (button.id === 'adjust-closing-btn') {
+    showModal('設定指定月份期末結餘', `<form id="override-form" class="demo-settings"><div class="form-grid">
+      <label class="field"><span>選擇 KOL</span><select name="code">${activeKols().map((k) => `<option value="${k.code}">${k.code} · ${safe(k.name)}</option>`).join('')}</select></label>
+      <label class="field"><span>所屬月份</span><select name="month">${months.map((m) => `<option value="${m}">${m}</option>`).join('')}</select></label>
+      <label class="field"><span>調整後金額（元）</span><input name="amount" type="number" required value="0"></label>
+      <label class="field"><span>調整原因</span><input name="note" maxlength="60" placeholder="例如：人工核對折讓"></label>
+    </div></form>`, '<button type="button" class="btn" data-close>取消</button><button type="submit" class="btn primary" form="override-form">套用並重算</button>');
+  }
+  if (button.dataset.removeOverride) {
+    delete state.overrides[button.dataset.removeOverride];
+    render();
+    notify('已還原該筆期末結餘的自動計算');
+  }
   if (button.dataset.edit) editKol(button.dataset.edit);
   if (button.dataset.detail) settlementDetail(getReports().find((report) => report.code === button.dataset.detail));
   if (button.dataset.preview) excelPreview(getReports().find((report) => report.code === button.dataset.preview));
@@ -428,35 +687,157 @@ modal.addEventListener('click', (event) => {
     document.documentElement.dataset.theme = button.dataset.theme;
     modal.querySelectorAll('[data-theme]').forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
   }
+  if (button.dataset.pocketAdd || button.dataset.pocketCorrect) {
+    const code = button.dataset.pocketAdd || button.dataset.pocketCorrect;
+    const kol = getKol(code);
+    const changeId = button.dataset.changeId ? Number(button.dataset.changeId) : null;
+    const orig = changeId ? kol.pocketChanges.find((c) => c.id === changeId) : null;
+    $('#pocket-change-panel', modal).innerHTML = `<div class="pocket-change-editor">
+      <strong>${orig ? '更正口袋出帳異動' : '新增口袋出帳異動'}</strong>
+      <div class="form-grid">
+        <label class="field"><span>生效月份</span><input id="pc-month" type="month" value="${orig ? orig.month : state.month}"></label>
+        <label class="field"><span>新金額（元）</span><input id="pc-amount" type="number" min="0" value="${orig ? orig.amount : kol.pocket}"></label>
+        <label class="field full"><span>備註</span><input id="pc-note" value="${safe(orig?.note || '')}" placeholder="例如：合約調整"></label>
+      </div>
+      <p class="hint" id="pc-impact"></p>
+      <div class="pocket-change-actions"><button type="button" class="btn" id="pc-cancel">取消</button><button type="button" class="btn primary" id="pc-save" data-pc-code="${code}" data-pc-orig="${changeId || ''}">套用異動</button></div>
+    </div>`;
+    const updateImpact = () => {
+      const m = $('#pc-month', modal).value;
+      $('#pc-impact', modal).textContent = `${m} 起使用新金額，生效月份之前不變，之後期間與結餘將自動重算。`;
+    };
+    $('#pc-month', modal).oninput = updateImpact;
+    $('#pc-cancel', modal).onclick = () => { $('#pocket-change-panel', modal).innerHTML = ''; };
+    updateImpact();
+  }
+  if (button.id === 'pc-save') {
+    const kol = getKol(button.dataset.pcCode);
+    const origId = button.dataset.pcOrig ? Number(button.dataset.pcOrig) : null;
+    if (origId) {
+      const old = kol.pocketChanges.find((c) => c.id === origId);
+      if (old) old.superseded = true;
+    }
+    kol.pocketChanges.unshift({
+      id: state.nextChangeId++,
+      month: $('#pc-month', modal).value,
+      amount: Number($('#pc-amount', modal).value),
+      note: $('#pc-note', modal).value.trim(),
+      actor: '業務部',
+      createdAt: '剛剛',
+      superseded: false,
+      deleted: false
+    });
+    editKol(kol.code);
+    render();
+    notify('已新增口袋出帳異動並重算結餘');
+  }
+  if (button.dataset.pocketDelete) {
+    const kol = getKol(button.dataset.pocketDelete);
+    const cid = Number(button.dataset.changeId);
+    const c = kol.pocketChanges.find((item) => item.id === cid);
+    if (c) c.deleted = true;
+    editKol(kol.code);
+    render();
+    notify('已刪除異動並回溯前一筆有效金額重算');
+  }
+  if (button.dataset.paymentAdd) {
+    const code = button.dataset.paymentAdd;
+    const kol = getKol(code);
+    $('#payment-change-panel', modal).innerHTML = `<div class="pocket-change-editor">
+      <strong>新增出帳方式異動</strong>
+      <div class="form-grid">
+        <label class="field"><span>生效年月</span><input id="pm-month" type="month" value="${state.month}"></label>
+        <label class="field"><span>新出帳方式</span><select id="pm-mode"><option value="A">A · 口袋</option><option value="B">B · 金尉</option><option value="A+B">A+B · 口袋＋金尉</option></select></label>
+      </div>
+      <div class="pocket-change-actions"><button type="button" class="btn" id="pm-cancel">取消</button><button type="button" class="btn primary" id="pm-save" data-pm-code="${code}">套用異動</button></div>
+    </div>`;
+    $('#pm-cancel', modal).onclick = () => { $('#payment-change-panel', modal).innerHTML = ''; };
+    $('#pm-save', modal).onclick = () => {
+      kol.paymentChanges.unshift({
+        id: state.nextChangeId++,
+        month: $('#pm-month', modal).value,
+        previous: effectivePaymentAt(kol, $('#pm-month', modal).value),
+        mode: $('#pm-mode', modal).value,
+        actor: '業務部',
+        createdAt: '剛剛',
+        superseded: false
+      });
+      editKol(kol.code);
+      render();
+      notify('已新增出帳方式分段異動');
+    };
+  }
 });
 
 modal.addEventListener('change', (event) => {
-  if (event.target.name === 'payment') $('#kol-form', modal).elements.pocket.disabled = event.target.value === 'B';
+  if (event.target.name === 'payment' && $('#kol-form', modal)) {
+    $('#kol-form', modal).elements.pocket.disabled = event.target.value === 'B';
+  }
 });
 
 modal.addEventListener('submit', (event) => {
   event.preventDefault();
   const form = event.target;
-  if (form.id !== 'kol-form') return;
   const fields = new FormData(form);
-  const name = fields.get('name').trim();
-  if (!name) {
-    form.elements.name.setCustomValidity('請填寫 KOL 姓名。');
-    form.elements.name.reportValidity();
-    return;
+  if (form.id === 'kol-form') {
+    const kol = getKol(form.dataset.code);
+    Object.assign(kol, {
+      name: fields.get('name').trim(),
+      settlement: fields.get('settlement'),
+      payment: fields.get('payment'),
+      coopStart: fields.get('coopStart').trim(),
+      coopEnd: fields.get('coopEnd').trim(),
+      pocket: fields.get('payment') === 'B' ? 0 : Number(fields.get('pocket')),
+      opening: Number(fields.get('opening'))
+    });
+    modal.close();
+    render();
+    notify('已更新 KOL 設定與結算結果');
+  } else if (form.id === 'add-kol-form') {
+    const code = fields.get('code').trim().toUpperCase();
+    if (!code || getKol(code)) {
+      notify('行銷碼不可空白或與現有重複', true);
+      return;
+    }
+    state.kols.push({
+      code,
+      name: fields.get('name').trim(),
+      settlement: fields.get('settlement'),
+      payment: fields.get('payment'),
+      pocket: fields.get('payment') === 'B' ? 0 : Number(fields.get('pocket')),
+      opening: Number(fields.get('opening')),
+      openingMonth: '2026-04',
+      coopStart: fields.get('coopStart').trim(),
+      coopEnd: fields.get('coopEnd').trim(),
+      deleted: false,
+      pocketChanges: [],
+      paymentChanges: []
+    });
+    state.showDeletedKols = false;
+    modal.close();
+    render();
+    notify(`已新增 ${code}`);
+  } else if (form.id === 'opening-form') {
+    const k = getKol(fields.get('code'));
+    if (k) k.opening = Number(fields.get('opening'));
+    modal.close();
+    render();
+    notify('已修正首次期初結餘並重算');
+  } else if (form.id === 'override-form') {
+    const code = fields.get('code');
+    const month = fields.get('month');
+    state.overrides[`${code}/${month}`] = {
+      code,
+      month,
+      amount: Number(fields.get('amount')),
+      note: fields.get('note').trim()
+    };
+    modal.close();
+    render();
+    notify(`已設定 ${code} 於 ${month} 的期末結餘人工調整`);
   }
-  Object.assign(getKol(form.dataset.code), {
-    name, settlement: fields.get('settlement'), payment: fields.get('payment'),
-    pocket: fields.get('payment') === 'B' ? 0 : Number(fields.get('pocket')), opening: Number(fields.get('opening'))
-  });
-  modal.close();
-  render();
-  notify('已更新 KOL 設定與結算結果');
 });
 
-modal.addEventListener('input', (event) => {
-  if (event.target.name === 'name') event.target.setCustomValidity('');
-});
 modal.addEventListener('close', () => { preview = null; });
 
 const firstView = location.hash.slice(1);

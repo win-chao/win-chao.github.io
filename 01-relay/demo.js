@@ -40,6 +40,7 @@ const sampleCards = [
 ];
 
 const navigation = [
+  { key: 'relay4', label: '四格角色接力', icon: 'Layers3' },
   { key: 'workspaces', label: '雙角色工作台', icon: 'Layers3' },
   { key: 'dashboard', label: 'Dashboard', icon: 'LayoutDashboard' },
   { key: 'notifications', label: '通知', icon: 'ClipboardList' },
@@ -109,8 +110,8 @@ function renderNavigation(route) {
   const bell = document.getElementById('bell');
   bell.innerHTML = icon('Bell') + (unread ? `<strong>${unread}</strong>` : '');
   bell.setAttribute('aria-label', unread ? `通知，${unread} 則未讀` : '通知');
-  actorSelect.closest('.topbar-user').hidden = route === 'workspaces';
-  bell.hidden = route === 'workspaces';
+  actorSelect.closest('.topbar-user').hidden = route === 'workspaces' || route === 'relay4';
+  bell.hidden = route === 'workspaces' || route === 'relay4';
   actorSelect.value = state.actor;
   document.getElementById('actor-avatar').textContent = personName(state.actor)[0];
 }
@@ -251,13 +252,14 @@ function renderNotices() {
 }
 
 function render() {
-  const route = location.hash.slice(1) || 'workspaces';
+  const route = location.hash.slice(1) || 'relay4';
   if (previousRoute === 'board') {
     const viewport = screen.querySelector('.kanban-viewport');
     if (viewport) kanbanPosition = viewport.scrollLeft;
   }
   renderNavigation(route);
   if (route.startsWith('issue/')) screen.innerHTML = renderIssue(findCard(route.slice(6)));
+  else if (route === 'relay4') screen.innerHTML = window.renderRelay4();
   else if (route === 'workspaces') screen.innerHTML = renderWorkspaces();
   else if (route === 'dashboard') screen.innerHTML = renderDashboard();
   else if (route === 'notifications') screen.innerHTML = renderNotices();
@@ -268,6 +270,7 @@ function render() {
   if (route !== previousRoute) window.scrollTo(0, 0);
   previousRoute = route;
 }
+window.relayShowToast = showToast;
 
 function switchActor(actor) {
   if (!people[actor]) return;
@@ -313,10 +316,11 @@ function transition(card, destination, reason = '', actor = state.actor) {
 
 document.getElementById('reset').addEventListener('click', () => {
   state = freshState();
+  window.resetRelay4?.();
   kanbanPosition = 0;
   previousRoute = undefined;
   if (createDialog.open) createDialog.close();
-  if (location.hash !== '#workspaces') location.hash = '#workspaces';
+  if (location.hash !== '#relay4') location.hash = '#relay4';
   render();
   showToast('已重置所有展示資料');
 });

@@ -50,3 +50,8 @@
   .breadcrumb { font-size: 11px; }
   .account-actions .btn { white-space: nowrap; }
 }
+
+.import-history-card { margin-top: 20px; }
+.adjustment-card { margin-top: 20px; }
+.payment-change-section { grid-column: 1 / -1; min-width: 0; border-top: 1px solid var(--line); padding-top: 12px; }
+.danger { color: var(--red); }
