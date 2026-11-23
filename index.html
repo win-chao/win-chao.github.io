@@ -7,8 +7,8 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' file:; style-src 'self' file: 'unsafe-inline'; img-src 'self' file: data:; connect-src 'none'; base-uri 'none'">
   <link rel="icon" href="data:,">
   <title>Qa-Win 的作品集與履歷表</title>
-  <link rel="stylesheet" href="./portfolio.css?v=cyber21">
-  <script src="./portfolio.js?v=cyber21" defer></script>
+  <link rel="stylesheet" href="./portfolio.css?v=cyber22">
+  <script src="./portfolio.js?v=cyber22" defer></script>
 </head>
 <body data-active-view="portfolio">
   <!-- Matrix 多層次光學景深舞台 -->
@@ -537,15 +537,16 @@
                 <div class="sub-block">
                   <h4>【AI 協作工具建置與流程改善】</h4>
                   <ul class="stage-bullets">
-                    <li><strong>金融服務網頁自動化測試工作台（Python＋Selenium）：</strong>負責定義流程範圍、環境條件與驗收標準，與 AI 協作建置支援 Chrome／Safari 之可重跑桌面工作台，整合官網例行檢查、開戶、錢包與後台審核流程，並加入失敗診斷（操作時間線、Network、Console、DOM、截圖），支援修復複測與 RD 問題追查。</li>
-                    <li><strong>內部 QA／RD 協作管理系統（類 Jira 流程設計）：</strong>針對母子卡跨人分工與交測退回追蹤不易的痛點，主導規劃製作人／驗收人雙指派、母子卡獨立責任、交測／退回／複測輪次、Sprint／Release 與主管視角，與 AI 協作產出系統與離線四格互動原型向主管展示。</li>
-                    <li><strong>業務薪獎結算工作台（已交付業務實際使用）：</strong>協助業務釐清結算規則，與 AI 協作將每月多分頁 Excel 作業系統化，涵蓋來源格式／重複檢核、多種出帳模式、月／季結、滿千發放與跨期結餘重算；設計異常阻擋機制避免猜值，預覽與下載共用同份版型快照，並於系統更新時嚴格執行回歸測試。</li>
+                    <li><strong>金融服務網頁自動化測試工作台（AutoQA Desktop｜Python＋Selenium）：</strong>負責定義流程範圍、環境條件與驗收標準，與 AI 協作建置支援 Chrome／Safari 之可重跑桌面工作台，整合官網例行檢查、開戶、錢包與後台審核流程，並加入失敗診斷（操作時間線、Network、Console、DOM、截圖），支援修復複測與 RD 問題追查。</li>
+                    <li><strong>內部 QA／RD 協作管理系統（Relay｜類 Jira 流程設計）：</strong>針對母子卡跨人分工與交測退回追蹤不易的痛點，主導規劃製作人／驗收人雙指派、母子卡獨立責任、交測／退回／複測輪次、Sprint／Release 與主管視角，與 AI 協作產出系統與離線四格互動原型向主管展示。</li>
+                    <li><strong>PMO 自動通知系統（狀態變更自動推播）：</strong>針對 QA 測完卡片需人工查單位、複製連結與逐筆私訊通知的痛點，設計偵測儲存「測試完成」即自動帶入卡片資訊、依需求單位（空白則沿用母卡）對應收件人推播且具防重複機制的通知工作流。</li>
+                    <li><strong>KOL Excel 薪獎工作台（已交付業務實際使用）：</strong>協助業務釐清結算規則，與 AI 協作將每月多分頁 Excel 作業系統化，涵蓋來源格式／重複檢核、多種出帳模式、月／季結、滿千發放與跨期結餘重算；設計異常阻擋機制避免猜值，預覽與下載共用同份版型快照，並於系統更新時嚴格執行回歸測試。</li>
                   </ul>
                   <div class="sandbox-jump-row no-print" aria-label="前往對應互動作品">
                     <button type="button" class="stage-sandbox-jump" data-jump-portfolio="01">體驗 AutoQA 作品 ↗</button>
                     <button type="button" class="stage-sandbox-jump" data-jump-portfolio="02">體驗 Relay 作品 ↗</button>
                     <button type="button" class="stage-sandbox-jump" data-jump-portfolio="03">體驗 PMO 通知作品 ↗</button>
-                    <button type="button" class="stage-sandbox-jump" data-jump-portfolio="04">體驗 Excel 智能彙整 ↗</button>
+                    <button type="button" class="stage-sandbox-jump" data-jump-portfolio="04">體驗 KOL 薪獎工作台 ↗</button>
                   </div>
                 </div>
               </div>
@@ -775,7 +776,7 @@
                 <div class="bio-chapter">
                   <h4>【第五份工作｜軟體QA工程師-導入自動化測試（口袋證券股份有限公司）】</h4>
                   <p>2026 年 7 月，家裡的生意上軌道後，我加入了口袋證券，回到熟悉的 QA 工作。平常主要測官網、線上開戶和後台審核。新功能進來，我會先跟 PM 確認預期結果，再寫測試案例。遇到異常，就把重現步驟、操作時間和瀏覽器收到的回應整理給 RD，修好後再跑一次。</p>
-                  <p>每次上版後，有些開戶和後台流程都得從頭點一遍。我把操作步驟和通過條件整理出來，用 AI 協助寫程式，做成 Pocket QA，再自己試跑、核對結果。跑到一半出錯，工具會留下當時的截圖和請求紀錄。以我平常負責的 Web 例行回歸項目來估，目前約八成可以用它重跑。</p>
+                  <p>每次上版後，有些開戶和後台流程都得從頭點一遍。我把操作步驟和通過條件整理出來，用 AI 協助寫程式，做成 AutoQA Desktop，再自己試跑、核對結果。跑到一半出錯，工具會留下當時的截圖和請求紀錄。以我平常負責的 Web 例行回歸項目來估，目前約八成可以用它重跑。</p>
                   <p>我也和 AI 做了 Relay，把工作卡交測或退回後該由誰接手的規則整理進去。做 KOL 薪獎工作台時，我先跟業務對 Excel 裡的算法。像是上個月的金額改了，後面幾個月的結餘要怎麼重算，我們就一起把規則釐清，再核對工具算出的報表。現在業務已經拿這套工具做結算。</p>
                 </div>
 

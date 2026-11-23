@@ -321,6 +321,7 @@
   // ---------------------------------------------------------
   const WIN_CONTACT_PROFILE = {
     name: '曹家贏 (Win)',
+    islandIdleText: 'CONNECTING · WIN',
     role: '軟體 QA 工程師｜金融服務 × AI 協作工具',
     phone: '0936-936-939',
     email: 'st25580209@gmail.com',
@@ -373,6 +374,7 @@
       avatarImg.hidden = false;
       avatarFallback.style.display = 'none';
     }
+    if (islandText) islandText.textContent = WIN_CONTACT_PROFILE.islandIdleText;
   }
 
   function updateIphoneClock() {
@@ -391,7 +393,7 @@
     islandText.textContent = msg;
     islandTimer = setTimeout(() => {
       islandEl.classList.remove('is-feedback');
-      islandText.textContent = `CONNECTING · ${WIN_CONTACT_PROFILE.name.toUpperCase()}`;
+      islandText.textContent = WIN_CONTACT_PROFILE.islandIdleText;
     }, 1800);
   }
 
@@ -594,6 +596,7 @@
           c.classList.remove('is-hidden');
           c.classList.toggle('is-dimmed', c.dataset.sys !== sysId);
         });
+        if (hobbyDividerEl) hobbyDividerEl.hidden = false;
         const targetCard = cards.find((c) => c.dataset.sys === sysId);
         targetCard?.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'center' });
         setTimeout(() => {
