@@ -7,8 +7,8 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' file:; style-src 'self' file: 'unsafe-inline'; img-src 'self' file: data:; connect-src 'none'; base-uri 'none'">
   <link rel="icon" href="data:,">
   <title>Qa-Win 的作品集與履歷表</title>
-  <link rel="stylesheet" href="./portfolio.css?v=cyber17">
-  <script src="./portfolio.js?v=cyber17" defer></script>
+  <link rel="stylesheet" href="./portfolio.css?v=cyber20">
+  <script src="./portfolio.js?v=cyber20" defer></script>
 </head>
 <body data-active-view="portfolio">
   <!-- Matrix 多層次光學景深舞台 -->
@@ -44,16 +44,25 @@
       <div class="hud-controls">
         <!-- 履歷表專用控制項 -->
         <div class="resume-hud-actions" id="resume-hud-actions" hidden>
-          <button type="button" class="pill-btn resume-print-btn" id="print-resume-btn">列印 / 另存 PDF 履歷</button>
+          <button type="button" class="pill-btn resume-print-btn" id="print-resume-btn" title="列印 / 另存 PDF 履歷" aria-label="列印 / 另存 PDF 履歷">
+            <span class="print-btn-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+            </span>
+            <span class="hud-btn-label">列印 / 另存 PDF 履歷</span>
+          </button>
         </div>
 
-        <button type="button" class="contact-win-btn" id="open-contact-phone" data-open-contact-phone aria-haspopup="dialog" aria-controls="iphone-contact-modal">
+        <button type="button" class="contact-win-btn" id="open-contact-phone" data-open-contact-phone title="聯絡Win" aria-label="聯絡Win" aria-haspopup="dialog" aria-controls="iphone-contact-modal">
           <span class="phone-ring-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
               <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
             </svg>
           </span>
-          <span>聯絡Win</span>
+          <span class="hud-btn-label">聯絡Win</span>
         </button>
       </div>
     </div>

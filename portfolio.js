@@ -724,7 +724,9 @@
     const sections = $$('[data-growth-stage]', resumeView);
     if (!sections.length) return;
 
-    const pivotY = window.innerHeight * 0.36;
+    const pivotY = window.innerWidth <= 960
+      ? Math.max(240, window.innerHeight * 0.42)
+      : window.innerHeight * 0.36;
     let chosen = sections[0];
     let bestDist = Infinity;
 

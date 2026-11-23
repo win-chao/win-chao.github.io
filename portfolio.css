@@ -1435,9 +1435,18 @@ body.modal-open .projects {
   flex-wrap: wrap;
 }
 .resume-print-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   border-color: rgba(52, 211, 153, 0.48);
   background: rgba(16, 185, 129, 0.14);
   color: #a7f3d0;
+}
+.print-btn-icon {
+  display: none;
+  align-items: center;
+  justify-content: center;
 }
 .resume-print-btn:hover {
   border-color: #34d399;
@@ -2228,28 +2237,142 @@ body[data-active-view="resume"] .growth-bg-stage {
 /* 履歷版面響應式調整 */
 @media (max-width: 960px) {
   .hud-inner {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    width: calc(100% - 20px);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    min-height: 48px;
+    padding: 6px 0;
+    gap: 8px;
+  }
+  .hud-brand {
+    visibility: hidden;
+    pointer-events: none;
+    min-width: 0;
+    overflow: hidden;
   }
   .main-view-tabs {
-    order: 3;
-    width: 100%;
+    grid-column: 2;
+    justify-self: center;
+    order: 0;
+    width: auto;
+    padding: 4px;
+    gap: 4px;
+  }
+  .main-tab-btn {
+    min-width: 78px;
+    padding: 6px 14px;
+    font-size: 13px;
+  }
+  .hud-controls {
+    grid-column: 3;
+    justify-self: end;
+    position: static;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0;
+    background: none;
+    border: 0;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .hud-btn-label {
+    display: none;
+  }
+  .print-btn-icon {
+    display: inline-flex;
+  }
+  .hud-controls .resume-print-btn,
+  .hud-controls .contact-win-btn {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
   }
+  main.portfolio {
+    padding-top: 14px;
+    padding-bottom: 36px;
+  }
+  .resume-view {
+    padding-top: 152px;
+  }
   .resume-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
   }
   .resume-anchor-rail {
     position: static;
+    min-width: 0;
+    max-width: 100%;
+    padding: 0;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    transform: none !important;
   }
   .anchor-stage-card {
-    position: sticky;
-    top: 74px;
-    z-index: 35;
+    position: fixed;
+    top: 54px;
+    left: 10px;
+    right: 10px;
+    z-index: 45;
+    padding: 8px 12px 10px;
+    border-radius: 14px;
+    background: rgba(6, 16, 36, 0.92);
+    backdrop-filter: blur(16px) saturate(170%);
+    -webkit-backdrop-filter: blur(16px) saturate(170%);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: baseline;
+    column-gap: 10px;
+  }
+  .anchor-stage-top {
+    margin-bottom: 0;
+  }
+  .rail-stage-title {
+    margin: 0;
+    font-size: 14px;
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .growth-theater-viewport {
-    height: 120px;
+    grid-column: 1 / -1;
+    height: 92px;
+    margin: 6px 0 6px;
+  }
+  .growth-progress-bar {
+    grid-column: 1 / -1;
+  }
+  .resume-anchor-nav {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 6px;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+  .resume-anchor-nav::-webkit-scrollbar {
+    display: none;
+  }
+  .anchor-link {
+    flex: none;
+    white-space: nowrap;
+    padding: 6px 11px;
+    font-size: 12px;
+  }
+  .resume-hero-card,
+  .timeline-stage-card,
+  .resume-edu-bio-grid {
+    scroll-margin-top: 202px;
   }
   .resume-pillars-grid,
   .resume-skill-grid,
@@ -2261,11 +2384,6 @@ body[data-active-view="resume"] .growth-bg-stage {
   }
 }
 @media (max-width: 600px) {
-  .main-tab-btn {
-    min-width: 96px;
-    padding: 7px 18px;
-    font-size: 14px;
-  }
   .resume-identity-bar {
     flex-direction: column;
     align-items: flex-start;
