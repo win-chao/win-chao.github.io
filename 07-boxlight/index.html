@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' file:; style-src 'self' file: 'unsafe-inline'; img-src 'self' file: data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+  <link rel="icon" href="data:,">
+  <title>箱光 BOXLIGHT · 台美股箱型決策與轉折雷達 Demo</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./demo.js" defer></script>
+</head>
+<body>
+  <aside class="sidebar" aria-label="箱光側邊導覽">
+    <a class="brand" href="../index.html">
+      <span class="brand-icon" aria-hidden="true">
+        <svg viewBox="0 0 28 28" width="24" height="24" fill="none">
+          <rect x="3" y="3" width="22" height="22" rx="5" stroke="currentColor" stroke-width="1.8"/>
+          <path d="M9 18V11m5 9V8m5 9v-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span>箱光<small>BOXLIGHT</small></span>
+    </a>
+
+    <a href="../index.html" class="back-portfolio">← 返回作品集</a>
+
+    <div class="workspace-label">每天只看重點</div>
+    <nav class="side-nav" role="tablist" aria-orientation="vertical">
+      <button type="button" class="nav-btn is-active" data-section="today"><span>▦</span>今日重點（箱型）</button>
+      <button type="button" class="nav-btn" data-section="fir"><span>⌕</span>轉折雷達 FIR</button>
+      <button type="button" class="nav-btn" data-section="personal"><span>▥</span>示範庫存 / 收藏</button>
+      <button type="button" class="nav-btn" data-section="calendar"><span>📅</span>股市日曆參考</button>
+      <button type="button" class="nav-btn" data-section="validation"><span>✓</span>模型前瞻驗證</button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <span class="online-dot"></span> 本機去識別化沙盒<small>日線箱型＋FIR 轉折雷達</small>
+      <p>等到條件到了，再出手。<br>收盤後研究工具，不自動下單。</p>
+    </div>
+  </aside>
+
+  <main class="main-wrap">
+    <header class="topbar">
+      <div>
+        <span class="eyebrow">每天收盤後，看看就好 · 模擬公開樣本資料</span>
+        <h1 id="page-title">箱型完整清單</h1>
+      </div>
+      <div class="header-actions">
+        <div class="market-switch" role="group" aria-label="市場切換">
+          <button type="button" class="seg-m is-active" data-market="TW">台股 TW</button>
+          <button type="button" class="seg-m" data-market="US">美股 US</button>
+        </div>
+        <button type="button" class="primary-btn" id="refresh-sim-btn">↻ 重整模擬日線</button>
+      </div>
+    </header>
+
+    <!-- 視圖 1：今日重點（箱型） -->
+    <section id="sec-today" class="view-sec">
+      <div class="brief-hero">
+        <div class="brief-copy">
+          <span class="brief-tag">● BOXLIGHT DECISION CORE · 原規則封存未偷放寬</span>
+          <h2>先看這檔在箱型的哪裡，再決定等還是看細節</h2>
+          <p>以訊號日前 40 根還原日線建立箱頂／箱底（不把當日突破計入箱頂，上下緣各至少 2 次相隔 4 日接觸）。台股採紅漲綠跌；所有機率皆附歷史抽樣條件與樣本數，不保證未來獲利。</p>
+        </div>
+        <div class="brief-stats">
+          <div class="stat"><b>82,574</b><span>20 日方向歷史樣本</span></div>
+          <div class="stat"><b>1,396</b><span>原箱型交易樣本</span></div>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <div class="stage-filters" role="group" aria-label="依箱型進度篩選">
+          <button type="button" class="flt-btn is-active" data-stage="all">全部階段</button>
+          <button type="button" class="flt-btn" data-stage="bottom_confirmed">箱底止穩已確認</button>
+          <button type="button" class="flt-btn" data-stage="bottom">等箱底止穩</button>
+          <button type="button" class="flt-btn" data-stage="breakout_confirmed">箱頂站穩已確認</button>
+          <button type="button" class="flt-btn" data-stage="breakout">等箱頂站穩</button>
+        </div>
+        <input type="search" id="stock-search" placeholder="找股票：代碼或名稱（如 2330 / NVDA）" aria-label="搜尋股票">
+      </div>
+
+      <div class="stock-cards" id="stock-cards"></div>
+    </section>
+
+    <!-- 視圖 2：轉折雷達 FIR -->
+    <section id="sec-fir" class="view-sec" hidden>
+      <div class="notice-banner">
+        <strong>轉折雷達 FIR 邊界說明：</strong>尋找「價格在自身 252 日歷史低位，且月營收／近似單季 EPS 正在改善」的研究對象；不核發買進資格，不替代原箱型停損。
+      </div>
+      <div class="fir-formula-card">
+        <h3>FIR 評分拆解（總分 0–100 · 全透明規則運算）</h3>
+        <div class="fir-pillars">
+          <div><strong>S_price (25)</strong><span>252 日價格百分位 P 越低分越高</span></div>
+          <div><strong>S_revenue (25)</strong><span>近 3 個月與前 3 個月平均 YoY 加速 A</span></div>
+          <div><strong>S_eps (25)</strong><span>同季 EPS 改善尺度 C / 虧損收斂 / 虧轉盈</span></div>
+          <div><strong>S_quality (25)</strong><span>毛利率／營益率同季變化（背離則警示）</span></div>
+        </div>
+      </div>
+      <div class="fir-list" id="fir-list"></div>
+    </section>
+
+    <!-- 視圖 3：示範庫存與收藏 -->
+    <section id="sec-personal" class="view-sec" hidden>
+      <div class="section-bar">
+        <div>
+          <h2>示範帳本｜我的庫存與原定防守</h2>
+          <p class="muted">固定契約：持股原本設定的「原定防守價」永遠優先於新分析參考機率。</p>
+        </div>
+        <button type="button" class="primary-btn" id="open-holding-btn">＋ 新增模擬持股</button>
+      </div>
+      <div class="holdings-grid" id="holdings-grid"></div>
+    </section>
+
+    <!-- 視圖 4：股市日曆 -->
+    <section id="sec-calendar" class="view-sec" hidden>
+      <div class="section-bar">
+        <div>
+          <h2>股市日曆｜事件前後 5 日歷史分布參考</h2>
+          <p class="muted">距今 60 天內為「近期條件參考」，超過 60 天標示為「遠期歷史參考／信心低」，稀疏樣本不捏造 0% / 100%。</p>
+        </div>
+      </div>
+      <div class="calendar-grid" id="calendar-grid"></div>
+    </section>
+
+    <!-- 視圖 5：模型前瞻驗證 -->
+    <section id="sec-validation" class="view-sec" hidden>
+      <div class="section-bar">
+        <div>
+          <h2>策略前瞻核對與誤差檢查（誠實揭露未決證據）</h2>
+          <p class="muted">先凍結事前預測 SHA，等市場開盤收盤後用還原與除權還原單位核對；不回填未來已知資料，也不將通過測試誇稱為已證實高勝率。</p>
+        </div>
+      </div>
+      <div class="val-metrics">
+        <div class="val-card"><span>有歷史參考估計</span><strong>1,974 檔</strong><small>20 日參考樣本 · 含稀疏退回</small></div>
+        <div class="val-card"><span>凍結前瞻核對中</span><strong>24 筆箱型</strong><small>含未成交／延後退出獨立計數</small></div>
+        <div class="val-card"><span>前瞻優於市場基準</span><strong>待長期獨立驗證</strong><small>舊抽樣 20 日 Brier 0.2471 vs 0.2463</small></div>
+      </div>
+      <div class="val-table-wrap">
+        <table class="val-table">
+          <thead>
+            <tr>
+              <th>版本 / 口徑</th>
+              <th>樣本數</th>
+              <th>淨獲利比例</th>
+              <th>平均淨報酬</th>
+              <th>狀態結論</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>固定 20 日持有（最近外推）</td><td>20,267 筆</td><td>41.3%</td><td>+0.839%</td><td>參考估計（非買進訊號）</td></tr>
+            <tr><td>原箱型規則（正式重算 1,822 檔）</td><td>19,608 筆</td><td>22.6% (最近段)</td><td>-0.502%</td><td>等待更長前瞻紀錄驗證濾網</td></tr>
+            <tr><td>事件 5 日分布 (v4 近期 / 遠期分離)</td><td>133 筆事件</td><td>—</td><td>—</td><td>60 天界線外降級「信心低」</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- 個股研究彈窗 -->
+  <dialog id="stock-dialog" class="box-dialog" aria-labelledby="sd-title">
+    <div class="dialog-head">
+      <h2 id="sd-title">個股研究</h2>
+      <button type="button" class="close-btn" id="close-sd-btn">×</button>
+    </div>
+    <div id="sd-body" class="dialog-body"></div>
+  </dialog>
+
+  <!-- 新增模擬持股彈窗 -->
+  <dialog id="holding-dialog" class="box-dialog" aria-labelledby="hd-title">
+    <div class="dialog-head">
+      <h2 id="hd-title">記下模擬持股</h2>
+      <button type="button" class="close-btn" id="close-hd-btn">×</button>
+    </div>
+    <form id="holding-form" class="holding-form">
+      <label>股票代碼
+        <input name="symbol" required placeholder="例如 2330 或 2454">
+      </label>
+      <label>股票名稱
+        <input name="name" required placeholder="例如 台積電">
+      </label>
+      <label>平均成本（元）
+        <input name="cost" type="number" step="0.01" min="1" required value="945">
+      </label>
+      <label>原定防守價（元 · 優先於新分析）
+        <input name="stop" type="number" step="0.01" min="1" required value="910">
+      </label>
+      <label>進場筆記
+        <input name="note" maxlength="100" value="箱底止穩確認後試單，跌破防守退出">
+      </label>
+      <button type="submit" class="primary-btn">加入示範庫存</button>
+    </form>
+  </dialog>
+</body>
+</html>

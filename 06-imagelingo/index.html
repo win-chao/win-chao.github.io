@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' file:; style-src 'self' file: 'unsafe-inline'; img-src 'self' file: data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+  <link rel="icon" href="data:,">
+  <title>圖譯工作室 ImageLingo 2.8 · AI 選框整圖翻譯 Demo</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./demo.js" defer></script>
+</head>
+<body>
+  <header class="app-header">
+    <div class="title-row">
+      <div class="brand-wrap">
+        <a href="../index.html" class="back-btn">← 作品集</a>
+        <div>
+          <h1>圖譯工作室 <span class="sub-tag">ImageLingo 2.8 · 多語言精準排版（去識別化純前端沙盒）</span></h1>
+          <p class="steps-line">匯入圖片 → 本機 RapidOCR 辨識文字框 → 勾選翻譯／保留範圍 → 單次整圖重製 → 指紋校驗匯出</p>
+        </div>
+      </div>
+      <button type="button" class="btn" id="quota-btn">剩餘額度（模擬）</button>
+    </div>
+
+    <div class="toolbar">
+      <div class="tool-group">
+        <label>原圖語言
+          <select id="source-lang" aria-label="原圖語言">
+            <option value="auto">AI 自動偵測</option>
+          </select>
+        </label>
+        <span class="arrow">→</span>
+        <label>目標語言
+          <select id="target-lang" aria-label="目標語言">
+            <option value="zh-TW" selected>繁體中文 (zh-TW)</option>
+            <option value="ja-JP">日本語 (ja-JP)</option>
+            <option value="es-ES">Español (es-ES)</option>
+            <option value="ko-KR">한국어 (ko-KR)</option>
+          </select>
+        </label>
+        <label class="check-pill">
+          <input type="checkbox" id="review-first" checked>
+          <span>先確認文字框，再開始翻譯</span>
+        </label>
+      </div>
+
+      <div class="tool-actions">
+        <button type="button" class="btn" id="run-ocr-btn">辨識文字框（本機 OCR）</button>
+        <button type="button" class="btn primary" id="generate-btn">AI 翻譯並重製圖片</button>
+        <button type="button" class="btn" id="export-btn">匯出完成圖 PNG</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <!-- 左側：圖片佇列 -->
+    <aside class="queue-panel" aria-label="圖片佇列">
+      <div class="panel-head">
+        <strong>圖片佇列 · <span id="queue-count">3</span></strong>
+        <span class="badge-mini">本機 ONNX / RapidOCR</span>
+      </div>
+      <ul class="queue-list" id="queue-list"></ul>
+
+      <div class="spec-box">
+        <strong>2.7 / 2.8 排版品質規則</strong>
+        <ul>
+          <li><strong>同級文字字級一致：</strong>以標準字高（Hx / 中日韓標準字）校正，避免 p/g/j 降部撐大字級。</li>
+          <li><strong>局部選框保護：</strong>未勾選文字明確列出於 <code>keep_original</code>，原圖引號與框外像素保留。</li>
+          <li><strong>選框指紋防呆：</strong>修改選框後將鎖定舊生成圖，防止匯出與目前勾選不符的版本。</li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- 中間：選框與整圖對照畫布 -->
+    <section class="canvas-panel" aria-label="原圖與翻譯預覽畫布">
+      <div class="view-tabs-bar">
+        <div class="seg-tabs" role="tablist">
+          <button type="button" role="tab" class="vtab is-active" data-view="compare">左右並排對照</button>
+          <button type="button" role="tab" class="vtab" data-view="source">原圖＋OCR 選框</button>
+          <button type="button" role="tab" class="vtab" data-view="result">AI 翻譯重製成品</button>
+          <button type="button" role="tab" class="vtab" data-view="payload">單次整圖請求 JSON</button>
+        </div>
+        <span class="fp-badge is-valid" id="fp-badge">指紋一致 · 可匯出</span>
+      </div>
+
+      <div class="canvas-stage" id="canvas-stage">
+        <canvas id="lingo-canvas" width="940" height="580" aria-label="ImageLingo OCR 與翻譯整圖預覽"></canvas>
+      </div>
+      <pre class="payload-pre" id="payload-pre" hidden></pre>
+
+      <div class="canvas-foot">
+        <span id="status-msg">提示：直接點擊畫布上的文字框，或勾選右側清單，即可切換「翻譯」與「保留原文」。</span>
+      </div>
+    </section>
+
+    <!-- 右側：OCR 文字區域勾選與字級校正表 -->
+    <aside class="regions-panel" aria-label="文字區域與字級校正表">
+      <div class="panel-head">
+        <strong>文字區域清單（<span id="checked-count">0</span> / <span id="total-count">0</span> 已勾選）</strong>
+        <div class="mini-actions">
+          <button type="button" class="mini-btn" id="select-all-btn">全選</button>
+          <button type="button" class="mini-btn" id="unselect-all-btn">全不選</button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="region-table">
+          <thead>
+            <tr>
+              <th>譯</th>
+              <th>原文</th>
+              <th>目標字級</th>
+              <th>譯文（可編輯）</th>
+            </tr>
+          </thead>
+          <tbody id="region-tbody"></tbody>
+        </table>
+      </div>
+    </aside>
+  </main>
+
+  <dialog id="quota-dialog" class="lingo-dialog" aria-labelledby="quota-title">
+    <div class="dialog-head">
+      <h2 id="quota-title">模型額度與本機安全狀態（Demo 模擬）</h2>
+      <button type="button" class="close-btn" id="close-quota-btn">×</button>
+    </div>
+    <div class="dialog-body">
+      <p><strong>固定模型規格：</strong>單次整圖生成（<code>gemini-3.8-flash-medium / effort: medium</code>），無逐框重繪與隱藏重試。</p>
+      <p><strong>5 小時額度餘裕：</strong>92%（Demo 模擬值） · 本機 RapidOCR 完全離線零成本。</p>
+      <p><strong>認證帳號：</strong>已套用去識別化測試身份 <code>demo.user@example.invalid</code>（不含實際 OAuth Token 或個人檔案）。</p>
+    </div>
+  </dialog>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' file:; style-src 'self' file: 'unsafe-inline'; img-src 'self' file: data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+  <link rel="icon" href="data:,">
+  <title>Still 靜穩 2.0.8 · 防 3D 暈桌面視覺舒適輔助 Demo</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./demo.js" defer></script>
+</head>
+<body>
+  <header class="page-header">
+    <div class="header-left">
+      <a href="../index.html" class="back-link">← 作品集</a>
+      <div class="brand-title">
+        <strong>STILL / 靜穩 2.0.8</strong>
+        <span>桌面視覺舒適輔助 · 去識別化純前端互動沙盒</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="ghost-btn" id="sim-turn-btn">模擬高速轉向光流</button>
+      <button type="button" class="ghost-btn" id="sim-strafe-btn">模擬斜走＋轉向</button>
+      <button type="button" class="ghost-btn" id="reset-demo-btn">重置預設</button>
+    </div>
+  </header>
+
+  <main class="still-shell">
+    <aside class="control-col" aria-label="設定控制欄">
+      <!-- 卡片 1：遊戲與效果模式 -->
+      <section class="card">
+        <h2>遊戲</h2>
+        <label class="field-label" for="target-select">遊戲視窗（每 2 秒自動刷新 · 保留目前選取）</label>
+        <select id="target-select" class="still-select">
+          <option value="apex">Apex Legends (無邊框視窗 1920×1080)</option>
+          <option value="l4d2">Left 4 Dead 2 (視窗化 2560×1440)</option>
+          <option value="cp77">Cyberpunk 2077 (無邊框視窗 1920×1080)</option>
+        </select>
+
+        <label class="field-label" for="mode-select">效果模式</label>
+        <select id="mode-select" class="still-select">
+          <option value="fixed">固定舒適（柔邊遮罩不隨操作收縮）</option>
+          <option value="visual">畫面偵測（60fps GPU 縮小光流＋可信度檢查）</option>
+          <option value="hybrid" selected>自適應 · 畫面＋輸入（推薦）</option>
+        </select>
+      </section>
+
+      <!-- 卡片 2：遮罩強度 -->
+      <section class="card">
+        <h2>遮罩強度</h2>
+        <div class="btn-row-3" role="group" aria-label="遮罩強度預設">
+          <button type="button" class="seg-btn is-active" data-mask-preset="1">低</button>
+          <button type="button" class="seg-btn" data-mask-preset="2">中</button>
+          <button type="button" class="seg-btn" data-mask-preset="3">高</button>
+        </div>
+        <p class="hint-text" id="mask-hint">動態靜止透明 96% → 峰值 86% · 邊緣不透明度 55%（保留 ≧65%×65% 中央清晰區）</p>
+        <button type="button" class="full-btn" id="open-advanced-btn">微調與進階設定（光流 / HUD 保護區 / 診斷）…</button>
+      </section>
+
+      <!-- 卡片 3：定點標的 (2.0.7 / 2.0.8) -->
+      <section class="card">
+        <h2>定點標的</h2>
+        <label class="check-row">
+          <input type="checkbox" id="ref-enabled" checked>
+          <span>啟用定點標的（固定於畫面客戶區）</span>
+        </label>
+
+        <div class="btn-row-4" role="group" aria-label="定點布局">
+          <button type="button" class="seg-btn is-active" data-ref-layout="cross">四向條</button>
+          <button type="button" class="seg-btn" data-ref-layout="edge">四角框</button>
+          <button type="button" class="seg-btn" data-ref-layout="spike">斜角尖</button>
+          <button type="button" class="seg-btn" data-ref-layout="none">無布局</button>
+        </div>
+
+        <label class="field-label" for="ref-tip">定點端點樣式</label>
+        <select id="ref-tip" class="still-select"></select>
+
+        <div class="btn-row-3" role="group" aria-label="定點強度檔位">
+          <button type="button" class="seg-btn" data-ref-strength="25">低 25</button>
+          <button type="button" class="seg-btn is-active" data-ref-strength="50">中 50</button>
+          <button type="button" class="seg-btn" data-ref-strength="75">高 75</button>
+        </div>
+
+        <div class="slider-row">
+          <input type="range" id="ref-slider" min="0" max="100" value="50" aria-label="定點強度 0 到 100">
+          <span class="mint-val" id="ref-slider-val">50</span>
+        </div>
+
+        <div class="center-row">
+          <label class="check-row compact">
+            <input type="checkbox" id="center-enabled" checked>
+            <span>中央小標的</span>
+          </label>
+          <select id="center-style" class="still-select compact-select" aria-label="中央小標的樣式">
+            <option value="cross">中空十字</option>
+            <option value="x">中空 X</option>
+            <option value="circle" selected>中空圓環</option>
+            <option value="diamond">中空菱形</option>
+          </select>
+        </div>
+
+        <label class="check-row">
+          <input type="checkbox" id="corners-enabled">
+          <span>額外細四角</span>
+        </label>
+
+        <p class="hint-text" id="ref-hint">定點固定在畫面上，不隨滑鼠或遮罩收縮移動（0 隱藏／100 延伸滿框）</p>
+      </section>
+    </aside>
+
+    <!-- 右側：16:9 即時互動預覽與光流模擬 -->
+    <section class="preview-col" aria-label="即時預覽與遊戲模擬畫面">
+      <div class="preview-header">
+        <span class="mint-title">即時預覽 · 在畫面上移動滑鼠模擬視角旋轉光流</span>
+        <div class="telemetry-pills">
+          <span class="tele-pill" id="tele-fps">分析節奏：60.0 fps</span>
+          <span class="tele-pill" id="tele-drive">Drive：0%</span>
+          <span class="tele-pill" id="tele-conf">光流可信度：96%</span>
+        </div>
+      </div>
+
+      <div class="viewport-frame">
+        <canvas id="still-preview-canvas" width="960" height="540" aria-label="Still 3D 第一人稱視角遮罩與定點預覽"></canvas>
+      </div>
+
+      <div class="footer-bar">
+        <div class="status-meta">
+          <strong id="engine-status" class="status-active">運行中 · 自適應畫面＋輸入（已通過自擷取排除檢查）</strong>
+          <span class="hotkey-hint">Ctrl+Alt+F8 開始／暫停 · Ctrl+Alt+F9 停止 · 工程強度不代表減暈療效保證</span>
+        </div>
+        <div class="engine-btns">
+          <button type="button" class="primary-btn" id="toggle-engine-btn">暫停</button>
+          <button type="button" class="stop-btn" id="stop-engine-btn">停止</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 進階設定與 HUD 保護區／診斷彈窗 -->
+  <dialog id="advanced-dialog" class="still-dialog" aria-labelledby="adv-title">
+    <div class="dialog-head">
+      <h3 id="adv-title">微調與進階設定（2.0.8 工程參數）</h3>
+      <button type="button" class="close-btn" id="close-advanced-btn" aria-label="關閉">×</button>
+    </div>
+    <div class="dialog-tabs" role="tablist">
+      <button type="button" role="tab" class="dtab is-active" data-dtab="hud">HUD 保護區</button>
+      <button type="button" role="tab" class="dtab" data-dtab="visual">視覺與門檻</button>
+      <button type="button" role="tab" class="dtab" data-dtab="diag">60fps 診斷</button>
+    </div>
+    <div class="dialog-body">
+      <div class="dpanel" data-dpanel="hud">
+        <p class="dialog-note">最多可設 6 個 HUD 保護區：保護區域不加深周邊遮罩，且排除在光流特徵之外，避免介面閃動誤觸發收縮。</p>
+        <div class="hud-zone-toggles" id="hud-zone-toggles"></div>
+      </div>
+      <div class="dpanel" data-dpanel="visual" hidden>
+        <div class="param-grid">
+          <label>最小透明中心保留
+            <input type="text" value="≧ 65% × 65%（強制安全底線）" readonly>
+          </label>
+          <label>邊緣柔邊羽化
+            <select id="feather-select">
+              <option value="soft">柔順寬羽化 (18%)</option>
+              <option value="standard" selected>標準平衡 (12%)</option>
+              <option value="crisp">俐落邊界 (7%)</option>
+            </select>
+          </label>
+          <label>可信度降級回退
+            <input type="text" value="低可信度自動平滑回到不遮蔽" readonly>
+          </label>
+          <label>靜止區塊過濾 (2.0.2 修正)
+            <input type="text" value="已排除靜止 HUD 不計入運動分母" readonly>
+          </label>
+        </div>
+      </div>
+      <div class="dpanel" data-dpanel="diag" hidden>
+        <div class="diag-box" id="diag-log"></div>
+      </div>
+    </div>
+  </dialog>
+</body>
+</html>

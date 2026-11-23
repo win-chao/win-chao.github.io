@@ -7,8 +7,8 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' file:; style-src 'self' file: 'unsafe-inline'; img-src 'self' file: data:; connect-src 'none'; base-uri 'none'">
   <link rel="icon" href="data:,">
   <title>Qa-Win 的作品集與履歷表</title>
-  <link rel="stylesheet" href="./portfolio.css?v=cyber20">
-  <script src="./portfolio.js?v=cyber20" defer></script>
+  <link rel="stylesheet" href="./portfolio.css?v=cyber21">
+  <script src="./portfolio.js?v=cyber21" defer></script>
 </head>
 <body data-active-view="portfolio">
   <!-- Matrix 多層次光學景深舞台 -->
@@ -81,6 +81,7 @@
             <button type="button" class="pill-btn" data-filter="automation">測試自動化</button>
             <button type="button" class="pill-btn" data-filter="workflow">專案管理系統</button>
             <button type="button" class="pill-btn" data-filter="settlement">Excel 智能彙整系統</button>
+            <button type="button" class="pill-btn" data-filter="hobby">興趣研發</button>
           </nav>
         </div>
 
@@ -213,6 +214,143 @@
                   <span>真實 .xlsx 解析匯出</span><span>月結／季結分段重算</span><span>畸零數跨期稽核</span>
                 </div>
                 <span class="project-cta">立即試玩：載入範例 Excel 匯入，預覽並下載結算表 →</span>
+              </div>
+            </a>
+          </article>
+
+          <div class="projects-hobby-divider" id="hobby-section-label">
+            <span class="hobby-divider-pill">興趣研發</span>
+            <p>工作之餘結合 AI 協作從痛點發想到可執行工具的個人作品（已去識別化）</p>
+          </div>
+
+          <!-- SYS-05 Still 靜穩防 3D 暈 -->
+          <article class="project-card glass-panel" data-category="hobby" data-sys="05" data-accent="matrix">
+            <span class="corner-bracket tl" aria-hidden="true"></span>
+            <span class="corner-bracket tr" aria-hidden="true"></span>
+            <span class="corner-bracket bl" aria-hidden="true"></span>
+            <span class="corner-bracket br" aria-hidden="true"></span>
+            <div class="glass-ripple-layer" aria-hidden="true"></div>
+            <div class="glass-prism-sweep" aria-hidden="true"></div>
+            <a class="project-link" href="./05-still-comfort/index.html">
+              <div class="project-top-bar">
+                <span class="sys-id" data-decrypt-text="SYS-05 // MOTION_COMFORT">SYS-05 // MOTION_COMFORT</span>
+                <span class="sys-badge">興趣研發 · 桌面輔助</span>
+              </div>
+              <div class="project-viewport">
+                <img src="./驗收截圖/05-Still-防3D暈視覺輔助.png" alt="Still 靜穩 2.0.8 的即時光流遮罩與定點標的預覽介面">
+                <div class="viewport-overlay"><span>DECODE &amp; ENTER Still ↗</span></div>
+              </div>
+              <div class="project-copy">
+                <h3>Still 靜穩 2.0.8｜防 3D 暈桌面視覺舒適輔助</h3>
+                <dl class="project-points">
+                  <dt>發現痛點</dt>
+                  <dd>玩第一人稱視角（FPS／3D）遊戲快速轉向時容易視覺疲勞與不適，市面外掛容易誤觸反作弊或遮蔽重要 HUD。</dd>
+                  <dt>主動解法</dt>
+                  <dd>設計不注入記憶體的桌面覆蓋工具：60fps GPU 畫面光流＋鍵鼠自適應偵測、保留 ≥65% 清晰區、6 組 HUD 保護區與四向／斜角定點標的。</dd>
+                </dl>
+                <div class="project-meta-chips">
+                  <span>60fps 光流驅動</span><span>3 種定點標的布局</span><span>HUD 保護區排除</span>
+                </div>
+                <span class="project-cta">立即試玩：在預覽畫布移動滑鼠模擬轉向光流，即時切換定點與保護區 →</span>
+              </div>
+            </a>
+          </article>
+
+          <!-- SYS-06 ImageLingo 整圖翻譯 -->
+          <article class="project-card glass-panel" data-category="hobby" data-sys="06" data-accent="matrix">
+            <span class="corner-bracket tl" aria-hidden="true"></span>
+            <span class="corner-bracket tr" aria-hidden="true"></span>
+            <span class="corner-bracket bl" aria-hidden="true"></span>
+            <span class="corner-bracket br" aria-hidden="true"></span>
+            <div class="glass-ripple-layer" aria-hidden="true"></div>
+            <div class="glass-prism-sweep" aria-hidden="true"></div>
+            <a class="project-link" href="./06-imagelingo/index.html">
+              <div class="project-top-bar">
+                <span class="sys-id" data-decrypt-text="SYS-06 // IMAGE_LINGO">SYS-06 // IMAGE_LINGO</span>
+                <span class="sys-badge">興趣研發 · AI 圖像翻譯</span>
+              </div>
+              <div class="project-viewport">
+                <img src="./驗收截圖/06-ImageLingo-AI整圖翻譯.png" alt="圖譯工作室 ImageLingo 2.8 的 OCR 選框與整圖翻譯對照介面">
+                <div class="viewport-overlay"><span>DECODE &amp; ENTER ImageLingo ↗</span></div>
+              </div>
+              <div class="project-copy">
+                <h3>圖譯工作室 ImageLingo 2.8｜AI 選框整圖翻譯</h3>
+                <dl class="project-points">
+                  <dt>發現痛點</dt>
+                  <dd>產品截圖本地化若逐框硬貼字會破壞背景、字級因降部高低亂跳，未勾選區域也常被 AI 意外重繪。</dd>
+                  <dt>主動解法</dt>
+                  <dd>結合本機 RapidOCR 選框、<code>translate_only / keep_original</code> 單次整圖請求、CJK 標準字高校正與選框指紋防呆。</dd>
+                </dl>
+                <div class="project-meta-chips">
+                  <span>本機 OCR 零費用</span><span>同層 CJK 字級校正</span><span>選框指紋鎖定保護</span>
+                </div>
+                <span class="project-cta">立即試玩：點擊原圖文字框切換翻譯／保留原文，查看跨語系整圖對照 →</span>
+              </div>
+            </a>
+          </article>
+
+          <!-- SYS-07 BOXLIGHT 箱光股票系統 -->
+          <article class="project-card glass-panel" data-category="hobby" data-sys="07" data-accent="matrix">
+            <span class="corner-bracket tl" aria-hidden="true"></span>
+            <span class="corner-bracket tr" aria-hidden="true"></span>
+            <span class="corner-bracket bl" aria-hidden="true"></span>
+            <span class="corner-bracket br" aria-hidden="true"></span>
+            <div class="glass-ripple-layer" aria-hidden="true"></div>
+            <div class="glass-prism-sweep" aria-hidden="true"></div>
+            <a class="project-link" href="./07-boxlight/index.html">
+              <div class="project-top-bar">
+                <span class="sys-id" data-decrypt-text="SYS-07 // BOXLIGHT_FIR">SYS-07 // BOXLIGHT_FIR</span>
+                <span class="sys-badge">興趣研發 · 量化研究工具</span>
+              </div>
+              <div class="project-viewport">
+                <img src="./驗收截圖/07-Boxlight-箱光股票系統.png" alt="箱光 BOXLIGHT 台美股箱型決策與轉折雷達介面">
+                <div class="viewport-overlay"><span>DECODE &amp; ENTER BOXLIGHT ↗</span></div>
+              </div>
+              <div class="project-copy">
+                <h3>箱光 BOXLIGHT｜台美股箱型觀察與轉折雷達 FIR</h3>
+                <dl class="project-points">
+                  <dt>發現痛點</dt>
+                  <dd>追新聞看盤容易追高殺低，且回測常忽略資料公布日時間差（Look-ahead Bias）或用歷史百分比過度包裝勝率。</dd>
+                  <dt>主動解法</dt>
+                  <dd>定義 40 日箱型頂底規則＋252 日低位×營收／EPS 加速的 FIR 轉折評分，搭配原防守價優先保護、事前 SHA 封存與前瞻核對。</dd>
+                </dl>
+                <div class="project-meta-chips">
+                  <span>台美股 40 日箱型</span><span>FIR 基本面轉折評分</span><span>原定防守價優先契約</span>
+                </div>
+                <span class="project-cta">立即試玩：篩選台美股箱型階段、拆解 FIR 四維評分與示範庫存防守 →</span>
+              </div>
+            </a>
+          </article>
+
+          <!-- SYS-08 我們的記事本 -->
+          <article class="project-card glass-panel" data-category="hobby" data-sys="08" data-accent="matrix">
+            <span class="corner-bracket tl" aria-hidden="true"></span>
+            <span class="corner-bracket tr" aria-hidden="true"></span>
+            <span class="corner-bracket bl" aria-hidden="true"></span>
+            <span class="corner-bracket br" aria-hidden="true"></span>
+            <div class="glass-ripple-layer" aria-hidden="true"></div>
+            <div class="glass-prism-sweep" aria-hidden="true"></div>
+            <a class="project-link" href="./08-our-notebook/index.html">
+              <div class="project-top-bar">
+                <span class="sys-id" data-decrypt-text="SYS-08 // OUR_NOTEBOOK">SYS-08 // OUR_NOTEBOOK</span>
+                <span class="sys-badge">興趣研發 · 全端協作應用</span>
+              </div>
+              <div class="project-viewport">
+                <img src="./驗收截圖/08-OurNotebook-雙人共同記事本.png" alt="雙人共同記事本與金字塔堆疊清單的去識別化互動介面">
+                <div class="viewport-overlay"><span>DECODE &amp; ENTER Notebook ↗</span></div>
+              </div>
+              <div class="project-copy">
+                <h3>雙人 LINE LIFF 共同記事本與相簿空間</h3>
+                <dl class="project-points">
+                  <dt>發現痛點</dt>
+                  <dd>LINE 原生記事本不好搜尋分類、清單勾選後完成項目散落難整理，且兩人同時修改容易靜默覆蓋彼此內容。</dd>
+                  <dt>主動解法</dt>
+                  <dd>設計雙人專屬 Cloudflare D1＋Drive 雲端空間：清單採金字塔堆疊排序、樂觀鎖 Revision 版本保留、主題色自動對比計算與紀念日儀表板。</dd>
+                </dl>
+                <div class="project-meta-chips">
+                  <span>清單金字塔堆疊排序</span><span>Revision 樂觀鎖防覆蓋</span><span>自動對比度動態主題</span>
+                </div>
+                <span class="project-cta">立即試玩：切換雙人身分體驗清單金字塔排序、發布記事與動態換色 →</span>
               </div>
             </a>
           </article>

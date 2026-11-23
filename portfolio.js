@@ -301,6 +301,7 @@
   // ---------------------------------------------------------
   // 3. 作品分類篩選 (全部系統 / 測試自動化 / 專案管理系統 / Excel 智能彙整系統)
   // ---------------------------------------------------------
+  const hobbyDividerEl = $('#hobby-section-label');
   $$('#portfolio-filter-pills .pill-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       const filter = btn.dataset.filter;
@@ -309,6 +310,9 @@
         const show = filter === 'all' || card.dataset.category === filter;
         card.classList.toggle('is-hidden', !show);
       });
+      if (hobbyDividerEl) {
+        hobbyDividerEl.hidden = !(filter === 'all' || filter === 'hobby');
+      }
     });
   });
 
