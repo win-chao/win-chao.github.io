@@ -167,7 +167,7 @@ function kolsTable() {
   });
   return table([
     ['行銷碼'], ['KOL 姓名'], ['合作期間（民國）'], ['結算方式'], ['出帳方式'],
-    ['平台出帳（目前）', true], ['期初結餘', true], ['期初適用月份'], ['操作']
+    ['平台出帳（目前）', true], ['期初結餘', true], ['期初適用月份'], ['操作', true]
   ], rows);
 }
 
@@ -226,7 +226,7 @@ function reportTable() {
     <td><div class="actions"><button class="btn text" type="button" data-detail="${report.code}">明細</button>
       <button class="btn" type="button" data-preview="${report.code}" ${report.status === 'ready' ? '' : 'disabled'}>預覽 Excel</button></div></td>
   </tr>`);
-  return table([['KOL'], ['結算期間'], ['已匯入獎金', true], ['實際發放', true], ['本次結餘', true], ['狀態'], ['操作']], rows, 'demo-report');
+  return table([['KOL'], ['結算期間'], ['已匯入獎金', true], ['實際發放', true], ['本次結餘', true], ['狀態'], ['操作', true]], rows, 'demo-report');
 }
 
 function renderReports() {

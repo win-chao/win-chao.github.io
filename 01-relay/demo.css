@@ -72,11 +72,7 @@ button, select { font-family: inherit; }
 .kanban-reviewer .kanban-assignee-avatar { border-color: #eab308; background: #fef9c3; color: #854d0e; }
 .kanban-assignee-avatar:hover { transform: scale(1.06); }
 
-/* Dashboard & filters */
-.dashboard-metric .metric-card { display: block; border: 0; background: transparent; color: inherit; width: 100%; text-align: left; padding: 0; cursor: pointer; }
-.dashboard-metric.is-selected { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(91, 91, 214, 0.16); }
-.dashboard-settings-link { margin-top: 8px; border: 0; background: transparent; color: var(--accent); font-size: 12px; font-weight: 600; padding: 0; cursor: pointer; }
-.dashboard-settings-link:hover { text-decoration: underline; }
+/* Dashboard & filters (uses relay.css native .dashboard-metric, .metric-card, .dashboard-settings-link) */
 .dashboard-status-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
 
 /* Issue detail & Handoff & Activity */
@@ -102,9 +98,10 @@ button, select { font-family: inherit; }
 .listing-filters { display: grid; gap: 12px; position: sticky; top: 18px; }
 .listing-filter-group { display: grid; gap: 4px; }
 .listing-filter-group summary { cursor: pointer; font-weight: 700; font-size: 13px; padding: 4px 0; }
-.listing-filter-options { display: grid; gap: 4px; padding-top: 4px; max-height: 170px; overflow-y: auto; }
+.listing-filter-options { display: grid; gap: 4px; padding-top: 4px; }
 .listing-filter-options label { display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; }
-.horizontal-issue-row { display: grid; grid-template-columns: 20px 64px minmax(180px, 1fr) 110px 92px 132px 54px 54px minmax(90px, auto); gap: 10px; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--line); font-size: 13px; }
+.horizontal-issue-list { overflow-x: auto; }
+.horizontal-issue-row { display: grid; grid-template-columns: 20px 64px minmax(180px, 1fr) 110px 84px 132px 54px 54px minmax(130px, auto); gap: 10px; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--line); font-size: 13px; }
 .horizontal-issue-row.sprint-table-header { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; background: #f8fafc; border-radius: 8px 8px 0 0; }
 .aligned-issue-reference { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-weight: 700; color: var(--accent); font-size: 12px; }
 .issue-project-tag { display: inline-block; background: #eef2ff; color: #3730a3; padding: 2px 7px; border-radius: 5px; font-size: 11px; font-weight: 700; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

@@ -644,16 +644,16 @@
         </label>
       </section>
 
-      <div class="grid grid-4 dashboard-metrics" style="margin:16px 0">
+      <div class="dashboard-metrics-sticky"><div class="grid grid-4 dashboard-metrics">
         ${buckets.map((b) => `<section class="card dashboard-metric ${b.key === active.key ? 'is-selected' : ''}">
           <button type="button" class="metric-card" data-dash-bucket="${b.key}">
             <div class="metric">${b.items.length}</div>
             <div class="metric-label">${b.label}</div>
-            <small class="eyebrow">查看下方工作清單</small>
+            <small>查看下方工作清單</small>
           </button>
           <button type="button" class="dashboard-settings-link" data-dash-custom="${b.key}">自訂 Status</button>
         </section>`).join('')}
-      </div>
+      </div></div>
 
       <section class="card dashboard-attention" style="margin-bottom:16px">
         <h2>需要注意 <span class="badge badge-orange">${attention.length}</span></h2>
@@ -741,7 +741,7 @@
             ${cards.map((i) => {
               const st = statusByCode(i.status);
               const isDone = st && state.teamCompletionIds.includes(st.id);
-              return `<a href="#issue/${esc(i.issueKey)}" class="card" style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-left:4px solid ${isDone ? 'var(--green)' : 'var(--red)'}">
+              return `<a href="#issue/${esc(i.issueKey)}" class="card" style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-radius:8px;overflow:hidden;border-left:4px solid ${isDone ? 'var(--green)' : 'var(--red)'}">
                 <span><b class="aligned-issue-reference">${esc(i.issueKey)}</b> ${esc(i.title)}</span>
                 <span style="display:flex;align-items:center;gap:8px">${statusBadgeHtml(i.status)}<span class="eyebrow">${i.assigneeId === u.id ? '負責人' : ''}${i.reviewerId === u.id ? ' 驗收人' : ''} · ${i.estimatedHours || 0}h</span></span>
               </a>`;
@@ -813,7 +813,7 @@
                 <div class="issue-title"><a href="#issue/${esc(i.issueKey)}">${esc(i.title)}</a>${tagPillsHtml(i.tagIds)}</div>
                 <div class="issue-card-sub">${esc(TYPE_LABELS[i.type] || i.type)}${i.estimatedHours ? ` · ${i.estimatedHours}h` : ''}</div>
                 <div class="issue-meta">
-                  ${statusInlineHtml(i)}
+                  ${statusBadgeHtml(i.status)}
                   <div class="kanban-assign-pair">${assigneePickerHtml(i, 'maker')}${assigneePickerHtml(i, 'reviewer')}</div>
                 </div>
               </article>`).join('') || '<p class="eyebrow" style="margin:8px 2px">尚無卡片</p>'}
@@ -937,7 +937,7 @@
             </div>
           </div>
           <div class="horizontal-issue-list">${horizontalHeaderHtml('排程')}
-            ${cards.map((i) => horizontalRowHtml(i, `<span class="eyebrow">${esc(i.plannedStartAt || '—')} ～ ${esc(i.plannedEndAt || '—')}</span>`)).join('') || '<p class="empty-state">尚未加入卡片，可點右上角「＋ 加入卡片」。</p>'}
+            ${cards.map((i) => horizontalRowHtml(i, `<span class="eyebrow" style="white-space:nowrap">${esc(i.plannedStartAt ? i.plannedStartAt.slice(5).replace('-', '/') : '—')} ～ ${esc(i.plannedEndAt ? i.plannedEndAt.slice(5).replace('-', '/') : '—')}</span>`)).join('') || '<p class="empty-state">尚未加入卡片，可點右上角「＋ 加入卡片」。</p>'}
           </div>
         </section>`;
       }).join('')}
@@ -1071,7 +1071,7 @@
         <button type="button" class="btn" onclick="history.back()">← 返回</button>
       </div>
       <div style="display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
-        <h1 style="margin:0"><span class="aligned-issue-reference" style="font-size:24px">${esc(alignedRef(issue))}</span> ·
+        <h1 style="margin:0"><span class="issue-key-fixed">${esc(issue.issueKey)} · </span>
           <button type="button" class="issue-title-editable" id="edit-issue-title">${esc(issue.title)}</button></h1>
         ${tagPillsHtml(issue.tagIds)}
         <button type="button" class="btn" id="add-tag-btn">Add tag +</button>
@@ -1095,7 +1095,17 @@
           ${['USERSTORY', 'ISSUE', 'EPIC'].includes(issue.type) ? `<section class="card tasks-card" style="margin-bottom:16px">
             <div class="toolbar"><h2>${issue.type === 'EPIC' ? '子工作項目' : 'Tasks'} <span class="eyebrow">(${tasks.length})</span></h2>
               <button type="button" class="btn btn-primary" id="btn-quick-task" data-parent="${esc(issue.id)}">＋ 新增 ${issue.type === 'EPIC' ? '子項目' : 'Task'}</button></div>
-            ${tasks.length ? `<div class="horizontal-issue-list">${horizontalHeaderHtml()}${tasks.map((t) => horizontalRowHtml(t)).join('')}</div>` : '<p class="eyebrow">尚未建立子工作項目。</p>'}
+            ${tasks.length ? `<div class="issue-task-table">
+              <div class="issue-task-row issue-task-header" aria-hidden="true"><span>編號</span><span>標題</span><span>專案</span><span>狀態</span><span class="person-column-heading">負責人</span><span class="person-column-heading">驗收人</span></div>
+              ${tasks.map((t) => `<div class="issue-task-row">
+                <a class="child-key aligned-issue-reference" href="#issue/${esc(t.issueKey)}">${esc(alignedRef(t))}</a>
+                <a class="issue-task-title child-title" href="#issue/${esc(t.issueKey)}">${esc(t.title)}</a>
+                <span class="child-project">${projectTagHtml(t)}</span>
+                <span class="child-status">${statusInlineHtml(t)}</span>
+                <span class="child-maker">${assigneePickerHtml(t, 'maker')}</span>
+                <span class="child-reviewer">${assigneePickerHtml(t, 'reviewer')}</span>
+              </div>`).join('')}
+            </div>` : '<p class="eyebrow">尚未建立子工作項目。</p>'}
           </section>` : ''}
 
           ${issue.type !== 'EPIC' ? `<section class="card" style="margin-bottom:16px" aria-label="同卡交接">

@@ -3,7 +3,7 @@
 const { complete, unitName, acceptedEdit, confirmedChange, confirmedTask, referenceURLs } = window.pmoRules;
 const project = 'demo';
 const initialMessage = '這張卡已測試完成，可以開始驗收了，謝謝！';
-const testRecipient = 'QA（自己）';
+const testRecipient = 'QA 本人';
 const defaultRecipients = {
   '產品企劃': '林晴',
   '營運支援': '莊安',
