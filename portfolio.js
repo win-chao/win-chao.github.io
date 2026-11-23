@@ -110,7 +110,7 @@
       ctx.save();
       ctx.font = `700 ${s.fontSize}px ui-monospace, SFMono-Regular, Menlo, monospace`;
       if (isNear) {
-        ctx.shadowColor = 'rgba(0, 255, 65, 0.75)';
+        ctx.shadowColor = 'rgba(34, 211, 238, 0.78)';
         ctx.shadowBlur = 20;
       }
 
@@ -120,10 +120,10 @@
         const fade = (1 - i / s.chars.length) * s.alpha * boost;
         if (i === 0) {
           ctx.fillStyle = isNear
-            ? `rgba(210, 255, 218, ${Math.min(0.42, s.alpha * 1.9 * boost)})`
-            : `rgba(230, 255, 234, ${Math.min(0.95, s.alpha * 2.1 * boost)})`;
+            ? `rgba(224, 247, 255, ${Math.min(0.42, s.alpha * 1.9 * boost)})`
+            : `rgba(235, 250, 255, ${Math.min(0.95, s.alpha * 2.1 * boost)})`;
         } else {
-          ctx.fillStyle = `rgba(0, 255, 65, ${Math.min(0.85, fade).toFixed(3)})`;
+          ctx.fillStyle = `rgba(34, 211, 238, ${Math.min(0.85, fade).toFixed(3)})`;
         }
         ctx.fillText(s.chars[i], px, cy);
       }
@@ -165,11 +165,11 @@
       ctx.save();
       ctx.font = `${f.isNear ? 700 : 500} ${f.fontSize}px ui-monospace, SFMono-Regular, Menlo, monospace`;
       if (f.isNear) {
-        ctx.shadowColor = 'rgba(0, 255, 65, 0.7)';
+        ctx.shadowColor = 'rgba(56, 189, 248, 0.75)';
         ctx.shadowBlur = 14;
-        ctx.fillStyle = `rgba(125, 255, 155, ${overdrive ? 0.38 : 0.28})`;
+        ctx.fillStyle = `rgba(165, 243, 252, ${overdrive ? 0.38 : 0.28})`;
       } else {
-        ctx.fillStyle = `rgba(0, 255, 65, ${overdrive ? 0.3 : 0.22})`;
+        ctx.fillStyle = `rgba(56, 189, 248, ${overdrive ? 0.32 : 0.22})`;
       }
       ctx.fillText(f.text, px, py);
       ctx.restore();
@@ -420,9 +420,9 @@
   const themeBtn = $('#theme-toggle');
   const themeLabel = $('#theme-label');
   themeBtn?.addEventListener('click', () => {
-    const next = document.documentElement.dataset.theme === 'overdrive' ? 'matrix' : 'overdrive';
+    const next = document.documentElement.dataset.theme === 'overdrive' ? 'cyber' : 'overdrive';
     document.documentElement.dataset.theme = next;
-    themeLabel.textContent = next === 'overdrive' ? 'OVERDRIVE' : 'MATRIX_CORE';
+    themeLabel.textContent = next === 'overdrive' ? 'OVERDRIVE' : 'CYBER_CORE';
     if (reducedMotion) drawCanvas();
   });
 
