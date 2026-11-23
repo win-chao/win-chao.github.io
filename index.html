@@ -10,30 +10,114 @@
 </head>
 <body>
   <main class="portfolio">
-    <header>
+    <header class="hero">
+      <p class="eyebrow">Web QA 測試工程師 · 流程改善 × AI 協作工具開發</p>
       <h1>Qa-Win的作品集</h1>
-      <p>選擇作品，用模擬資料試跑一遍核心流程。</p>
+      <p class="lead">專注於證券／金融服務網頁驗證（官網、線上開戶、CMS 後台審核與跨系統介接）。在日常測試中不只回報單點 Bug，更習慣主動觀察團隊與跨部門的重複作業、溝通斷點，由我梳理業務規則、例外邊界與驗收標準，並結合 AI 協作將解法做成可實際操作、可留存證據的工具。</p>
+      <div class="traits" aria-label="工作方法與特質">
+        <section class="trait">
+          <h2>主動把痛點變工具</h2>
+          <p>看到反覆人工回歸、交接資訊漏接或複雜人工作業，主動定義流程並推動工具化解決。</p>
+        </section>
+        <section class="trait">
+          <h2>重視可查核的證據</h2>
+          <p>堅持完整原圖截圖、操作時間線與預期／實際對照，讓 RD 與 PM 能一次看懂並精準定位。</p>
+        </section>
+        <section class="trait">
+          <h2>規則設計 × AI 協作</h2>
+          <p>由本人負責需求拆解、邊界條件與驗收把關，結合 AI 協作快速實作並依實際使用回饋迭代。</p>
+        </section>
+      </div>
     </header>
-    <div class="projects" aria-label="作品">
-      <article class="project relay">
-        <a class="project-link" href="./01-relay/index.html">
-          <div class="project-image"><img src="./驗收截圖/01-Relay-雙角色工作台.png" alt="Relay 的 RD 與 QA 左右工作台"></div>
-          <div class="project-copy"><h2>Relay</h2><p>在左右角色工作台拆子卡、指派、交接與複測。</p><span>操作 Relay 工作台</span></div>
-        </a>
-      </article>
-      <article class="project pmo">
-        <a class="project-link" href="./02-pmo-slack/index.html">
-          <div class="project-image"><img src="./驗收截圖/02-PMO-Slack-測試完成通知.png" alt="PMO 驗收通知設定與模擬 Slack 訊息"></div>
-          <div class="project-copy"><h2>PMO 測試完成通知</h2><p>編輯卡片、通知內容與收件人，查看右側 Slack 私訊。</p><span>操作通知流程</span></div>
-        </a>
-      </article>
-      <article class="project payroll">
-        <a class="project-link" href="./03-excel-payroll/index.html">
-          <div class="project-image"><img src="./驗收截圖/03-KOL薪獎-匯入範例.png" alt="KOL 薪獎工作台的 Excel 匯入畫面"></div>
-          <div class="project-copy"><h2>Excel 薪獎系統</h2><p>匯入範例 Excel，查看月結、季結與出帳結果，下載結算表。</p><span>操作薪獎工作台</span></div>
-        </a>
-      </article>
-    </div>
+
+    <section aria-labelledby="projects-heading">
+      <div class="section-bar">
+        <h2 id="projects-heading">互動作品展示（點擊即可在瀏覽器直接操作）</h2>
+        <p>以下皆為去識別化後的純前端互動沙盒，無須登入即可試跑完整核心流程。</p>
+      </div>
+
+      <div class="projects" aria-label="作品清單">
+        <article class="project pocket-qa">
+          <a class="project-link" href="./04-pocket-qa/index.html">
+            <div class="project-image">
+              <img src="./驗收截圖/04-Pocket-QA-測試工作台.png" alt="Pocket QA Desktop 的測試流程清單與執行安排">
+            </div>
+            <div class="project-copy">
+              <div class="project-tag">自動化測試與診斷</div>
+              <h3>Pocket QA Desktop</h3>
+              <dl class="project-points">
+                <dt>發現痛點</dt>
+                <dd>例行上版回歸流程重複度高，且失敗時常缺乏當下畫面與時間線證據，增加 RD 追查成本。</dd>
+                <dt>主動解法</dt>
+                <dd>規劃可自選流程、排程順序與重跑的桌面工作台，在失敗當下自動保存完整原圖截圖與步驟紀錄，並產出可離線分享的 HTML 報告。</dd>
+              </dl>
+              <span class="project-cta">立即試玩：切「故障示範」看自動截圖與 HTML 報告 →</span>
+            </div>
+          </a>
+        </article>
+
+        <article class="project relay">
+          <a class="project-link" href="./01-relay/index.html">
+            <div class="project-image">
+              <img src="./驗收截圖/01-Relay-雙角色工作台.png" alt="Relay 的 RD 與 QA 左右工作台">
+            </div>
+            <div class="project-copy">
+              <div class="project-tag">跨角色協作流程設計</div>
+              <h3>Relay 專案與交接工作台</h3>
+              <dl class="project-points">
+                <dt>發現痛點</dt>
+                <dd>一張母卡常拆出多位 RD／QA 負責的子卡，只看單一狀態容易搞混「現在輪到誰」，退回複測也常要反覆口頭確認。</dd>
+                <dt>主動解法</dt>
+                <dd>設計製作人／驗收人雙指派與母子卡獨立交接規則，用左右雙角色工作台與看板即時呈現待辦流向與退回紀錄。</dd>
+              </dl>
+              <span class="project-cta">立即試玩：在左右工作台拆子卡、提交驗收或拖曳交接 →</span>
+            </div>
+          </a>
+        </article>
+
+        <article class="project pmo">
+          <a class="project-link" href="./02-pmo-slack/index.html">
+            <div class="project-image">
+              <img src="./驗收截圖/02-PMO-Slack-測試完成通知.png" alt="PMO 驗收通知設定與模擬 Slack 訊息">
+            </div>
+            <div class="project-copy">
+              <div class="project-tag">驗收通知自動化</div>
+              <h3>PMO 測試完成 Slack 通知</h3>
+              <dl class="project-points">
+                <dt>發現痛點</dt>
+                <dd>QA 測完卡片後需人工逐筆查需求單位、複製連結並私訊通知驗收，容易漏發或重複通知。</dd>
+                <dt>主動解法</dt>
+                <dd>設計狀態變更觸發與防重機制：偵測儲存「測試完成」時自動帶入卡片資訊、依需求單位（空白則沿用母卡）對應收件人發送通知。</dd>
+              </dl>
+              <span class="project-cta">立即試玩：將狀態改為「測試完成」並儲存，看右側 Slack 私訊 →</span>
+            </div>
+          </a>
+        </article>
+
+        <article class="project payroll">
+          <a class="project-link" href="./03-excel-payroll/index.html">
+            <div class="project-image">
+              <img src="./驗收截圖/03-KOL薪獎-匯入範例.png" alt="KOL 薪獎工作台的 Excel 匯入畫面">
+            </div>
+            <div class="project-copy">
+              <div class="project-tag">跨部門業務流程工具（實際上線使用中）</div>
+              <h3>KOL Excel 薪獎工作台</h3>
+              <dl class="project-points">
+                <dt>發現痛點</dt>
+                <dd>業務每月須人工核對多份 Excel 績效表、A／B／A+B 三種出帳模式、月結／季結與跨期結餘，極易算錯且不易回溯。</dd>
+                <dt>主動解法</dt>
+                <dd>協助釐清結算與例外規則（滿千發放、畸零數承接、異動重算），做出可預覽並沿用原業務版型匯出 Excel 的工作台。</dd>
+              </dl>
+              <span class="project-cta">立即試玩：載入範例 Excel 匯入，預覽並下載結算表 →</span>
+            </div>
+          </a>
+        </article>
+      </div>
+    </section>
+
+    <footer class="portfolio-footer">
+      <p>說明：所有作品均由本人負責痛點發掘、規則定義、邊界條件與驗收把關，並結合 AI 協作完成開發；本網站展示內容皆已替換為去識別化模擬資料，於瀏覽器本機獨立運行。</p>
+    </footer>
   </main>
 </body>
 </html>
