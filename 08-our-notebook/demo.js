@@ -4,7 +4,7 @@
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
-  const CATEGORIES = ['生活', '約會', '旅行', '想吃', '回憶', '重要'];
+  const CATEGORIES = ['生活', '工作', '旅行', '想吃', '靈感', '重要'];
   const PALETTES = [
     { id: 'green', name: '薄荷綠' },
     { id: 'pink', name: '櫻花粉' },
@@ -13,9 +13,9 @@
   ];
 
   const ALBUMS = [
-    { title: '秋季京都散步紀錄', count: 18, date: '2026-10', svg: '<svg viewBox="0 0 240 120" width="210" height="105"><rect width="240" height="120" rx="12" fill="#fce8df"/><circle cx="185" cy="34" r="18" fill="#f59e0b" opacity="0.65"/><path d="M0 95 Q60 65 120 88 T240 82 L240 120 L0 120 Z" fill="#c2410c" opacity="0.72"/><rect x="86" y="46" width="8" height="44" fill="#991b1b"/><rect x="146" y="46" width="8" height="44" fill="#991b1b"/><rect x="70" y="38" width="100" height="10" rx="4" fill="#b91c1c"/></svg>' },
-    { title: '週末手作甜點與手沖地圖', count: 12, date: '2026-11', svg: '<svg viewBox="0 0 240 120" width="210" height="105"><rect width="240" height="120" rx="12" fill="#e6f4ec"/><rect x="82" y="48" width="76" height="42" rx="12" fill="#1d754b"/><path d="M158 58 Q176 58 176 70 Q176 82 158 82" stroke="#1d754b" stroke-width="6" fill="none"/><path d="M104 38 Q108 26 102 18 M124 38 Q128 24 122 16" stroke="#86efac" stroke-width="3.5" stroke-linecap="round" fill="none"/></svg>' },
-    { title: '淡水河岸日落小旅行', count: 9, date: '2026-09', svg: '<svg viewBox="0 0 240 120" width="210" height="105"><rect width="240" height="120" rx="12" fill="#e0eefc"/><circle cx="120" cy="64" r="24" fill="#fb7185"/><path d="M0 78 Q60 70 120 78 T240 78 L240 120 L0 120 Z" fill="#2563eb" opacity="0.6"/></svg>' }
+    { title: '秋季京都行程紀錄', count: 18, date: '2026-10', svg: '<svg viewBox="0 0 240 120" width="210" height="105"><rect width="240" height="120" rx="12" fill="#fce8df"/><circle cx="185" cy="34" r="18" fill="#f59e0b" opacity="0.65"/><path d="M0 95 Q60 65 120 88 T240 82 L240 120 L0 120 Z" fill="#c2410c" opacity="0.72"/><rect x="86" y="46" width="8" height="44" fill="#991b1b"/><rect x="146" y="46" width="8" height="44" fill="#991b1b"/><rect x="70" y="38" width="100" height="10" rx="4" fill="#b91c1c"/></svg>' },
+    { title: '團隊午茶與手沖咖啡地圖', count: 12, date: '2026-11', svg: '<svg viewBox="0 0 240 120" width="210" height="105"><rect width="240" height="120" rx="12" fill="#e6f4ec"/><rect x="82" y="48" width="76" height="42" rx="12" fill="#1d754b"/><path d="M158 58 Q176 58 176 70 Q176 82 158 82" stroke="#1d754b" stroke-width="6" fill="none"/><path d="M104 38 Q108 26 102 18 M124 38 Q128 24 122 16" stroke="#86efac" stroke-width="3.5" stroke-linecap="round" fill="none"/></svg>' },
+    { title: '淡水河岸單車路線紀錄', count: 9, date: '2026-09', svg: '<svg viewBox="0 0 240 120" width="210" height="105"><rect width="240" height="120" rx="12" fill="#e0eefc"/><circle cx="120" cy="64" r="24" fill="#fb7185"/><path d="M0 78 Q60 70 120 78 T240 78 L240 120 L0 120 Z" fill="#2563eb" opacity="0.6"/></svg>' }
   ];
 
   const state = {
@@ -25,8 +25,6 @@
     query: '',
     palette: 'green',
     mode: 'light',
-    daysLabel: '在一起',
-    daysStart: '2025-06-22',
     notes: [
       {
         id: 'n1', pinned: true, deleted: false, author: '宇', category: '旅行', kind: 'checklist',
@@ -34,7 +32,7 @@
         body: '禮拜六早上八點出發，預備品清單如下：',
         items: [
           { id: 'c1', label: '確認民宿入住密碼與停車位', completed: false },
-          { id: 'c2', label: '攜帶雙人雨衣與行動電源', completed: false },
+          { id: 'c2', label: '攜帶輕便雨衣與行動電源', completed: false },
           { id: 'c3', label: '訂好海邊咖啡廳下午茶座位', completed: true },
           { id: 'c4', label: '列印高鐵來回取票序號', completed: true }
         ],
@@ -57,25 +55,25 @@
       },
       {
         id: 'n3', pinned: false, deleted: false, author: '宇', category: '生活', kind: 'note',
-        title: '家裡備品補貨備忘（週末大賣場）', revision: 3, liked: true, likeCount: 1,
-        body: '1. 濾掛咖啡剩 4 包，要補深焙款\n2. 洗碗精與海綿快見底\n3. 貓咪零食凍乾記得買兩罐',
+        title: '辦公室茶水間補貨備忘（週末採買）', revision: 3, liked: true, likeCount: 1,
+        body: '1. 濾掛咖啡剩 4 包，要補深焙款\n2. 洗碗精與擦手紙快見底\n3. 氣泡水箱裝記得補兩箱',
         items: [],
         comments: [
-          { author: '晴', text: '我順便幫你把冷凍水餃記在心上～' }
+          { author: '安', text: '我順便把無糖綠茶也補進採購單囉！' }
         ],
         history: ['第 3 版 (小宇)：加註深焙濾掛偏好']
       },
       {
-        id: 'n4', pinned: false, deleted: false, author: '晴', category: '重要', kind: 'note',
-        title: '週年紀念晚餐備案餐廳', revision: 1, liked: false, likeCount: 2,
-        body: 'A 方案：陽明山夜景義式小餐館（有壽星甜點）\nB 方案：市政府附近無菜單鐵板燒',
+        id: 'n4', pinned: false, deleted: false, author: '安', category: '工作', kind: 'note',
+        title: '部門季末聚餐備案餐廳', revision: 1, liked: false, likeCount: 2,
+        body: 'A 方案：信義區義式小餐館（可預約 8 人包廂）\nB 方案：市政府附近鐵板燒（需提前一週訂位）',
         items: [],
         comments: [],
-        history: ['第 1 版 (小晴)：建立初次筆記']
+        history: ['第 1 版 (小安)：建立初次筆記']
       },
       {
         id: 'n5', pinned: false, deleted: true, author: '宇', category: '生活', kind: 'note',
-        title: '舊的週末採買草稿（已移至垃圾桶）', revision: 1, liked: false, likeCount: 0,
+        title: '舊的週會採買草稿（已移至垃圾桶）', revision: 1, liked: false, likeCount: 0,
         body: '這篇可以點擊「復原記事」找回。',
         items: [],
         comments: [],
@@ -97,13 +95,6 @@
     const todo = items.filter((i) => !i.completed);
     const done = items.filter((i) => i.completed);
     return [...todo, ...done];
-  }
-
-  function calcDays() {
-    const start = new Date(`${state.daysStart}T00:00:00+08:00`).getTime();
-    const diff = Math.max(1, Math.floor((Date.now() - start) / 86400000) + 1);
-    $('#together-days').textContent = `${state.daysLabel} ${diff} 天`;
-    $('#together-sub').textContent = `自 ${state.daysStart} 起 · 點擊設定`;
   }
 
   function renderCategories() {
@@ -168,8 +159,8 @@
       card.className = `note-card ${n.pinned && !n.deleted ? 'is-pinned' : ''}`;
 
       const pinLine = n.pinned && !n.deleted ? `<div class="pin-tag">📌 置頂記事</div>` : '';
-      const authorName = n.author === '宇' ? '小宇' : '小晴';
-      const avatarCls = n.author === '宇' ? 'a' : 'b';
+      const authorMap = { '宇': ['小宇', 'a'], '晴': ['小晴', 'b'], '安': ['小安', 'c'] };
+      const [authorName, avatarCls] = authorMap[n.author] || [`小${n.author}`, 'a'];
 
       card.innerHTML = `
         ${pinLine}
@@ -238,7 +229,7 @@
         });
         const form = document.createElement('form');
         form.className = 'comment-input-row';
-        form.innerHTML = `<input placeholder="留一句話給對方…" required maxlength="100"><button type="submit" class="icon-mini">送出</button>`;
+        form.innerHTML = `<input placeholder="新增協作留言…" required maxlength="100"><button type="submit" class="icon-mini">送出</button>`;
         form.addEventListener('submit', (e) => {
           e.preventDefault();
           const inp = $('input', form);
@@ -258,7 +249,7 @@
         const likeBtn = document.createElement('button');
         likeBtn.type = 'button';
         likeBtn.className = `react-btn ${n.liked ? 'is-liked' : ''}`;
-        likeBtn.textContent = `♥ ${n.likeCount || '喜歡'}`;
+        likeBtn.textContent = `👍 ${n.likeCount || '讚'}`;
         likeBtn.addEventListener('click', () => {
           n.liked = !n.liked;
           n.likeCount += n.liked ? 1 : -1;
@@ -410,20 +401,7 @@
     });
   });
 
-  $('#open-days-btn').addEventListener('click', () => $('#days-dialog').showModal());
-  $('#close-days-btn').addEventListener('click', () => $('#days-dialog').close());
-  $('#days-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const fd = new FormData(e.currentTarget);
-    state.daysLabel = String(fd.get('label')).trim() || '在一起';
-    state.daysStart = String(fd.get('startDate'));
-    calcDays();
-    $('#days-dialog').close();
-    notify('紀念日設定已更新 ♡');
-  });
-
   $('#close-hist-btn').addEventListener('click', () => $('#history-dialog').close());
 
-  calcDays();
   renderAll();
 })();

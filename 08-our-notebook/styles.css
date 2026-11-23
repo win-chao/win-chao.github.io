@@ -147,6 +147,7 @@ html, body {
 }
 .avatar-dot.a { background: var(--accent); }
 .avatar-dot.b { background: #e06d88; margin-left: -8px; }
+.avatar-dot.c { background: #3b82f6; margin-left: -8px; }
 
 .primary-btn {
   padding: 10px 16px;

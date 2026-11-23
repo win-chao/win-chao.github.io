@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' file:; style-src 'self' file: 'unsafe-inline'; img-src 'self' file: data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
   <link rel="icon" href="data:,">
-  <title>我們的記事本 · 雙人 LINE LIFF 共同空間 Demo</title>
+  <title>記事本工具 · LINE LIFF 雲端協作空間 Demo</title>
   <link rel="stylesheet" href="./styles.css">
   <script src="./demo.js" defer></script>
 </head>
@@ -13,8 +13,8 @@
   <div class="app-shell">
     <aside class="sidebar" aria-label="記事本側邊導覽">
       <a class="brand" href="../index.html">
-        <span class="brand-icon" aria-hidden="true">♡</span>
-        <span>我們的記事本<small>OUR LITTLE NOTEBOOK</small></span>
+        <span class="brand-icon" aria-hidden="true">✎</span>
+        <span>記事本工具<small>COLLAB NOTEBOOK TOOL</small></span>
       </a>
 
       <a href="../index.html" class="back-btn">← 返回作品集</a>
@@ -23,10 +23,11 @@
         <div class="mini-pair">
           <span class="avatar-dot a">宇</span>
           <span class="avatar-dot b">晴</span>
+          <span class="avatar-dot c">安</span>
         </div>
         <div>
-          <strong>雙人限定空間</strong>
-          <span>已配對兩人 · 去識別化示範</span>
+          <strong>雲端協作空間</strong>
+          <span>多人共編與版本追蹤 · 示範模式</span>
         </div>
       </div>
 
@@ -34,8 +35,8 @@
 
       <nav class="main-nav" aria-label="主要檢視">
         <button type="button" class="nav-btn is-active" data-view="all"><span>📄</span>所有記事<small id="cnt-all">4</small></button>
-        <button type="button" class="nav-btn" data-view="lists"><span>☑</span>共同清單<small id="cnt-lists">2</small></button>
-        <button type="button" class="nav-btn" data-view="albums"><span>📷</span>共同相簿<small id="cnt-albums">3</small></button>
+        <button type="button" class="nav-btn" data-view="lists"><span>☑</span>協作清單<small id="cnt-lists">2</small></button>
+        <button type="button" class="nav-btn" data-view="albums"><span>📷</span>共享相簿<small id="cnt-albums">3</small></button>
         <button type="button" class="nav-btn" data-view="trash"><span>🗑</span>垃圾桶<small id="cnt-trash">1</small></button>
       </nav>
 
@@ -51,27 +52,22 @@
 
     <div class="workspace">
       <div class="demo-banner">
-        <span><span class="demo-badge">本機示範模式</span> 去識別化雙人 LINE LIFF 空間（無真實個資與私密照片）</span>
+        <span><span class="demo-badge">本機示範模式</span> 去識別化 LINE LIFF 協作記事本（無真實個資與私密照片）</span>
         <label>切換目前操作身分
           <select id="persona-select" aria-label="切換示範身分">
             <option value="宇" selected>小宇（成員 A）</option>
             <option value="晴">小晴（成員 B）</option>
+            <option value="安">小安（成員 C）</option>
           </select>
         </label>
       </div>
 
       <header class="page-head">
         <div>
-          <span class="eyebrow">OUR EVERYDAY, TOGETHER</span>
+          <span class="eyebrow">CLOUD COLLABORATION WORKSPACE</span>
           <h1 id="view-title">所有記事</h1>
-          <p class="subtitle">清單勾選支援金字塔堆疊（新勾選自動置頂已完成區），支援樂觀鎖與雙人留言。</p>
+          <p class="subtitle">清單勾選支援金字塔堆疊（新勾選自動置頂已完成區），支援樂觀鎖與多人協作留言。</p>
         </div>
-
-        <button type="button" class="together-card" id="open-days-btn">
-          <span class="together-badge">♡ 紀念日</span>
-          <strong id="together-days">在一起 520 天</strong>
-          <small id="together-sub">自 2025-06-22 起 · 點擊自訂</small>
-        </button>
       </header>
 
       <!-- 主記事視圖 -->
@@ -93,63 +89,51 @@
   <!-- 新增記事視窗 -->
   <dialog id="composer-dialog" class="nb-dialog" aria-labelledby="comp-title">
     <div class="dialog-head">
-      <h2 id="comp-title">新增共同記事</h2>
+      <h2 id="comp-title">新增協作記事</h2>
       <button type="button" class="close-btn" id="close-comp-btn">×</button>
     </div>
     <form id="composer-form" class="dialog-form">
-      <label>標題<input name="title" required placeholder="例如：週末山城咖啡清單" maxlength="80"></label>
+      <label>標題<input name="title" required placeholder="例如：週末戶外活動採買清單" maxlength="80"></label>
       <label>分類
         <select name="category">
           <option value="生活">生活</option>
-          <option value="約會">約會</option>
+          <option value="工作">工作</option>
           <option value="旅行">旅行</option>
           <option value="想吃">想吃</option>
+          <option value="靈感">靈感</option>
           <option value="重要">重要</option>
         </select>
       </label>
       <label>類型
         <select name="kind" id="comp-kind">
-          <option value="checklist">共同清單（支援勾選堆疊）</option>
+          <option value="checklist">協作清單（支援勾選堆疊）</option>
           <option value="note">純文字記事</option>
         </select>
       </label>
       <label>內容 / 清單項目（清單每行一項）
         <textarea name="body" rows="4" placeholder="輸入內容，或每行填寫一項待辦…">帶防曬與行動電源
-預約下午三點靠窗座位
+預約下午三點會議室／場地
 順路買兩包手沖濾掛</textarea>
       </label>
       <label class="check-line"><input type="checkbox" name="pinned"> 置頂這篇記事</label>
-      <button type="submit" class="primary-btn">發布到共同空間</button>
+      <button type="submit" class="primary-btn">發布到協作空間</button>
     </form>
   </dialog>
 
   <!-- 外觀配色彈窗 -->
   <dialog id="theme-dialog" class="nb-dialog" aria-labelledby="theme-title">
     <div class="dialog-head">
-      <h2 id="theme-title">兩人共同外觀設定</h2>
+      <h2 id="theme-title">空間外觀設定</h2>
       <button type="button" class="close-btn" id="close-theme-btn">×</button>
     </div>
     <div class="dialog-body">
-      <p>切換色系會立即套用到整個共同空間，並依據對比度自動計算可讀文字色（Contrast ≧ 4.5:1）。</p>
+      <p>切換色系會立即套用到整個協作空間，並依據對比度自動計算可讀文字色（Contrast ≧ 4.5:1）。</p>
       <div class="palette-row" id="palette-row"></div>
       <div class="mode-row">
         <button type="button" class="mode-btn is-active" data-mode="light">☀ 晨間淺色</button>
         <button type="button" class="mode-btn" data-mode="dark">☾ 夜間深色</button>
       </div>
     </div>
-  </dialog>
-
-  <!-- 紀念日設定彈窗 -->
-  <dialog id="days-dialog" class="nb-dialog" aria-labelledby="days-title">
-    <div class="dialog-head">
-      <h2 id="days-title">紀念日設定</h2>
-      <button type="button" class="close-btn" id="close-days-btn">×</button>
-    </div>
-    <form id="days-form" class="dialog-form">
-      <label>紀念日名稱<input name="label" value="在一起" required maxlength="20"></label>
-      <label>起始日期<input type="date" name="startDate" value="2025-06-22" required></label>
-      <button type="submit" class="primary-btn">儲存紀念日</button>
-    </form>
   </dialog>
 
   <!-- 修改紀錄彈窗 -->
