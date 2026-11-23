@@ -431,13 +431,13 @@
   // ---------------------------------------------------------
   // TODO: 若要替換成您的真實聯絡資料與大頭貼，直接修改下方物件即可
   const WIN_CONTACT_PROFILE = {
-    name: 'Win',
+    name: '曹家贏 (Win)',
     role: 'Web QA 工程師 · 流程設計 × AI 協作',
-    phone: '0912-345-678',
-    email: 'win.qa.contact@example.com',
-    resumeUrl: 'https://pda.104.com.tw/',
+    phone: '0936-936-939',
+    email: 'st25580209@gmail.com',
+    resumeUrl: 'https://pda.104.com.tw/profile/share/ia4BlMtDcQbjzSte0yujfkwPynpxI8xT',
     resumeLabel: '開啟 Win 的 104 履歷 ↗',
-    avatarUrl: '' // 可填入 './avatar.jpg' 或圖片路徑
+    avatarUrl: './avatar.png'
   };
 
   const contactModal = $('#iphone-contact-modal');
