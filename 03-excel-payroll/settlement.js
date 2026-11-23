@@ -114,7 +114,7 @@
     const pocketPaid = activePayment === 'B' || (activePayment === 'A+B' && carry < 0 && due <= 0) ? 0 : activePocket;
     const paid = activePayment === 'A' ? pocketPaid : Math.floor(Math.max(0, due) / 1000) * 1000;
     if (activePayment === 'A+B' && pocketPaid > paid) {
-      return { ...report, due, status: 'error', label: '口袋出帳高於實發' };
+      return { ...report, due, status: 'error', label: '平台出帳高於實發' };
     }
     const override = overrides[`${kol.code}/${month}`] ?? null;
     const closing = override ? override.amount : due - paid;

@@ -7,7 +7,7 @@
   const testPage = $('#test-page');
   const portal = createPortal(testPage);
   const dialog = $('#detail-dialog');
-  const storageKey = 'pocket-qa-portfolio-history-v2';
+  const storageKey = 'autoqa-portfolio-history-v1';
 
   const timestamp = new Intl.DateTimeFormat('zh-TW', {
     timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
@@ -34,8 +34,8 @@
     queue: [],
     presets: [],
     passwordDefaults: {
-      uat: { identity_number: 'A123456789', birthday: '19991111', password: 'demo-password' },
-      staging: { identity_number: 'B234567890', birthday: '19980520', password: 'demo-password' }
+      uat: { identity_number: 'A100000001', birthday: '19991111', password: 'demo-password' },
+      staging: { identity_number: 'B200000002', birthday: '19980520', password: 'demo-password' }
     },
     lastRun: null,
     history: loadHistory(),
@@ -649,12 +649,12 @@
       openImage(findRun(data.openImage).rows[Number(data.row)]);
     } else if (data.downloadReport) {
       const run = findRun(data.downloadReport);
-      const html = `<!doctype html><html lang="zh-Hant"><meta charset="utf-8"><title>Pocket QA 測試報告</title><body><h1>Pocket QA Desktop 測試報告</h1>${reportBody(run)}</body></html>`;
-      download(html, 'text/html;charset=utf-8', 'pocket-qa-' + run.id + '.html');
+      const html = `<!doctype html><html lang="zh-Hant"><meta charset="utf-8"><title>AutoQA 測試報告</title><body><h1>AutoQA Desktop 測試報告</h1>${reportBody(run)}</body></html>`;
+      download(html, 'text/html;charset=utf-8', 'autoqa-' + run.id + '.html');
     } else if (data.downloadLog) {
       const run = findRun(data.downloadLog);
       const events = state.allLogs ? run.events : run.events.filter((e) => e.index === state.selected);
-      download(events.map((e) => timestamp.format(new Date(e.at)) + ' ' + e.step + ' ' + e.message).join('\n'), 'text/plain;charset=utf-8', 'pocket-qa-' + run.id + '.txt');
+      download(events.map((e) => timestamp.format(new Date(e.at)) + ' ' + e.step + ' ' + e.message).join('\n'), 'text/plain;charset=utf-8', 'autoqa-' + run.id + '.txt');
     } else if (data.rerun && !state.control) {
       state.queue = findRun(data.rerun).rows.filter((row) => row.status === 'FAIL').map((row) => entry(row.flowId, row.mode, row.params));
       state.view = 'plan';

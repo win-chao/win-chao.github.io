@@ -3,7 +3,7 @@
 const { complete, unitName, acceptedEdit, confirmedChange, confirmedTask, referenceURLs } = window.pmoRules;
 const project = 'demo';
 const initialMessage = '這張卡已測試完成，可以開始驗收了，謝謝！';
-const testRecipient = 'Win（自己）';
+const testRecipient = 'QA（自己）';
 const defaultRecipients = {
   '產品企劃': '林晴',
   '營運支援': '莊安',
@@ -15,7 +15,7 @@ const initialWbs = [
   { key: 'PMO-42', id: ':demo42', isParent: false, parentKey: 'PMO-10', title: '測試－通知偏好儲存', unit: '（未指定）', status: '測試中', url: 'https://pmo.example.test/projects/demo/tasks/42' },
   { key: 'PMO-20', id: ':parent20', isParent: true, title: 'KOL 結算報表匯出優化', unit: '營運支援', status: '進行中', url: 'https://pmo.example.test/projects/demo/tasks/20' },
   { key: 'PMO-56', id: ':demo56', isParent: false, parentKey: 'PMO-20', title: '測試－報表下載', unit: '營運支援', status: '測試中', url: 'https://pmo.example.test/projects/demo/tasks/56' },
-  { key: 'PMO-61', id: ':demo61', isParent: false, parentKey: 'PMO-20', title: '測試－開戶契約條款核對', unit: '需求驗證', status: '測試中', url: 'https://pmo.example.test/projects/demo/tasks/61' }
+  { key: 'PMO-61', id: ':demo61', isParent: false, parentKey: 'PMO-20', title: '測試－服務條款內容核對', unit: '需求驗證', status: '測試中', url: 'https://pmo.example.test/projects/demo/tasks/61' }
 ];
 
 const lookup = (id) => document.getElementById(id);

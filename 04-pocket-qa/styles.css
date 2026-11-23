@@ -186,7 +186,7 @@ dialog::backdrop { background: #26342e58; }
 @media (max-width: 380px) { .top-actions { justify-content: flex-start; } .view-toolbar nav { max-width: 100%; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }
 
-/* Real PocketQA.swift controls & failure diagnostic table styles */
+/* AutoQA controls & failure diagnostic table styles */
 .segments.compact button { padding: 4px 10px; font-size: 12px; }
 .top-select { padding: 5px 8px; border: 1px solid var(--line); border-radius: 7px; background: #fff; font: inherit; font-size: 12px; }
 .otp-banner { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 10px 20px; background: #fff4e5; border-bottom: 1px solid #f4d3a1; color: #7c3f00; font-size: 13px; }

@@ -167,7 +167,7 @@ function kolsTable() {
   });
   return table([
     ['行銷碼'], ['KOL 姓名'], ['合作期間（民國）'], ['結算方式'], ['出帳方式'],
-    ['口袋出帳（目前）', true], ['期初結餘', true], ['期初適用月份'], ['操作']
+    ['平台出帳（目前）', true], ['期初結餘', true], ['期初適用月份'], ['操作']
   ], rows);
 }
 
@@ -201,21 +201,21 @@ function overviewTable() {
     </tr>`;
   });
   return table([
-    ['行銷碼'], ['KOL 姓名'], ['結算與出帳'], ['當月開戶數', true], ['總客戶數', true],
-    ['來源獎金', true], ['口袋出帳', true], ['金尉出帳', true], ['期末結餘', true], ['狀態']
+    ['行銷碼'], ['KOL 姓名'], ['結算與出帳'], ['當月新戶數', true], ['總客戶數', true],
+    ['來源獎金', true], ['平台出帳', true], ['合作方出帳', true], ['期末結餘', true], ['狀態']
   ], rows, 'demo-overview');
 }
 
 function renderOverview() {
   const synced = Boolean(state.metabaseSynced[state.month]);
   const actions = `<div class="actions">
-    <button type="button" class="btn" id="sync-metabase">${synced ? '↻ 重新同步台股人數（Metabase）' : '↻ 同步台股人數（Metabase）'}</button>
+    <button type="button" class="btn" id="sync-metabase">${synced ? '↻ 重新同步新戶人數（數據後台）' : '↻ 同步新戶人數（數據後台）'}</button>
     <button type="button" class="btn primary" id="export-overview">↓ 匯出總覽 Excel</button>
   </div>`;
-  return heading('KOL 總覽', '按月份查看 Metabase 台股開戶數、來源獎金、出帳金額及期末結餘。', actions)
+  return heading('KOL 總覽', '按月份查看數據後台新戶數、來源獎金、出帳金額及期末結餘。', actions)
     + controls()
     + `<section class="card" id="data-table">${overviewTable()}</section>
-       <p class="ledger-note">總客戶數取 Metabase 台股同月客戶總數；未同步時顯示未同步，可點右上角「同步台股人數」取得該月開戶數據。</p>`;
+       <p class="ledger-note">總客戶數取數據後台同月客戶總數；未同步時顯示未同步，可點右上角「同步新戶人數」取得該月新戶數據。</p>`;
 }
 
 function reportTable() {
@@ -364,10 +364,10 @@ function pocketHistoryBlock(kol) {
   </li>`).join('');
   return `<div class="pocket-history-section full">
     <div class="pocket-amount-line">
-      <span>目前有效口袋出帳（${safe(state.month)}）：<strong>${kol.payment === 'B' ? '—' : money(effectivePocketAt(kol, state.month)) + ' 元'}</strong></span>
+      <span>目前有效平台出帳（${safe(state.month)}）：<strong>${kol.payment === 'B' ? '—' : money(effectivePocketAt(kol, state.month)) + ' 元'}</strong></span>
       <button type="button" class="btn text" data-pocket-add="${safe(kol.code)}">＋ 新增異動</button>
     </div>
-    <details class="pocket-history" open><summary>口袋出帳異動紀錄 (${changes.length})</summary>
+    <details class="pocket-history" open><summary>平台出帳異動紀錄 (${changes.length})</summary>
       <div class="pocket-history-content"><ul>${items}<li class="pocket-history-item"><strong>初始金額：${money(kol.pocket)} 元</strong></li></ul></div>
     </details>
     <div id="pocket-change-panel"></div>
@@ -394,7 +394,7 @@ function paymentHistoryBlock(kol) {
 
 function editKol(code) {
   const kol = getKol(code);
-  const paymentOptions = [['A', '固定口袋出帳'], ['B', '金尉出帳'], ['A+B', '由兩方出帳']];
+  const paymentOptions = [['A', '固定平台出帳'], ['B', '合作方出帳'], ['A+B', '由兩方出帳']];
   showModal('編輯 KOL', `<form id="kol-form" class="demo-settings" data-code="${code}">
     <p class="modal-intro">${code} · 儲存後重算示範期間的歷史報表。</p>
     <div class="form-grid">
@@ -402,7 +402,7 @@ function editKol(code) {
       <label class="field"><span>結算方式</span><select name="settlement"><option value="monthly" ${kol.settlement === 'monthly' ? 'selected' : ''}>月結</option><option value="quarterly" ${kol.settlement === 'quarterly' ? 'selected' : ''}>季結</option></select></label>
       <label class="field"><span>合作起日（民國）</span><input name="coopStart" placeholder="115/01/01" value="${safe(kol.coopStart || '')}"></label>
       <label class="field"><span>合作迄日（民國）</span><input name="coopEnd" placeholder="115/12/31" value="${safe(kol.coopEnd || '')}"></label>
-      <label class="field"><span>初始口袋出帳（元）</span><input name="pocket" type="number" required min="0" max="1000000" step="1" value="${kol.pocket}" ${kol.payment === 'B' ? 'disabled' : ''}></label>
+      <label class="field"><span>初始平台出帳（元）</span><input name="pocket" type="number" required min="0" max="1000000" step="1" value="${kol.pocket}" ${kol.payment === 'B' ? 'disabled' : ''}></label>
       <label class="field"><span>期初結餘（元）</span><input name="opening" type="number" required min="-1000000" max="1000000" step="1" value="${kol.opening}"></label>
     </div>
     <fieldset class="payment-field"><legend>出帳方式</legend><div class="payment-options">${paymentOptions.map(([id, label]) =>
@@ -419,10 +419,10 @@ function openAddKolModal() {
       <label class="field"><span>行銷碼 *</span><input name="code" required maxlength="20" placeholder="例如 DEMO-104"></label>
       <label class="field"><span>KOL 姓名</span><input name="name" maxlength="24" placeholder="選填"></label>
       <label class="field"><span>結算方式</span><select name="settlement"><option value="monthly">月結</option><option value="quarterly">季結</option></select></label>
-      <label class="field"><span>出帳方式</span><select name="payment"><option value="A">A · 固定口袋</option><option value="B">B · 金尉出帳</option><option value="A+B">A+B · 兩方出帳</option></select></label>
+      <label class="field"><span>出帳方式</span><select name="payment"><option value="A">A · 固定平台</option><option value="B">B · 合作方出帳</option><option value="A+B">A+B · 兩方出帳</option></select></label>
       <label class="field"><span>合作起日（民國）</span><input name="coopStart" value="115/01/01"></label>
       <label class="field"><span>合作迄日（民國）</span><input name="coopEnd" value="115/12/31"></label>
-      <label class="field"><span>口袋出帳（元）</span><input name="pocket" type="number" min="0" value="10000"></label>
+      <label class="field"><span>平台出帳（元）</span><input name="pocket" type="number" min="0" value="10000"></label>
       <label class="field"><span>期初結餘（元）</span><input name="opening" type="number" value="0"></label>
     </div>
   </form>`, '<button type="button" class="btn" data-close>取消</button><button type="submit" class="btn primary" form="add-kol-form">建立 KOL</button>');
@@ -431,7 +431,7 @@ function openAddKolModal() {
 function settlementDetail(report) {
   const summary = [
     ['期初結餘', report.opening], ['來源獎金', report.sourceTotal], ['應發', report.due], ['實際發放', report.paid],
-    ['口袋出帳', report.pocketPaid], ['金尉出帳', report.otherPaid], ['期末結餘', report.closing]
+    ['平台出帳', report.pocketPaid], ['合作方出帳', report.otherPaid], ['期末結餘', report.closing]
   ];
   showModal(safe(report.name) + '・結算明細', `<p class="modal-intro">${report.period} · ${report.code} · ${settlementName(report)} · ${report.payment}</p>
     ${badge(report)}<dl class="demo-report-detail">${summary.map(([label, amount]) => `<dt>${label}</dt><dd>${money(amount)}</dd>`).join('')}</dl>`);
@@ -441,14 +441,14 @@ function statementRows(report) {
   return [
     { type: 'title', cells: ['KOL 薪獎結算表（模擬資料）'] },
     { type: 'meta', cells: [`${report.period} · ${report.code} · ${report.name} · ${settlementName(report)} / ${report.payment}`] },
-    { type: 'head', cells: ['資料月份', '台股特殊營獎', '複委託特殊營獎', '來源獎金'] },
+    { type: 'head', cells: ['資料月份', '方案 A 專案獎金', '方案 B 專案獎金', '來源獎金'] },
     ...report.sources.map(({ month, row }) => ({ cells: [month, row?.tw ?? null, row?.foreign ?? null, row ? row.tw + row.foreign : null] })),
     { type: 'total', cells: ['來源獎金合計', null, null, report.sourceTotal] },
     { cells: ['前期結餘', null, null, report.opening] },
     { cells: ['應發金額', null, null, report.due] },
     { type: 'total', cells: ['實際發放', null, null, report.paid] },
-    { cells: ['口袋出帳', null, null, report.pocketPaid] },
-    { cells: ['金尉出帳', null, null, report.otherPaid] },
+    { cells: ['平台出帳', null, null, report.pocketPaid] },
+    { cells: ['合作方出帳', null, null, report.otherPaid] },
     { type: 'total', cells: ['本期結餘', null, null, report.closing] }
   ];
 }
@@ -590,7 +590,7 @@ main.addEventListener('click', (event) => {
   if (button.id === 'sync-metabase') {
     state.metabaseSynced[state.month] = true;
     render();
-    notify(`已完成 ${state.month} Metabase 台股開戶數同步（模擬）。`);
+    notify(`已完成 ${state.month} 數據後台新戶人數同步（模擬）。`);
   }
   if (button.id === 'export-overview') {
     const synced = Boolean(state.metabaseSynced[state.month]);
@@ -601,7 +601,7 @@ main.addEventListener('click', (event) => {
       synced ? (monthMeta[r.code]?.total ?? 0) : '未同步',
       r.sourceTotal ?? 0, r.pocketPaid ?? 0, r.otherPaid ?? 0, r.closing ?? 0
     ]);
-    void downloadWorkbook(`KOL總覽_${state.month}.xlsx`, 'KOL總覽', ['行銷碼', 'KOL 姓名', '結算與出帳', '當月開戶數', '總客戶數', '來源獎金', '口袋出帳', '金尉出帳', '期末結餘'], rows);
+    void downloadWorkbook(`KOL總覽_${state.month}.xlsx`, 'KOL總覽', ['行銷碼', 'KOL 姓名', '結算與出帳', '當月新戶數', '總客戶數', '來源獎金', '平台出帳', '合作方出帳', '期末結餘'], rows);
     notify('已匯出 KOL 總覽 Excel');
   }
   if (button.id === 'export-ledger-btn') {
@@ -693,7 +693,7 @@ modal.addEventListener('click', (event) => {
     const changeId = button.dataset.changeId ? Number(button.dataset.changeId) : null;
     const orig = changeId ? kol.pocketChanges.find((c) => c.id === changeId) : null;
     $('#pocket-change-panel', modal).innerHTML = `<div class="pocket-change-editor">
-      <strong>${orig ? '更正口袋出帳異動' : '新增口袋出帳異動'}</strong>
+      <strong>${orig ? '更正平台出帳異動' : '新增平台出帳異動'}</strong>
       <div class="form-grid">
         <label class="field"><span>生效月份</span><input id="pc-month" type="month" value="${orig ? orig.month : state.month}"></label>
         <label class="field"><span>新金額（元）</span><input id="pc-amount" type="number" min="0" value="${orig ? orig.amount : kol.pocket}"></label>
@@ -729,7 +729,7 @@ modal.addEventListener('click', (event) => {
     });
     editKol(kol.code);
     render();
-    notify('已新增口袋出帳異動並重算結餘');
+    notify('已新增平台出帳異動並重算結餘');
   }
   if (button.dataset.pocketDelete) {
     const kol = getKol(button.dataset.pocketDelete);
@@ -747,7 +747,7 @@ modal.addEventListener('click', (event) => {
       <strong>新增出帳方式異動</strong>
       <div class="form-grid">
         <label class="field"><span>生效年月</span><input id="pm-month" type="month" value="${state.month}"></label>
-        <label class="field"><span>新出帳方式</span><select id="pm-mode"><option value="A">A · 口袋</option><option value="B">B · 金尉</option><option value="A+B">A+B · 口袋＋金尉</option></select></label>
+        <label class="field"><span>新出帳方式</span><select id="pm-mode"><option value="A">A · 平台方</option><option value="B">B · 合作方</option><option value="A+B">A+B · 平台＋合作方</option></select></label>
       </div>
       <div class="pocket-change-actions"><button type="button" class="btn" id="pm-cancel">取消</button><button type="button" class="btn primary" id="pm-save" data-pm-code="${code}">套用異動</button></div>
     </div>`;

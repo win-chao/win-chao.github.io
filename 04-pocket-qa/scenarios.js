@@ -2,7 +2,7 @@
   'use strict';
 
   const exampleEmail = 'demo.qa@example.invalid';
-  const defaultId = 'A123456789';
+  const defaultId = 'A100000001';
   const defaultBirthday = '19991111';
 
   function textOf(root, selector) {
@@ -46,18 +46,18 @@
     { id: 'dashboard_icons', group: '官網與快捷入口', label: '首頁快捷入口與內容按鈕', description: '核對首頁主要服務捷徑可達性', envs: ['uat', 'staging'], steps: null },
     { id: 'footer_entries', group: '官網與快捷入口', label: '官網 Footer 入口', description: '檢查雙 App 下載與反詐宣導頁連結', envs: ['uat', 'staging'], steps: null },
 
-    // 2. ETF 與口袋存股 (6)
-    { id: 'etf_ranking', group: 'ETF 與口袋存股', label: 'ETF 專區台股 + 美股排行榜', description: '驗證排行榜排序與欄位顯示', envs: ['uat', 'staging'], steps: null },
-    { id: 'etf_tw_search', group: 'ETF 與口袋存股', label: 'ETF 專區台股搜尋', description: '輸入代碼搜尋並核對搜尋結果', envs: ['uat', 'staging'], steps: null },
-    { id: 'webca_entry', group: 'ETF 與口袋存股', label: '各入口 WebCA 彈窗驗證', description: '檢查憑證簽章彈窗正常觸發', envs: ['uat', 'staging'], steps: null },
-    { id: 'saving_stock_full_lifecycle', group: 'ETF 與口袋存股', label: '口袋存股完整生命週期', description: '建立約定、修改、暫停與終止', envs: ['uat', 'staging'], steps: null },
-    { id: 'saving_stock_immediate', group: 'ETF 與口袋存股', label: '口袋存股立即存股', description: '驗證單筆立即申購流程', envs: ['uat'], steps: null },
-    { id: 'saving_stock_my_saving_edit', group: 'ETF 與口袋存股', label: '口袋存股我的存股編輯', description: '調整扣款日與金額後重讀驗證', envs: ['uat'], steps: null },
+    // 2. 商品專區與定期申購 (6)
+    { id: 'etf_ranking', group: '商品專區與定期申購', label: '熱門商品排行榜（雙市場）', description: '驗證排行榜排序與欄位顯示', envs: ['uat', 'staging'], steps: null },
+    { id: 'etf_tw_search', group: '商品專區與定期申購', label: '商品專區關鍵字與代碼搜尋', description: '輸入代碼搜尋並核對搜尋結果', envs: ['uat', 'staging'], steps: null },
+    { id: 'webca_entry', group: '商品專區與定期申購', label: '各入口電子憑證簽章彈窗驗證', description: '檢查憑證簽章彈窗正常觸發', envs: ['uat', 'staging'], steps: null },
+    { id: 'saving_stock_full_lifecycle', group: '商品專區與定期申購', label: '定期定額完整生命週期（建立／修改／暫停／終止）', description: '建立約定、修改、暫停與終止', envs: ['uat', 'staging'], steps: null },
+    { id: 'saving_stock_immediate', group: '商品專區與定期申購', label: '定期定額單筆立即申購', description: '驗證單筆立即申購流程', envs: ['uat'], steps: null },
+    { id: 'saving_stock_my_saving_edit', group: '商品專區與定期申購', label: '我的約定設定編輯與重讀驗證', description: '調整扣款日與金額後重讀驗證', envs: ['uat'], steps: null },
 
-    // 3. 口袋錢包與帳務安全 (3)
-    { id: 'cash_transfer', group: '口袋錢包與帳務安全', label: '口袋錢包入金 + 出款', description: '核對銀行代碼與出入金狀態', envs: ['uat'], steps: null },
+    // 3. 電子錢包與帳務安全 (3)
+    { id: 'cash_transfer', group: '電子錢包與帳務安全', label: '電子錢包入金 + 出款狀態核對', description: '核對銀行代碼與出入金狀態', envs: ['uat'], steps: null },
     {
-      id: 'forgot_password_resend', group: '口袋錢包與帳務安全', label: '忘記密碼 - 密碼補發', description: '支援身分證／生日參數與 Staging 手動 OTP', envs: ['uat', 'staging'],
+      id: 'forgot_password_resend', group: '電子錢包與帳務安全', label: '忘記密碼 - 密碼補發', description: '支援身分證／生日參數與 Staging 手動 OTP', envs: ['uat', 'staging'],
       params: [
         { key: 'identity_number', label: '身分證字號', default: defaultId },
         { key: 'birthday', label: '生日（YYYYMMDD）', default: defaultBirthday }
@@ -66,7 +66,7 @@
       steps: null
     },
     {
-      id: 'forgot_password_unlock', group: '口袋錢包與帳務安全', label: '忘記密碼 - 密碼解鎖', description: '連續錯誤鎖定後執行解鎖流程', envs: ['uat', 'staging'],
+      id: 'forgot_password_unlock', group: '電子錢包與帳務安全', label: '忘記密碼 - 密碼解鎖', description: '連續錯誤鎖定後執行解鎖流程', envs: ['uat', 'staging'],
       params: [
         { key: 'identity_number', label: '身分證字號', default: defaultId },
         { key: 'birthday', label: '生日（YYYYMMDD）', default: defaultBirthday }
@@ -75,16 +75,16 @@
       steps: null
     },
 
-    // 4. 線上開戶與加開 (11)
+    // 4. 線上申辦與權限加開 (11)
     {
-      id: 'online_account_tw', group: '線上開戶與加開', label: '線上開戶 - 台股', description: '支援故障示範，驗證錯誤時間線與原圖蒐證', envs: ['uat', 'staging'],
+      id: 'online_account_tw', group: '線上申辦與權限加開', label: '線上申辦 - 標準會員帳戶', description: '支援故障示範，驗證錯誤時間線與原圖蒐證', envs: ['uat', 'staging'],
       configurable: true,
       params: [{ key: 'email', label: 'Email（選填）', default: exampleEmail }],
       steps: [
         { action: '開啟線上申請', expected: '顯示「線上申請」表單', run(root) { click(root, '[data-portal-view="apply"]'); return expect(root, '.portal-content h3', '線上申請'); } },
         { action: '輸入聯絡信箱', expected: '保留有效聯絡信箱', run: enterEmail },
         {
-          action: '送出開戶申請並核對業務回傳',
+          action: '送出申辦表單並核對業務回傳',
           expected: '顯示「申請已送出」及案件編號 DEMO-001',
           run(root) {
             click(root, '[data-portal-submit]');
@@ -100,20 +100,20 @@
         }
       ]
     },
-    { id: 'online_account_tw_us_sub_brokerage', group: '線上開戶與加開', label: '線上開戶 - 台股＋美股複委託', description: '含雙市場契約簽署與進件確認', envs: ['uat', 'staging'], params: [{ key: 'email', label: 'Email（選填）', default: exampleEmail }], steps: null },
-    { id: 'online_account_tw_us_fund', group: '線上開戶與加開', label: '線上開戶 - 三合一基金（台股＋美股複委託＋基金）', description: '三合一開戶送件驗證', envs: ['uat', 'staging'], params: [{ key: 'email', label: 'Email（選填）', default: exampleEmail }], steps: null },
-    { id: 'online_account_tw_us_futures', group: '線上開戶與加開', label: '線上開戶 - 三合一期貨（台股＋美股複委託＋期貨）', description: '含期貨問卷與風險預告書簽署', envs: ['uat'], params: [{ key: 'email', label: 'Email（選填）', default: exampleEmail }], steps: null },
-    { id: 'online_account_add_us_sub_brokerage', group: '線上開戶與加開', label: '加開-美股複委托', description: '既有帳戶加開，進件後自動作廢測資案件', envs: ['uat'], params: [{ key: 'identity_number', label: '身分證字號', default: defaultId }, { key: 'birthday', label: '生日', default: defaultBirthday }], steps: null },
-    { id: 'online_account_add_credit', group: '線上開戶與加開', label: '加開-信用戶', description: '既有帳戶加開信用交易權限', envs: ['uat', 'staging'], params: [{ key: 'identity_number', label: '身分證字號', default: defaultId }, { key: 'birthday', label: '生日', default: defaultBirthday }], steps: null },
-    { id: 'online_account_add_fund', group: '線上開戶與加開', label: '加開-基金', description: '既有帳戶加開基金專戶', envs: ['uat', 'staging'], params: [{ key: 'identity_number', label: '身分證字號', default: defaultId }, { key: 'birthday', label: '生日', default: defaultBirthday }], steps: null },
-    { id: 'online_account_add_futures', group: '線上開戶與加開', label: '加開-期貨', description: '既有帳戶加開期貨帳戶', envs: ['uat'], params: [{ key: 'identity_number', label: '身分證字號', default: defaultId }, { key: 'birthday', label: '生日', default: defaultBirthday }], steps: null },
-    { id: 'online_account_tw_supplement', group: '線上開戶與加開', label: '線開台股三頁斷點補件', description: '驗證證件模糊退件與補件續填', envs: ['uat', 'staging'], steps: null },
-    { id: 'online_account_tw_us_supplement', group: '線上開戶與加開', label: '線開台股＋美股三頁斷點補件', description: '雙市場補件上傳與欄位保留檢查', envs: ['uat', 'staging'], steps: null },
-    { id: 'online_account_tw_basic_info_validation', group: '線上開戶與加開', label: '線開基本資料驗證（不送件）', description: '核對必填欄位、身分證格式與錯誤提示', envs: ['uat', 'staging'], steps: null },
+    { id: 'online_account_tw_us_sub_brokerage', group: '線上申辦與權限加開', label: '線上申辦 - 雙市場服務帳戶', description: '含雙市場契約簽署與進件確認', envs: ['uat', 'staging'], params: [{ key: 'email', label: 'Email（選填）', default: exampleEmail }], steps: null },
+    { id: 'online_account_tw_us_fund', group: '線上申辦與權限加開', label: '線上申辦 - 三合一服務（標準＋跨市場＋理財）', description: '三合一申辦送件驗證', envs: ['uat', 'staging'], params: [{ key: 'email', label: 'Email（選填）', default: exampleEmail }], steps: null },
+    { id: 'online_account_tw_us_futures', group: '線上申辦與權限加開', label: '線上申辦 - 三合一進階服務（含風險問卷簽署）', description: '含問卷與風險預告書簽署', envs: ['uat'], params: [{ key: 'email', label: 'Email（選填）', default: exampleEmail }], steps: null },
+    { id: 'online_account_add_us_sub_brokerage', group: '線上申辦與權限加開', label: '加開 - 跨市場交易權限', description: '既有帳戶加開，進件後自動作廢測資案件', envs: ['uat'], params: [{ key: 'identity_number', label: '身分證字號', default: defaultId }, { key: 'birthday', label: '生日', default: defaultBirthday }], steps: null },
+    { id: 'online_account_add_credit', group: '線上申辦與權限加開', label: '加開 - 進階額度權限', description: '既有帳戶加開進階交易權限', envs: ['uat', 'staging'], params: [{ key: 'identity_number', label: '身分證字號', default: defaultId }, { key: 'birthday', label: '生日', default: defaultBirthday }], steps: null },
+    { id: 'online_account_add_fund', group: '線上申辦與權限加開', label: '加開 - 理財專戶權限', description: '既有帳戶加開理財專戶', envs: ['uat', 'staging'], params: [{ key: 'identity_number', label: '身分證字號', default: defaultId }, { key: 'birthday', label: '生日', default: defaultBirthday }], steps: null },
+    { id: 'online_account_add_futures', group: '線上申辦與權限加開', label: '加開 - 衍生性商品權限', description: '既有帳戶加開進階商品帳戶', envs: ['uat'], params: [{ key: 'identity_number', label: '身分證字號', default: defaultId }, { key: 'birthday', label: '生日', default: defaultBirthday }], steps: null },
+    { id: 'online_account_tw_supplement', group: '線上申辦與權限加開', label: '線上申辦三頁斷點續填與補件', description: '驗證證件模糊退件與補件續填', envs: ['uat', 'staging'], steps: null },
+    { id: 'online_account_tw_us_supplement', group: '線上申辦與權限加開', label: '雙市場申辦三頁斷點續填與補件', description: '雙市場補件上傳與欄位保留檢查', envs: ['uat', 'staging'], steps: null },
+    { id: 'online_account_tw_basic_info_validation', group: '線上申辦與權限加開', label: '線上申辦基本資料驗證（不送件）', description: '核對必填欄位、身分證格式與錯誤提示', envs: ['uat', 'staging'], steps: null },
 
     // 5. 後台四審與批次作業 (2)
-    { id: 'backoffice_review', group: '後台四審與批次作業', label: 'UAT 線開後台四審', description: 'CMS 一審至四審依序覆核與狀態驗證', envs: ['uat'], steps: null },
-    { id: 'online_account_batch_review', group: '後台四審與批次作業', label: '批次開戶＋四審', description: '批次建立不同組合案件並接續四審', envs: ['uat'], steps: null }
+    { id: 'backoffice_review', group: '後台四審與批次作業', label: 'UAT 後台一審至四審覆核', description: 'CMS 一審至四審依序覆核與狀態驗證', envs: ['uat'], steps: null },
+    { id: 'online_account_batch_review', group: '後台四審與批次作業', label: '批次申辦建案＋後台四審', description: '批次建立不同組合案件並接續四審', envs: ['uat'], steps: null }
   ];
 
   // Fill standard verification steps for flows without custom inline steps

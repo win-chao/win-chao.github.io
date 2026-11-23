@@ -56,7 +56,7 @@
         <aside class="audit-drawer" id="audit-drawer" aria-label="異動紀錄" hidden>
           <div class="audit-head">
             <strong>異動紀錄（供 Chrome 擴充核對）</strong>
-            <span class="muted">僅採計 win 儲存的「測試完成」</span>
+            <span class="muted">僅採計 QA 儲存的「測試完成」</span>
           </div>
           <ul id="audit-list" class="audit-list"></ul>
         </aside>
@@ -71,7 +71,7 @@
               <h2>PMO 驗收通知</h2>
               <span id="state">已啟用</span>
             </header>
-            <p>你以 win 在甘特圖儲存「測試完成」時，會通知 App 設定的需求單位收件人（子卡未填需求單位時自動沿用母卡）。</p>
+            <p>當 QA 在甘特圖儲存「測試完成」時，會通知 App 設定的需求單位收件人（子卡未填需求單位時自動沿用母卡）。</p>
             <div class="actions">
               <button id="toggle" type="button">暫停自動通知</button>
               <button id="check" type="button">檢查 PMO 連線</button>
@@ -109,7 +109,7 @@
             </label>
             <label>
               卡片網址（多筆請換行，每行一筆）
-              <textarea id="manual-urls" name="urls" rows="3" placeholder="貼上 PMO 或 Taiga 卡片網址"></textarea>
+              <textarea id="manual-urls" name="urls" rows="3" placeholder="貼上專案系統卡片網址"></textarea>
             </label>
             <label>
               內容
@@ -120,7 +120,7 @@
             <div class="mac-divider"></div>
 
             <div class="mac-footer">
-              <span class="slack-link-status">🔗 Slack 連線 · Win</span>
+              <span class="slack-link-status">🔗 Slack 連線 · QA 帳號</span>
               <button type="submit" class="mac-send-btn" id="manual-send">✈ 送出</button>
             </div>
             <p class="task-message" id="manual-result" role="status" hidden></p>
@@ -156,7 +156,7 @@
       </div>
       <section class="settings-group">
         <h3>Slack 發送者</h3>
-        <p class="muted">Demo 證券 · Win · 既有 Slack 連線</p>
+        <p class="muted">產品研發團隊 · QA · 既有 Slack 連線</p>
       </section>
       <section class="settings-group">
         <h3>自動通知測試</h3>

@@ -1,11 +1,11 @@
 (function () {
   'use strict';
 
-  const STORAGE = 'relay-four-boards-demo-v1';
+  const STORAGE = 'relay-four-boards-demo-v2';
   const PEOPLE = {
-    alex: { name: 'Alex', initial: 'A', role: 'rd' },
-    daniel: { name: 'Daniel', initial: 'D', role: 'rd' },
-    win: { name: 'Win', initial: 'W', role: 'qa' }
+    alex: { name: '林晨', initial: '林', role: 'rd' },
+    daniel: { name: '許安', initial: '許', role: 'rd' },
+    win: { name: '陳晴', initial: '陳', role: 'qa' }
   };
   const BOARDS = {
     rd1: { role: 'rd', person: 'alex', label: 'RD1' },
@@ -25,11 +25,11 @@
       managerExpanded: { alex: true, daniel: false },
       expanded: {},
       cards: [
-        { id: 'WEB-128', parent: null, title: '開戶流程優化與契約修正', rd: 'alex', qa: null, status: 'new', version: '' },
-        { id: 'WEB-129', parent: 'WEB-128', title: '開戶同意書排版修正', rd: 'alex', qa: 'win', status: 'new', version: '' },
-        { id: 'WEB-130', parent: 'WEB-128', title: '契約帶入客戶姓名與身分證字號', rd: 'alex', qa: 'win', status: 'new', version: 'v1.0.0' },
-        { id: 'WEB-131', parent: 'WEB-128', title: '交易認知契約內容調整', rd: 'alex', qa: 'win', status: 'new', version: 'v1.0.0' },
-        { id: 'WEB-132', parent: 'WEB-128', title: '入金銀行錯誤提示', rd: 'alex', qa: 'win', status: 'ready', version: 'v1.0.0' },
+        { id: 'WEB-128', parent: null, title: '會員線上申辦流程與條款優化', rd: 'alex', qa: null, status: 'new', version: '' },
+        { id: 'WEB-129', parent: 'WEB-128', title: '服務同意書排版修正', rd: 'alex', qa: 'win', status: 'new', version: '' },
+        { id: 'WEB-130', parent: 'WEB-128', title: '申請書自動帶入會員基本資料', rd: 'alex', qa: 'win', status: 'new', version: 'v1.0.0' },
+        { id: 'WEB-131', parent: 'WEB-128', title: '服務條款確認彈窗內容調整', rd: 'alex', qa: 'win', status: 'new', version: 'v1.0.0' },
+        { id: 'WEB-132', parent: 'WEB-128', title: '扣款帳戶綁定錯誤提示', rd: 'alex', qa: 'win', status: 'ready', version: 'v1.0.0' },
         { id: 'WEB-133', parent: 'WEB-128', title: '手機版同意按鈕調整', rd: 'daniel', qa: 'win', status: 'new', version: '' },
         { id: 'WEB-134', parent: 'WEB-128', title: '信箱驗證與案件建立', rd: 'daniel', qa: 'win', status: 'ready', version: 'v1.0.0' }
       ]
