@@ -6,11 +6,11 @@
   <meta name="robots" content="noindex, nofollow">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' file:; style-src 'self' file: 'unsafe-inline'; img-src 'self' file: data:; connect-src 'none'; base-uri 'none'">
   <link rel="icon" href="data:,">
-  <title>Qa-Win的作品集</title>
-  <link rel="stylesheet" href="./portfolio.css?v=cyber7">
-  <script src="./portfolio.js?v=cyber7" defer></script>
+  <title>Qa-Win 的作品集與履歷表</title>
+  <link rel="stylesheet" href="./portfolio.css?v=cyber17">
+  <script src="./portfolio.js?v=cyber17" defer></script>
 </head>
-<body>
+<body data-active-view="portfolio">
   <!-- Matrix 多層次光學景深舞台 -->
   <div class="ambient-stage" aria-hidden="true">
     <div class="ambient-orb orb-core"></div>
@@ -19,28 +19,34 @@
   </div>
   <div class="cyber-perspective-grid" aria-hidden="true"></div>
   <canvas id="tech-canvas" aria-hidden="true"></canvas>
+
+  <!-- 履歷專屬：柔和環境光暈背景（隨成長階段變色，無文字遮擋） -->
+  <div id="growth-bg-stage" class="growth-bg-stage" aria-hidden="true" data-active-stage="5"></div>
+
   <div class="bg-grid" aria-hidden="true"></div>
   <div class="crt-scanlines" aria-hidden="true"></div>
   <div class="dof-foreground-hud" aria-hidden="true"></div>
 
-  <!-- 頂部半透明綠曜石玻璃指揮列 -->
+  <!-- 頂部玻璃導覽列 -->
   <header class="hud-bar glass-surface">
     <div class="hud-inner">
       <div class="hud-brand">
         <span class="live-pulse" aria-hidden="true"></span>
-        <span class="hud-code">QA-WIN // WORKFLOW &amp; AUTOMATION LAB</span>
+        <span class="hud-code">Qa-Win</span>
       </div>
+
+      <!-- 主視圖雙 TAB 切換 -->
+      <nav class="main-view-tabs" role="tablist" aria-label="主視圖切換">
+        <button type="button" role="tab" aria-selected="true" class="main-tab-btn is-active" data-main-tab="portfolio" id="tab-btn-portfolio">作品集</button>
+        <button type="button" role="tab" aria-selected="false" class="main-tab-btn" data-main-tab="resume" id="tab-btn-resume">履歷表</button>
+      </nav>
+
       <div class="hud-controls">
-        <nav class="filter-pills" aria-label="系統分類篩選">
-          <button type="button" class="pill-btn is-active" data-filter="all">全部系統 <span>04</span></button>
-          <button type="button" class="pill-btn" data-filter="automation">測試自動化</button>
-          <button type="button" class="pill-btn" data-filter="workflow">跨角色協作</button>
-          <button type="button" class="pill-btn" data-filter="settlement">業務結算引擎</button>
-        </nav>
-        <button type="button" class="theme-toggle" id="theme-toggle" aria-label="切換科技藍光強度">
-          <span class="theme-dot" aria-hidden="true"></span>
-          <span id="theme-label">CYBER_CORE</span>
-        </button>
+        <!-- 履歷表專用控制項 -->
+        <div class="resume-hud-actions" id="resume-hud-actions" hidden>
+          <button type="button" class="pill-btn resume-print-btn" id="print-resume-btn">列印 / 另存 PDF 履歷</button>
+        </div>
+
         <button type="button" class="contact-win-btn" id="open-contact-phone" data-open-contact-phone aria-haspopup="dialog" aria-controls="iphone-contact-modal">
           <span class="phone-ring-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
@@ -54,204 +60,622 @@
   </header>
 
   <main class="portfolio">
-    <!-- 雙欄式 Matrix Hero -->
-    <section class="hero-grid" aria-label="個人定位與母體遙測終端">
-      <div class="hero-copy">
-        <div class="eyebrow-row">
-          <span class="eyebrow">[ WEB_QA_ENGINEER × WORKFLOW_ARCHITECT ]</span>
-          <span class="status-tag">SYSTEM_CONNECTED</span>
+    <!-- =========================================================
+         視圖 1：作品集
+         ========================================================= -->
+    <div id="view-portfolio" class="tab-view is-active" role="tabpanel" aria-labelledby="tab-btn-portfolio">
+      <section aria-labelledby="projects-heading" class="projects-section">
+        <div class="portfolio-top-bar">
+          <h1 id="projects-heading" class="portfolio-main-title">Qa-Win 的作品集</h1>
+          <nav class="filter-pills" id="portfolio-filter-pills" aria-label="系統分類篩選">
+            <button type="button" class="pill-btn is-active" data-filter="all">全部系統</button>
+            <button type="button" class="pill-btn" data-filter="automation">測試自動化</button>
+            <button type="button" class="pill-btn" data-filter="workflow">專案管理系統</button>
+            <button type="button" class="pill-btn" data-filter="settlement">Excel 智能彙整系統</button>
+          </nav>
         </div>
-        <h1 class="hero-title">Qa-Win的作品集</h1>
-        <p class="lead">專注於 Web 產品與跨系統流程驗證（前台服務、線上申辦、後台審核與跨系統介接）。在日常測試中不只回報單點 Bug，更習慣主動觀察團隊與跨部門的重複作業、溝通斷點，由我梳理業務規則、例外邊界與驗收標準，並結合 AI 協作將解法做成可實際操作、可留存證據的工具。</p>
 
-        <div class="traits" aria-label="工作方法與特質（點擊可連動預覽）">
-          <button type="button" class="trait glass-panel" data-trait-sys="01">
-            <span class="trait-code">01 // PROACTIVE</span>
-            <h2>主動把痛點變工具</h2>
-            <p>看到反覆人工回歸、交接資訊漏接或複雜人工作業，主動定義流程並推動工具化解決。</p>
-          </button>
-          <button type="button" class="trait glass-panel" data-trait-sys="01">
-            <span class="trait-code">02 // EVIDENCE</span>
-            <h2>重視可查核的證據</h2>
-            <p>堅持完整原圖截圖、操作時間線與預期／實際對照，讓 RD 與 PM 能一次看懂並精準定位。</p>
-          </button>
-          <button type="button" class="trait glass-panel" data-trait-sys="04">
-            <span class="trait-code">03 // BOUNDARY</span>
-            <h2>規則設計 × AI 協作</h2>
-            <p>由本人負責需求拆解、邊界條件與驗收把關，結合 AI 協作快速實作並依實際使用回饋迭代。</p>
-          </button>
+        <div class="projects" aria-label="作品清單">
+          <!-- SYS-01 AutoQA -->
+          <article class="project-card glass-panel" data-category="automation" data-sys="01" data-accent="matrix">
+            <span class="corner-bracket tl" aria-hidden="true"></span>
+            <span class="corner-bracket tr" aria-hidden="true"></span>
+            <span class="corner-bracket bl" aria-hidden="true"></span>
+            <span class="corner-bracket br" aria-hidden="true"></span>
+            <div class="glass-ripple-layer" aria-hidden="true"></div>
+            <div class="glass-prism-sweep" aria-hidden="true"></div>
+            <a class="project-link" href="./04-pocket-qa/index.html">
+              <div class="project-top-bar">
+                <span class="sys-id" data-decrypt-text="SYS-01 // TEST_RUNNER">SYS-01 // TEST_RUNNER</span>
+                <span class="sys-badge">自動化測試與診斷</span>
+              </div>
+              <div class="project-viewport">
+                <img src="./驗收截圖/04-Pocket-QA-測試工作台.png" alt="AutoQA Desktop 的測試流程清單與執行安排">
+                <div class="viewport-overlay"><span>DECODE &amp; ENTER AutoQA ↗</span></div>
+              </div>
+              <div class="project-copy">
+                <h3>AutoQA Desktop 自動化測試工作台</h3>
+                <dl class="project-points">
+                  <dt>發現痛點</dt>
+                  <dd>例行上版回歸流程重複度高，且失敗時常缺乏當下畫面與時間線證據，增加 RD 追查成本。</dd>
+                  <dt>主動解法</dt>
+                  <dd>規劃可自選流程、排程順序與重跑的桌面工作台，在失敗當下自動保存完整原圖截圖與步驟紀錄，並產出可離線分享的 HTML 報告。</dd>
+                </dl>
+                <div class="project-meta-chips">
+                  <span>26 條驗證流程</span><span>4 大失敗診斷證據</span><span>完整原圖保存</span>
+                </div>
+                <span class="project-cta">立即試玩：切「故障示範」看自動截圖與 HTML 報告 →</span>
+              </div>
+            </a>
+          </article>
+
+          <!-- SYS-02 Relay -->
+          <article class="project-card glass-panel" data-category="workflow" data-sys="02" data-accent="matrix">
+            <span class="corner-bracket tl" aria-hidden="true"></span>
+            <span class="corner-bracket tr" aria-hidden="true"></span>
+            <span class="corner-bracket bl" aria-hidden="true"></span>
+            <span class="corner-bracket br" aria-hidden="true"></span>
+            <div class="glass-ripple-layer" aria-hidden="true"></div>
+            <div class="glass-prism-sweep" aria-hidden="true"></div>
+            <a class="project-link" href="./01-relay/index.html">
+              <div class="project-top-bar">
+                <span class="sys-id" data-decrypt-text="SYS-02 // WORKFLOW_ENGINE">SYS-02 // WORKFLOW_ENGINE</span>
+                <span class="sys-badge">專案管理系統</span>
+              </div>
+              <div class="project-viewport">
+                <img src="./驗收截圖/01-Relay-雙角色工作台.png" alt="Relay 的工作總覽、專案看板與雙指派接球介面">
+                <div class="viewport-overlay"><span>DECODE &amp; ENTER Relay ↗</span></div>
+              </div>
+              <div class="project-copy">
+                <h3>Relay 專案與交接工作台</h3>
+                <dl class="project-points">
+                  <dt>發現痛點</dt>
+                  <dd>一張卡常跨 RD 開發與 QA 驗收，只看單一狀態容易搞混「現在輪到誰」，退回複測也常要反覆口頭確認。</dd>
+                  <dt>主動解法</dt>
+                  <dd>設計製作人／驗收人雙指派與依狀態自動接球規則，完整涵蓋個人 Dashboard、專案看板、Sprint／Release、工作分時與退回原因紀錄。</dd>
+                </dl>
+                <div class="project-meta-chips">
+                  <span>雙指派頭像 Popover</span><span>狀態自動接球</span><span>12 大完整工作頁</span>
+                </div>
+                <span class="project-cta">立即試玩：在 Dashboard 與專案看板體驗雙指派頭像、狀態接球與 Sprint 規劃 →</span>
+              </div>
+            </a>
+          </article>
+
+          <!-- SYS-03 PMO-Slack -->
+          <article class="project-card glass-panel" data-category="automation" data-sys="03" data-accent="matrix">
+            <span class="corner-bracket tl" aria-hidden="true"></span>
+            <span class="corner-bracket tr" aria-hidden="true"></span>
+            <span class="corner-bracket bl" aria-hidden="true"></span>
+            <span class="corner-bracket br" aria-hidden="true"></span>
+            <div class="glass-ripple-layer" aria-hidden="true"></div>
+            <div class="glass-prism-sweep" aria-hidden="true"></div>
+            <a class="project-link" href="./02-pmo-slack/index.html">
+              <div class="project-top-bar">
+                <span class="sys-id" data-decrypt-text="SYS-03 // EVENT_NOTIFIER">SYS-03 // EVENT_NOTIFIER</span>
+                <span class="sys-badge">驗收通知自動化</span>
+              </div>
+              <div class="project-viewport">
+                <img src="./驗收截圖/02-PMO-Slack-測試完成通知.png" alt="PMO 驗收通知設定與模擬 Slack 訊息">
+                <div class="viewport-overlay"><span>DECODE &amp; ENTER Notifier ↗</span></div>
+              </div>
+              <div class="project-copy">
+                <h3>PMO 測試完成 Slack 通知</h3>
+                <dl class="project-points">
+                  <dt>發現痛點</dt>
+                  <dd>QA 測完卡片後需人工逐筆查需求單位、複製連結並私訊通知驗收，容易漏發或重複通知。</dd>
+                  <dt>主動解法</dt>
+                  <dd>設計狀態變更觸發與防重機制：偵測儲存「測試完成」時自動帶入卡片資訊、依需求單位（空白則沿用母卡）對應收件人發送通知。</dd>
+                </dl>
+                <div class="project-meta-chips">
+                  <span>三段式架構整合</span><span>母卡單位沿用</span><span>防重覆發送機制</span>
+                </div>
+                <span class="project-cta">立即試玩：將狀態改為「測試完成」並儲存，看右側 Slack 私訊 →</span>
+              </div>
+            </a>
+          </article>
+
+          <!-- SYS-04 KOL Payroll -->
+          <article class="project-card glass-panel" data-category="settlement" data-sys="04" data-accent="matrix">
+            <span class="corner-bracket tl" aria-hidden="true"></span>
+            <span class="corner-bracket tr" aria-hidden="true"></span>
+            <span class="corner-bracket bl" aria-hidden="true"></span>
+            <span class="corner-bracket br" aria-hidden="true"></span>
+            <div class="glass-ripple-layer" aria-hidden="true"></div>
+            <div class="glass-prism-sweep" aria-hidden="true"></div>
+            <a class="project-link" href="./03-excel-payroll/index.html">
+              <div class="project-top-bar">
+                <span class="sys-id" data-decrypt-text="SYS-04 // SETTLEMENT_CORE">SYS-04 // SETTLEMENT_CORE</span>
+                <span class="sys-badge">Excel 智能彙整系統</span>
+              </div>
+              <div class="project-viewport">
+                <img src="./驗收截圖/03-KOL薪獎-匯入範例.png" alt="KOL 薪獎工作台的 Excel 匯入畫面">
+                <div class="viewport-overlay"><span>DECODE &amp; ENTER Payroll ↗</span></div>
+              </div>
+              <div class="project-copy">
+                <h3>KOL Excel 薪獎工作台</h3>
+                <dl class="project-points">
+                  <dt>發現痛點</dt>
+                  <dd>業務每月須人工核對多份 Excel 績效表、A／B／A+B 三種出帳模式、月結／季結與跨期結餘，極易算錯且不易回溯。</dd>
+                  <dt>主動解法</dt>
+                  <dd>協助釐清結算與例外規則（滿千發放、畸零數承接、異動重算），做出可預覽並沿用原業務版型匯出 Excel 的工作台。</dd>
+                </dl>
+                <div class="project-meta-chips">
+                  <span>真實 .xlsx 解析匯出</span><span>月結／季結分段重算</span><span>畸零數跨期稽核</span>
+                </div>
+                <span class="project-cta">立即試玩：載入範例 Excel 匯入，預覽並下載結算表 →</span>
+              </div>
+            </a>
+          </article>
+        </div>
+      </section>
+    </div>
+
+    <!-- =========================================================
+         視圖 2：客製化履歷表（方案 A：最新置頂＋開場進化秀＋時光回溯）
+         ========================================================= -->
+    <section id="view-resume" class="tab-view resume-view" role="tabpanel" aria-labelledby="tab-btn-resume" hidden>
+      <div class="resume-layout">
+        <!-- 左欄：無遮擋專屬成長動畫舞台 + 黏性錨點導覽軌 -->
+        <aside class="resume-anchor-rail glass-panel" aria-label="成長動畫舞台與履歷章節導覽">
+          <div class="anchor-stage-card" id="growth-stage-theater" data-stage="5">
+            <div class="anchor-stage-top">
+              <span class="rail-stage-code" id="rail-stage-code">階段 05 / 05</span>
+            </div>
+            <h2 class="rail-stage-title" id="rail-stage-title">口袋證券</h2>
+
+            <!-- 獨立不遮擋的動畫畫布視窗 -->
+            <div class="growth-theater-viewport" aria-hidden="true">
+              <canvas id="growth-walker-canvas"></canvas>
+            </div>
+
+            <div class="growth-progress-bar" aria-hidden="true">
+              <div class="growth-progress-fill" id="growth-progress-fill"></div>
+            </div>
+          </div>
+
+          <nav class="resume-anchor-nav" aria-label="履歷時期快速跳轉">
+            <a href="#resume-overview" class="anchor-link is-active" data-anchor-target="resume-overview" data-stage="5">
+              <span class="anchor-dot" aria-hidden="true"></span>
+              <span>個人摘要與核心技能</span>
+            </a>
+            <a href="#stage-05-pocket" class="anchor-link" data-anchor-target="stage-05-pocket" data-stage="5">
+              <span class="anchor-dot" aria-hidden="true"></span>
+              <span>口袋證券 (2026.07–至今)</span>
+            </a>
+            <a href="#stage-04-crystal" class="anchor-link" data-anchor-target="stage-04-crystal" data-stage="4">
+              <span class="anchor-dot" aria-hidden="true"></span>
+              <span>怡誠水晶 (2025.09–2026.07)</span>
+            </a>
+            <a href="#stage-03-chanel" class="anchor-link" data-anchor-target="stage-03-chanel" data-stage="3">
+              <span class="anchor-dot" aria-hidden="true"></span>
+              <span>派駐 Chanel (2025.03–09)</span>
+            </a>
+            <a href="#stage-02-mobifone" class="anchor-link" data-anchor-target="stage-02-mobifone" data-stage="2">
+              <span class="anchor-dot" aria-hidden="true"></span>
+              <span>移動資通 (2021–2024)</span>
+            </a>
+            <a href="#stage-01-miracle" class="anchor-link" data-anchor-target="stage-01-miracle" data-stage="1">
+              <span class="anchor-dot" aria-hidden="true"></span>
+              <span>奇蹟行動科技 (2019–2021)</span>
+            </a>
+            <a href="#resume-education" class="anchor-link" data-anchor-target="resume-education" data-stage="5">
+              <span class="anchor-dot" aria-hidden="true"></span>
+              <span>學歷、證照與自傳</span>
+            </a>
+          </nav>
+        </aside>
+
+        <!-- 右欄：客製化履歷主內容（保留最新 104 第二份履歷完整內容） -->
+        <div class="resume-content-col">
+          <!-- Block 0：個人總覽與 SUMMARY / 專長 -->
+          <section id="resume-overview" class="resume-hero-card glass-panel" data-growth-stage="5" aria-label="個人摘要與核心技能">
+            <div class="resume-identity-bar">
+              <div class="resume-avatar-box">
+                <img src="./avatar.png?v=cyber15" alt="曹家贏 (Win) 的大頭貼">
+              </div>
+              <div class="resume-id-main">
+                <div class="resume-id-top">
+                  <h1 class="resume-name">曹家贏 <span class="resume-en-name">Win Tsao</span></h1>
+                </div>
+                <p class="resume-headline">口袋證券股份有限公司｜軟體QA工程師</p>
+                <div class="resume-status-badges">
+                  <span class="r-badge is-primary">現職：口袋證券股份有限公司 (2026/07–仍在職)</span>
+                  <span class="r-badge">5~6 年工作經歷（約 6 年軟體 QA）</span>
+                  <span class="r-badge">台北市大同區</span>
+                </div>
+                <div class="resume-contact-chips">
+                  <a href="mailto:st25580209@gmail.com">✉ st25580209@gmail.com</a>
+                  <a href="tel:0936936939">☎ 0936-936-939</a>
+                  <span>私立致理科技大學 資訊管理系（四技畢業）</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 104 SUMMARY：完整保留五大核心論述 -->
+            <div class="resume-summary-section">
+              <h2 class="resume-block-heading">個人摘要（SUMMARY）</h2>
+              <div class="resume-pillars-grid">
+                <article class="pillar-item">
+                  <h3>具備產品與專案管理思維的 QA</h3>
+                  <p>約 6 年軟體 QA 經驗（證券金融服務／跨國品牌系統整合／電信金流 App），職涯橫跨 QA、PM 與 Sales。擅長從「商業價值與使用者體驗」反推測試策略，能在開發初期識別 UI/UX 與需求邏輯矛盾，從源頭降低開發成本。</p>
+                </article>
+                <article class="pillar-item">
+                  <h3>高階跨部門溝通與談判能力</h3>
+                  <p>具備高度專案掌握度，曾作為測試端代表直面客戶與 PM，參與核心開發會議。擅長透過邏輯分析釐清模糊需求，平衡開發資源與測試時程，達成雙贏。</p>
+                </article>
+                <article class="pillar-item">
+                  <h3>從 0 到 1 的品質流程建置</h3>
+                  <p>具備獨立建置 QA 體系的能力，熟練導入 Jira、Trello、Kiwi TCMS 等追蹤系統。</p>
+                </article>
+                <article class="pillar-item">
+                  <h3>自動化測試投資回報評估</h3>
+                  <p>具備 Python + Selenium / Appium 實作經驗，但不盲目追求全自動化。擅長將自動化資源精準投入於「高頻重複、低變動」的流程，將核心人力保留於複雜的商業邏輯探索與防漏測試。</p>
+                </article>
+                <article class="pillar-item is-featured">
+                  <h3>AI 協作自動化與內部流程工具化</h3>
+                  <p>能從 QA 與業務實務痛點出發，與 AI 協作建置網頁自動化測試工作台（Python＋Selenium）、QA／RD 協作管理系統及實際落地使用之業務薪獎結算工作台，減少重複作業並強化資料一致性把關。</p>
+                </article>
+              </div>
+            </div>
+
+            <!-- 技術與工具專長（包含 Codex / Antigravity / Cursor） -->
+            <div class="resume-skill-section">
+              <h2 class="resume-block-heading">專長與技術工具</h2>
+              <div class="resume-skill-grid">
+                <div class="skill-group is-ai-group">
+                  <h3>AI 協作開發工具</h3>
+                  <div class="tool-chip-row">
+                    <span class="tool-chip is-ai">Codex</span>
+                    <span class="tool-chip is-ai">Antigravity</span>
+                    <span class="tool-chip is-ai">Cursor</span>
+                  </div>
+                </div>
+                <div class="skill-group">
+                  <h3>自動化與測試工具</h3>
+                  <div class="tool-chip-row">
+                    <span class="tool-chip">Python</span>
+                    <span class="tool-chip">Selenium</span>
+                    <span class="tool-chip">Appium</span>
+                    <span class="tool-chip">Postman</span>
+                    <span class="tool-chip">Katalon Studio</span>
+                    <span class="tool-chip">SikuliX</span>
+                    <span class="tool-chip">DBeaver</span>
+                  </div>
+                </div>
+                <div class="skill-group">
+                  <h3>Issue Tracking 與管理系統</h3>
+                  <div class="tool-chip-row">
+                    <span class="tool-chip">JIRA</span>
+                    <span class="tool-chip">Taiga</span>
+                    <span class="tool-chip">Azure DevOps (ADO)</span>
+                    <span class="tool-chip">Kiwi TCMS</span>
+                    <span class="tool-chip">Trello</span>
+                  </div>
+                </div>
+                <div class="skill-group">
+                  <h3>軟體測試核心專長</h3>
+                  <p>App 測試、Web 測試、手動測試／單元測試／回歸測試／功能測試／黑箱測試、獨立設計並撰寫 Test Case 與 Test Plan、跨職能 QA / PM / Sales 協作</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 工作經歷標題列（由新到舊） -->
+          <div class="timeline-section-header">
+            <h2>工作經歷</h2>
+          </div>
+
+          <!-- 5 個時期公司經歷（最新置頂：2026 → 2019） -->
+          <div id="resume-timeline-list" class="resume-timeline-list">
+            <!-- Stage 05: 口袋證券股份有限公司 -->
+            <article id="stage-05-pocket" class="timeline-stage-card glass-panel is-in-view" data-growth-stage="5" data-chrono-index="5">
+              <div class="stage-card-header">
+                <span class="stage-period">2026/07 ~ 仍在職</span>
+              </div>
+              <div class="stage-title-row">
+                <h3>口袋證券股份有限公司｜軟體QA工程師</h3>
+                <span class="stage-location">新北市板橋區 · 證券及期貨業（100~500人）</span>
+              </div>
+              <p class="stage-growth-narrative">負責證券服務前後台功能驗證，涵蓋官網、線上開戶、CMS 後臺、銀行核驗、期貨開戶介接、股息再投資、券差／借券等證券核心流程。</p>
+
+              <div class="stage-subgrid single-col">
+                <div class="sub-block">
+                  <h4>【日常金融服務 QA 與異常排查】</h4>
+                  <ul class="stage-bullets">
+                    <li><strong>規格釐清與測試設計：</strong>結合 Figma、Taiga 卡片，針對 PM 需求變動重新對照規格，明確區分產品缺陷、驗證 Feature 和追蹤 BUG 確保不再重現。</li>
+                  </ul>
+                </div>
+
+                <div class="sub-block">
+                  <h4>【AI 協作工具建置與流程改善】</h4>
+                  <ul class="stage-bullets">
+                    <li><strong>金融服務網頁自動化測試工作台（Python＋Selenium）：</strong>負責定義流程範圍、環境條件與驗收標準，與 AI 協作建置支援 Chrome／Safari 之可重跑桌面工作台，整合官網例行檢查、開戶、錢包與後台審核流程，並加入失敗診斷（操作時間線、Network、Console、DOM、截圖），支援修復複測與 RD 問題追查。</li>
+                    <li><strong>內部 QA／RD 協作管理系統（類 Jira 流程設計）：</strong>針對母子卡跨人分工與交測退回追蹤不易的痛點，主導規劃製作人／驗收人雙指派、母子卡獨立責任、交測／退回／複測輪次、Sprint／Release 與主管視角，與 AI 協作產出系統與離線四格互動原型向主管展示。</li>
+                    <li><strong>業務薪獎結算工作台（已交付業務實際使用）：</strong>協助業務釐清結算規則，與 AI 協作將每月多分頁 Excel 作業系統化，涵蓋來源格式／重複檢核、多種出帳模式、月／季結、滿千發放與跨期結餘重算；設計異常阻擋機制避免猜值，預覽與下載共用同份版型快照，並於系統更新時嚴格執行回歸測試。</li>
+                  </ul>
+                  <div class="sandbox-jump-row no-print" aria-label="前往對應互動作品">
+                    <button type="button" class="stage-sandbox-jump" data-jump-portfolio="01">體驗 AutoQA 作品 ↗</button>
+                    <button type="button" class="stage-sandbox-jump" data-jump-portfolio="02">體驗 Relay 作品 ↗</button>
+                    <button type="button" class="stage-sandbox-jump" data-jump-portfolio="03">體驗 PMO 通知作品 ↗</button>
+                    <button type="button" class="stage-sandbox-jump" data-jump-portfolio="04">體驗 Excel 智能彙整 ↗</button>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Stage 04: 怡誠水晶 -->
+            <article id="stage-04-crystal" class="timeline-stage-card glass-panel" data-growth-stage="4" data-chrono-index="4">
+              <div class="stage-card-header">
+                <span class="stage-period">2025/09 ~ 2026/07（11 個月）</span>
+              </div>
+              <div class="stage-title-row">
+                <h3>怡誠水晶｜營運優化與數位轉型負責人</h3>
+                <span class="stage-location">台北市大同區 · 國內業務（其他商品批發業 1~30人）</span>
+              </div>
+              <p class="stage-growth-narrative"><strong>2026/7 起轉為下班後寄貨與空閒時間維護（完全不影響正職投入）。</strong><br>主導家族傳統批發事業的數位化轉型專案，將原本高度依賴人工的作業流程，透過工具導入與數據管理進行標準化重整。（2025/9 - 至今 自營電商事業，拓展家族水晶產業至線上市場）</p>
+
+              <div class="stage-subgrid two-col">
+                <div class="sub-block">
+                  <h4>流程改善與數位化 (Process Optimization)</h4>
+                  <ul class="stage-bullets">
+                    <li>將傳統手寫進出貨紀錄全面電子化，建立可追蹤的庫存管理系統，大幅降低人為記帳錯誤率。</li>
+                    <li>導入自動化標籤設備，取代耗時的手寫標籤流程，解決出貨瓶頸，提升物流處理效率。</li>
+                  </ul>
+                </div>
+                <div class="sub-block">
+                  <h4>供應鏈管理與成本控制 (Supply Chain &amp; Cost Control)</h4>
+                  <ul class="stage-bullets">
+                    <li>親赴海外產地進行源頭品質稽核 (On-site Audit)，直接與供應商進行商務談判。</li>
+                    <li>運用數據分析制定採購策略，在確保產品品質的前提下，成功優化進貨成本結構（Cost Structure）。</li>
+                  </ul>
+                </div>
+                <div class="sub-block">
+                  <h4>電商通路建置 (E-commerce Implementation)</h4>
+                  <ul class="stage-bullets">
+                    <li>從零搭建蝦皮電商平台，負責產品攝影、SEO 關鍵字優化與定價策略，將業務範疇從線下批發拓展至線上零售 (O2O)。</li>
+                  </ul>
+                </div>
+                <div class="sub-block">
+                  <h4>客戶體驗管理 (Customer Experience)</h4>
+                  <ul class="stage-bullets">
+                    <li>負責門市客戶接待與需求引導，收集第一線使用者回饋以調整產品採購方向，確保市場需求與庫存相符。</li>
+                  </ul>
+                </div>
+              </div>
+            </article>
+
+            <!-- Stage 03: 新科有限公司 / Chanel -->
+            <article id="stage-03-chanel" class="timeline-stage-card glass-panel" data-growth-stage="3" data-chrono-index="3">
+              <div class="stage-card-header">
+                <span class="stage-period">2025/03 ~ 2025/09（7 個月）</span>
+              </div>
+              <div class="stage-title-row">
+                <h3>新科有限公司｜軟體 QA 工程師（派駐香奈兒 Chanel 總部）</h3>
+                <span class="stage-location">台北市大安區 · 網際網路相關業（1~30人）</span>
+              </div>
+              <p class="stage-growth-narrative"><strong>核心職責：</strong>負責國際精品品牌之 Salesforce Marketing Cloud (SFMC) 與 LINE Official Account (OA) 整合行銷系統測試，確保行銷 (Journey) 與使用者互動的精確性。</p>
+
+              <ul class="stage-bullets">
+                <li><strong>複雜商業邏輯轉化：</strong>在缺乏完整 UI/UX 設計稿的純文字需求環境下，運用強大的邏輯分析能力，將抽象的商業行銷需求（Campaign/Journey）精準轉化為端對端（E2E）測試案例，成功填補 PM 需求與 RD 開發間的認知落差。</li>
+                <li><strong>複雜系統整合測試 (E2E Testing)：</strong>主導 Salesforce 行銷雲與 LINE 機器人（fbp/fsn 帳號）之端對端測試，驗證 Campaign 設定、Journey 觸發至 LINE 訊息推播的完整資料流。</li>
+                <li>
+                  <strong>自動化測試導入 (Automation Implementation)：</strong>
+                  <ul class="sub-bullets">
+                    <li>針對 Salesforce Marketing Cloud 每次測試皆需重新建立的 8-9 種繁瑣行銷旅程 (Journey)，運用 Python + Selenium 開發自動化腳本。</li>
+                    <li>自動化執行 Campaign Creation 與測試資料初始化，成功取代人工重複建立資料的耗時流程，將原本冗長的測試前置準備時間 (Test Setup Time) 大幅縮短，讓團隊能專注於核心功能的驗證。</li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>CI/CD 流程與品質閘門管理：</strong>
+                  <ul class="sub-bullets">
+                    <li>使用 Azure DevOps 進行測試案例與 Bug 管理。</li>
+                    <li>嚴格執行 Dev &gt; SIT &gt; UAT &gt; Prod 四階段部署驗收流程，在繁瑣的版本發布規範下確保問題在前期環境即被攔截，降低生產環境風險。</li>
+                  </ul>
+                </li>
+                <li><strong>數據驗證：</strong>透過檢查 SFMC Sendlog 與系統後端資料，確保不同行銷活動（fsn/fbp）的紀錄寫入正確無誤。</li>
+              </ul>
+
+              <div class="product-detail-box">
+                <h4>產品與技術細節 (Product &amp; Tech Stack)</h4>
+                <ul class="stage-bullets">
+                  <li><strong>核心系統：</strong>Salesforce Marketing Cloud (SFMC), LINE OA (Bot), House Internal System.</li>
+                  <li><strong>測試工具：</strong>Azure DevOps (ADO) 為主要管理平台。</li>
+                  <li><strong>自動化技術：</strong>Python + Selenium (針對 Web 後臺介面進行腳本開發)。</li>
+                  <li><strong>測試場景：</strong>涵蓋 9 組不同類型的 Campaign Journey 測試，包含取樣活動 (Sampling)、單次／多次推播 (One-off/Multi) 等複雜邏輯驗證。</li>
+                </ul>
+              </div>
+            </article>
+
+            <!-- Stage 02: 移動資通有限公司 -->
+            <article id="stage-02-mobifone" class="timeline-stage-card glass-panel" data-growth-stage="2" data-chrono-index="2">
+              <div class="stage-card-header">
+                <span class="stage-period">2021/10 ~ 2024/04（2 年 7 個月）</span>
+              </div>
+              <div class="stage-title-row">
+                <h3>移動資通有限公司｜軟體QA工程師</h3>
+                <span class="stage-location">台北市中山區 · 電信相關業（30~100人）</span>
+              </div>
+              <p class="stage-growth-narrative">負責的產品為 <strong>Tel-U / Comii / NEXIM APP</strong>（三款為同架構不同產品內容的 APP）。</p>
+
+              <ul class="stage-bullets">
+                <li><strong>需求釐清與跨部門談判：</strong>作為 QA 端核心代表參與前期開發會議，協助主管評估技術可行性。擅長以邏輯與數據引導 PM 釐清模糊需求，有效管理專案範圍（Scope），確保上版時程與產品品質的平衡。</li>
+                <li><strong>測試策略優化：</strong>建立「需求探討 &gt; 測試計畫 &gt; 資源分配」的標準化流程。透過主動提出流程改善建議，不僅提升團隊協作效率，更確保了每次迭代（Iteration）的產品穩定性。</li>
+                <li>負責電信 APP 測試工作，獨立設計測試方案並撰寫測試案例，執行 APP 功能測試。</li>
+                <li>使用 TCMS 編寫測試報告，並對每一次的上版前測試做總結。</li>
+                <li>透過 TCMS System 記錄每一次的測試時間與測試覆蓋率，並且可以藉由 Priority 分類 Testcase，於有時程壓力的局限下至少讓 P0 的 TestCase 回歸測試覆蓋率達到 80% 以上，藉此來讓產品保持相當的穩定度。</li>
+                <li>透過 JIRA 針對新發現的 BUG 做持續追蹤並確保在產品上版前不再發生；針對已修正的 BUG 做驗證，並做回歸測試確保沒有 Side effect 發生。</li>
+                <li>分析每一次的測試資料並釐清問題，對團隊提出改善建議，讓每次的迭代都能提升產品品質；協助跨部門溝通協調與主管交辦事項執行。</li>
+              </ul>
+
+              <div class="product-detail-box">
+                <h4>產品 Detail（Tel-U / Comii / NEXIM）</h4>
+                <ul class="stage-bullets">
+                  <li>嘗試／輔助登入登出以及購買商品等低變動流程回歸測試</li>
+                  <li>運用 TCMS 系統編寫 Testcase 並持續追蹤產品 BUG</li>
+                  <li>使用 Postman 搭配 Dbeaver 資料庫測試端對端資料正確性</li>
+                  <li>搭配 JIRA 做 BUG 追蹤</li>
+                </ul>
+              </div>
+            </article>
+
+            <!-- Stage 01: 奇蹟行動科技有限公司 -->
+            <article id="stage-01-miracle" class="timeline-stage-card glass-panel" data-growth-stage="1" data-chrono-index="1">
+              <div class="stage-card-header">
+                <span class="stage-period">2019/04 ~ 2021/09（2 年 6 個月）</span>
+              </div>
+              <div class="stage-title-row">
+                <h3>奇蹟行動科技有限公司｜軟體QA工程師</h3>
+                <span class="stage-location">台北市中山區 · 網際網路相關業</span>
+              </div>
+              <p class="stage-growth-narrative">負責的產品為 <strong>各式外包 APP / WEB</strong>，期間橫跨 QA、PM 與 Sales 三種角色歷練。</p>
+
+              <div class="stage-subgrid three-col">
+                <div class="sub-block">
+                  <h4>[QA] 2019/4 ~ 2021/9（2年6個月）</h4>
+                  <ul class="stage-bullets">
+                    <li>負責所有外接案子的測試，包含了 App / Web / Hardware</li>
+                    <li>使用 Excel 獨立撰寫測試報告，並對每個產品做功能測試</li>
+                    <li>使用 Trello 記錄所有發現的 BUG 並持續追蹤直到 BUG 被解決</li>
+                    <li>於每一次上版前做回歸測試，確保產品於線上時都能保持高度穩定</li>
+                  </ul>
+                </div>
+                <div class="sub-block">
+                  <h4>[PM] 2021/1 ~ 2021/7（7個月）</h4>
+                  <ul class="stage-bullets">
+                    <li>參加每次的需求會議，直面客戶端，整理並排除客戶疑慮</li>
+                    <li>定期與客戶開會，蒐集新需求，並規劃產品時程</li>
+                    <li>於各個不同產品上分配 RD 資源，並使用 Trello 分派工作給 RD</li>
+                    <li>審閱 UI/UX design、製作結案報告書，並向政府單位做標案的結案收款與執行主管交辦事項</li>
+                  </ul>
+                </div>
+                <div class="sub-block">
+                  <h4>[SALES] 2020/6 ~ 2021/1（8個月）</h4>
+                  <ul class="stage-bullets">
+                    <li>於網路與電話上做陌生客戶開發，並使用自動化寄件找到產品 TA</li>
+                    <li>直面各大軟體與網頁開發公司，想盡辦法繞過客服後找到 Keyman</li>
+                    <li>從無到有提升產品能見度，至少接洽 50 間以上的軟體／網頁開發公司負責人</li>
+                    <li>蒐集客戶反饋對內部提出修改建議提升品質，並定期聯繫已知客戶提升黏著度</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="product-detail-box">
+                <h4>產品 Detail（Web &amp; APP 代表專案）</h4>
+                <div class="product-detail-grid">
+                  <div class="pd-item">
+                    <h5>Web 專案</h5>
+                    <ul>
+                      <li><strong>教育部專業師資發展平台：</strong>使用 Katalon Studio 做不同身分別的審核／申請流程，搭配 Trello 做 BUG 追蹤</li>
+                      <li><strong>展招視訊通話網頁平台：</strong>手動測試，搭配 Trello 做 BUG 追蹤</li>
+                      <li><strong>Pxcode：</strong>手動測試，搭配 Trello 做 BUG 追蹤</li>
+                    </ul>
+                  </div>
+                  <div class="pd-item">
+                    <h5>APP 專案</h5>
+                    <ul>
+                      <li><strong>Acer Planet9 Dropzone (電競社群平台)：</strong>使用 Sikulix 在 UI 上做自動化回歸測試避免錯位變形；使用 Katalon Studio 在登入／登出等低變動性流程做自動化回歸，搭配 Trello 追蹤</li>
+                      <li><strong>HTC Enterprise VR：</strong>手動測試，搭配 Trello 做 BUG 追蹤</li>
+                      <li><strong>Monchat (交友軟體)：</strong>使用 Sikulix 在登入／登出以及抽卡流程做自動化測試，搭配 Trello 追蹤</li>
+                      <li><strong>APIS 凌群電腦工單管理系統：</strong>手動測試，搭配 Trello 做 BUG 追蹤</li>
+                      <li><strong>Rungood2 德州撲克記帳演算系統：</strong>手動測試，搭配 Trello 做 BUG 追蹤</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <!-- Block 6: 學歷、證照與完整自傳（保留 104 原文五段） -->
+          <section id="resume-education" class="resume-edu-bio-grid glass-panel" data-growth-stage="5" aria-label="學歷、資格認證與自傳">
+            <div class="edu-cert-row">
+              <div class="edu-block">
+                <h2 class="resume-block-heading">學歷背景</h2>
+                <ul class="edu-list">
+                  <li>
+                    <strong>私立致理科技大學｜資訊管理系</strong>
+                    <span>四技畢業 · 2014/09 ~ 2018/06</span>
+                  </li>
+                  <li>
+                    <strong>臺北市立松山高級工農職業學校｜資訊科</strong>
+                    <span>高職畢業 · 2011/09 ~ 2014/06</span>
+                  </li>
+                </ul>
+              </div>
+              <div class="cert-block">
+                <h2 class="resume-block-heading">資格認證與語言能力</h2>
+                <div class="cert-chips">
+                  <span>IT Expert 數位內容遊戲企劃專業人員</span>
+                  <span>勞動部乙級電腦硬體裝修技術士</span>
+                  <span>勞動部丙級電腦硬體裝修技術士</span>
+                  <span>ITE Linux 進階系統管理</span>
+                  <span>ITE Linux 基礎運作</span>
+                  <span>Prosoft CIW Associate</span>
+                  <span>Microsoft MTA 微軟專業應用技術國際認證</span>
+                </div>
+                <p class="lang-note"><strong>語言能力：</strong>英文（聽／略懂｜說／略懂｜讀／中等｜寫／中等）、台語（精通）</p>
+              </div>
+            </div>
+
+            <div class="bio-full-section">
+              <h2 class="resume-block-heading">自傳</h2>
+              <div class="bio-chapters">
+                <div class="bio-chapter">
+                  <h4>【個人特質：具備商業思維的整合型 QA】</h4>
+                  <p>我是曹家贏，畢業於致理科技大學資訊管理系。擁有約 6 年軟體測試經驗，職涯歷程橫跨 QA、PM 與 Sales 三種角色。這種獨特的「多邊形」背景，使我不僅具備軟體測試的技術能力，更擁有「從商業價值與使用者體驗」反推測試案例的宏觀視野。</p>
+                </div>
+
+                <div class="bio-chapter">
+                  <h4>【第五份工作｜軟體QA工程師-導入自動化測試（口袋證券股份有限公司）】</h4>
+                  <p>2026 年 7 月，家裡的生意上軌道後，我加入了口袋證券，回到熟悉的 QA 工作。平常主要測官網、線上開戶和後台審核。新功能進來，我會先跟 PM 確認預期結果，再寫測試案例。遇到異常，就把重現步驟、操作時間和瀏覽器收到的回應整理給 RD，修好後再跑一次。</p>
+                  <p>每次上版後，有些開戶和後台流程都得從頭點一遍。我把操作步驟和通過條件整理出來，用 AI 協助寫程式，做成 Pocket QA，再自己試跑、核對結果。跑到一半出錯，工具會留下當時的截圖和請求紀錄。以我平常負責的 Web 例行回歸項目來估，目前約八成可以用它重跑。</p>
+                  <p>我也和 AI 做了 Relay，把工作卡交測或退回後該由誰接手的規則整理進去。做 KOL 薪獎工作台時，我先跟業務對 Excel 裡的算法。像是上個月的金額改了，後面幾個月的結餘要怎麼重算，我們就一起把規則釐清，再核對工具算出的報表。現在業務已經拿這套工具做結算。</p>
+                </div>
+
+                <div class="bio-chapter">
+                  <h4>【第四份工作：傳統產業轉型實踐與全方位營運 (怡誠水晶)】</h4>
+                  <p>2025年9月，我選擇主動挑戰一項高難度的實戰專案——接手家族的水晶批發事業並全面推動數位轉型。這項決定不僅是為了協助長年經營的家族傳產走出沒落，更是為了驗證自己運用資訊知識獨立營運一間公司的實戰能力。</p>
+                  <p>在這半年多的創業過程中，我採取「一手包辦」的策略，將工程師的解決問題思維發揮到極致。我的執行範疇極廣，展現出高度的跨界適應力：</p>
+                  <ul>
+                    <li><strong>基礎建設與硬體除錯：</strong>為了優化實體環境並控制成本，我親自爬上輕鋼架重新拉線、焊接電路，將全店傳統水銀燈具全數改裝為省電的 LED 燈系統。</li>
+                    <li><strong>數位化重構與電商通路：</strong>徹底廢除舊有的手寫記帳，將進出貨與庫存管理全面電子化。同時從零搭建 B2C 電商平台，一手包辦產品攝影、視覺修圖、上架與庫存調度。</li>
+                    <li><strong>流量優化與商務談判：</strong>破除傳統線下「口耳相傳」的被動模式，導入 SEO 關鍵字操作，成功將業務拓展開發至線上市場。此外，我亦獨自親赴中國產地，直接面對各個源頭供應商進行價格談判與品質稽核。</li>
+                  </ul>
+                  <p>這段「一人公司」的歷練，在短短半年內為公司帶來了客流量提升近 20 倍的實際成果。這段經歷對我而言，是一次極具價值的商業與能力證明。它證實了我是一個具備多方位實力、生存能力極強的整合型人才。小到電路硬體的實體除錯，大到電商架構、行銷策略，甚至是直面外部高階商務談判的壓力，我都具備絕不退縮且能迅速理出頭緒的實戰實力。</p>
+                </div>
+
+                <div class="bio-chapter">
+                  <h4>【第三份工作：跨國品牌系統整合與自動化實踐 (香奈兒 Chanel)】</h4>
+                  <p>隨後，我以駐點 QA 工程師身分進入 Chanel 香奈兒總部，在由架構師、PM 與 RD 組成的精實團隊中，負責核心的 LINE Robot 與 Salesforce Marketing Cloud 商務系統聯動測試。</p>
+                  <ul>
+                    <li><strong>複雜系統的品質守門員 (Quality Gatekeeper)：</strong>面對 Dev &gt; SIT &gt; UAT &gt; Prod 的繁瑣四階段部署流程，我擔任關鍵的品質守門員。利用 Azure DevOps 進行嚴謹管理，並以全英文撰寫 Test Case，確保每次版本推進都在可控風險內。</li>
+                    <li><strong>從零打造自動化測試 (Automation Initiative)：</strong>為了提升效率，我主動從零建置 Python + Selenium 腳本，針對 Salesforce 流程進行自動化驗證。這不僅大幅減少手動測試成本，更證明了我具備「發現瓶頸並導入技術解決方案」的主動性。</li>
+                  </ul>
+                </div>
+
+                <div class="bio-chapter">
+                  <h4>【第二份工作：自動化測試落地與數據驅動 (移動資通)】</h4>
+                  <p>在二類電信產業的敏捷開發團隊中，我負責 Tel-U / NEXIM 等核心 App 的品質保證。</p>
+                  <ul>
+                    <li><strong>導入 Bug Tracking System：</strong>主導導入 Kiwi TCMS 與 JIRA 整合流程，將測試案例庫（Test Case Library）系統化，確保每一個 Bug 都能被有效追蹤與數據化分析。</li>
+                    <li><strong>自動化測試策略 (ROI 導向)：</strong>主動評估維護成本與效益後，運用 Python + Selenium / Appium 針對「登入/註冊/儲值」等低變動功能實作自動化回歸測試；將自動化鎖定於高重複性場景以釋放人力，並將核心資源集中於探索性測試（Exploratory Testing）以挖掘深層邏輯問題，達成最佳的測試成本效益比。</li>
+                  </ul>
+                </div>
+
+                <div class="bio-chapter">
+                  <h4>【第一份工作：全端品質與跨職能歷練 (奇蹟行動科技)】</h4>
+                  <p>作為公司唯一的 QA 工程師，我在無資深人員指導的環境下，獨立建構了完整的測試規範。</p>
+                  <ul>
+                    <li><strong>從無到有建立 QA 體系：</strong>獨立負責教育部師資平台、HTC VR 等多樣化專案的測試計畫，從需求分析到上線驗收一手包辦。</li>
+                    <li><strong>跨職能整合價值：</strong>兼任 PM 與 Sales 的經歷，讓我能精準對接客戶需求（Requirement）與開發資源（Resources）。我擅長在產品規格書與 UI 設計階段就提前識別邏輯矛盾，大幅降低後續的修復成本。</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
       </div>
-
-      <!-- 右欄：Matrix 半透明玻璃互動終端機 -->
-      <aside class="telemetry-console glass-panel" aria-label="互動式規則引擎與 QA 診斷模擬器">
-        <div class="console-header">
-          <div class="window-dots" aria-hidden="true"><span></span><span></span><span></span></div>
-          <span class="console-title">telemetry://qa-rule-simulator</span>
-          <button type="button" class="console-run-btn" id="console-replay">▶ EXECUTE</button>
-        </div>
-        <div class="console-tabs" role="tablist" aria-label="選擇檢視系統">
-          <button type="button" role="tab" aria-selected="true" class="console-tab is-active" data-sys-tab="01">SYS-01 AutoQA</button>
-          <button type="button" role="tab" aria-selected="false" class="console-tab" data-sys-tab="02">SYS-02 Relay</button>
-          <button type="button" role="tab" aria-selected="false" class="console-tab" data-sys-tab="03">SYS-03 Notify</button>
-          <button type="button" role="tab" aria-selected="false" class="console-tab" data-sys-tab="04">SYS-04 Payroll</button>
-        </div>
-        <div class="console-body" id="console-output" aria-live="polite"></div>
-        <div class="console-footer">
-          <span class="console-metric" id="console-metric">ASSERTIONS: 4/4 PASSED · 0.31s</span>
-          <a class="console-launch" id="console-launch" href="./04-pocket-qa/index.html">ENTER_SANDBOX ↗</a>
-        </div>
-      </aside>
     </section>
-
-    <!-- 作品卡片區 -->
-    <section aria-labelledby="projects-heading" class="projects-section">
-      <div class="section-bar">
-        <div>
-          <span class="section-kicker">CONSTRUCT_NODES // GLASS_PROJECTION</span>
-          <h2 id="projects-heading">互動作品展示（點擊即可在瀏覽器直接操作）</h2>
-        </div>
-        <p>去識別化純前端沙盒 · 滑鼠移上卡片觸發 3D 微波翻轉、水波紋與字元解碼特效</p>
-      </div>
-
-      <div class="projects" aria-label="作品清單">
-        <!-- SYS-01 AutoQA -->
-        <article class="project-card glass-panel" data-category="automation" data-sys="01" data-accent="matrix">
-          <span class="corner-bracket tl" aria-hidden="true"></span>
-          <span class="corner-bracket tr" aria-hidden="true"></span>
-          <span class="corner-bracket bl" aria-hidden="true"></span>
-          <span class="corner-bracket br" aria-hidden="true"></span>
-          <div class="glass-ripple-layer" aria-hidden="true"></div>
-          <div class="glass-prism-sweep" aria-hidden="true"></div>
-          <a class="project-link" href="./04-pocket-qa/index.html">
-            <div class="project-top-bar">
-              <span class="sys-id" data-decrypt-text="SYS-01 // TEST_RUNNER">SYS-01 // TEST_RUNNER</span>
-              <span class="sys-badge">自動化測試與診斷</span>
-            </div>
-            <div class="project-viewport">
-              <img src="./驗收截圖/04-Pocket-QA-測試工作台.png" alt="AutoQA Desktop 的測試流程清單與執行安排">
-              <div class="viewport-overlay"><span>DECODE &amp; ENTER AutoQA ↗</span></div>
-            </div>
-            <div class="project-copy">
-              <h3>AutoQA Desktop 自動化測試工作台</h3>
-              <dl class="project-points">
-                <dt>發現痛點</dt>
-                <dd>例行上版回歸流程重複度高，且失敗時常缺乏當下畫面與時間線證據，增加 RD 追查成本。</dd>
-                <dt>主動解法</dt>
-                <dd>規劃可自選流程、排程順序與重跑的桌面工作台，在失敗當下自動保存完整原圖截圖與步驟紀錄，並產出可離線分享的 HTML 報告。</dd>
-              </dl>
-              <div class="project-meta-chips">
-                <span>26 條驗證流程</span><span>4 大失敗診斷證據</span><span>完整原圖保存</span>
-              </div>
-              <span class="project-cta">立即試玩：切「故障示範」看自動截圖與 HTML 報告 →</span>
-            </div>
-          </a>
-        </article>
-
-        <!-- SYS-02 Relay -->
-        <article class="project-card glass-panel" data-category="workflow" data-sys="02" data-accent="matrix">
-          <span class="corner-bracket tl" aria-hidden="true"></span>
-          <span class="corner-bracket tr" aria-hidden="true"></span>
-          <span class="corner-bracket bl" aria-hidden="true"></span>
-          <span class="corner-bracket br" aria-hidden="true"></span>
-          <div class="glass-ripple-layer" aria-hidden="true"></div>
-          <div class="glass-prism-sweep" aria-hidden="true"></div>
-          <a class="project-link" href="./01-relay/index.html">
-            <div class="project-top-bar">
-              <span class="sys-id" data-decrypt-text="SYS-02 // WORKFLOW_ENGINE">SYS-02 // WORKFLOW_ENGINE</span>
-              <span class="sys-badge">跨角色協作流程設計</span>
-            </div>
-            <div class="project-viewport">
-              <img src="./驗收截圖/01-Relay-雙角色工作台.png" alt="Relay 的工作總覽、專案看板與雙指派接球介面">
-              <div class="viewport-overlay"><span>DECODE &amp; ENTER Relay ↗</span></div>
-            </div>
-            <div class="project-copy">
-              <h3>Relay 專案與交接工作台</h3>
-              <dl class="project-points">
-                <dt>發現痛點</dt>
-                <dd>一張卡常跨 RD 開發與 QA 驗收，只看單一狀態容易搞混「現在輪到誰」，退回複測也常要反覆口頭確認。</dd>
-                <dt>主動解法</dt>
-                <dd>設計製作人／驗收人雙指派與依狀態自動接球規則，完整涵蓋個人 Dashboard、專案看板、Sprint／Release、工作分時與退回原因紀錄。</dd>
-              </dl>
-              <div class="project-meta-chips">
-                <span>雙指派頭像 Popover</span><span>狀態自動接球</span><span>12 大完整工作頁</span>
-              </div>
-              <span class="project-cta">立即試玩：在 Dashboard 與專案看板體驗雙指派頭像、狀態接球與 Sprint 規劃 →</span>
-            </div>
-          </a>
-        </article>
-
-        <!-- SYS-03 PMO-Slack -->
-        <article class="project-card glass-panel" data-category="automation" data-sys="03" data-accent="matrix">
-          <span class="corner-bracket tl" aria-hidden="true"></span>
-          <span class="corner-bracket tr" aria-hidden="true"></span>
-          <span class="corner-bracket bl" aria-hidden="true"></span>
-          <span class="corner-bracket br" aria-hidden="true"></span>
-          <div class="glass-ripple-layer" aria-hidden="true"></div>
-          <div class="glass-prism-sweep" aria-hidden="true"></div>
-          <a class="project-link" href="./02-pmo-slack/index.html">
-            <div class="project-top-bar">
-              <span class="sys-id" data-decrypt-text="SYS-03 // EVENT_NOTIFIER">SYS-03 // EVENT_NOTIFIER</span>
-              <span class="sys-badge">驗收通知自動化</span>
-            </div>
-            <div class="project-viewport">
-              <img src="./驗收截圖/02-PMO-Slack-測試完成通知.png" alt="PMO 驗收通知設定與模擬 Slack 訊息">
-              <div class="viewport-overlay"><span>DECODE &amp; ENTER Notifier ↗</span></div>
-            </div>
-            <div class="project-copy">
-              <h3>PMO 測試完成 Slack 通知</h3>
-              <dl class="project-points">
-                <dt>發現痛點</dt>
-                <dd>QA 測完卡片後需人工逐筆查需求單位、複製連結並私訊通知驗收，容易漏發或重複通知。</dd>
-                <dt>主動解法</dt>
-                <dd>設計狀態變更觸發與防重機制：偵測儲存「測試完成」時自動帶入卡片資訊、依需求單位（空白則沿用母卡）對應收件人發送通知。</dd>
-              </dl>
-              <div class="project-meta-chips">
-                <span>三段式架構整合</span><span>母卡單位沿用</span><span>防重覆發送機制</span>
-              </div>
-              <span class="project-cta">立即試玩：將狀態改為「測試完成」並儲存，看右側 Slack 私訊 →</span>
-            </div>
-          </a>
-        </article>
-
-        <!-- SYS-04 KOL Payroll -->
-        <article class="project-card glass-panel" data-category="settlement" data-sys="04" data-accent="matrix">
-          <span class="corner-bracket tl" aria-hidden="true"></span>
-          <span class="corner-bracket tr" aria-hidden="true"></span>
-          <span class="corner-bracket bl" aria-hidden="true"></span>
-          <span class="corner-bracket br" aria-hidden="true"></span>
-          <div class="glass-ripple-layer" aria-hidden="true"></div>
-          <div class="glass-prism-sweep" aria-hidden="true"></div>
-          <a class="project-link" href="./03-excel-payroll/index.html">
-            <div class="project-top-bar">
-              <span class="sys-id" data-decrypt-text="SYS-04 // SETTLEMENT_CORE">SYS-04 // SETTLEMENT_CORE</span>
-              <span class="sys-badge">實際上線使用中</span>
-            </div>
-            <div class="project-viewport">
-              <img src="./驗收截圖/03-KOL薪獎-匯入範例.png" alt="KOL 薪獎工作台的 Excel 匯入畫面">
-              <div class="viewport-overlay"><span>DECODE &amp; ENTER Payroll ↗</span></div>
-            </div>
-            <div class="project-copy">
-              <h3>KOL Excel 薪獎工作台</h3>
-              <dl class="project-points">
-                <dt>發現痛點</dt>
-                <dd>業務每月須人工核對多份 Excel 績效表、A／B／A+B 三種出帳模式、月結／季結與跨期結餘，極易算錯且不易回溯。</dd>
-                <dt>主動解法</dt>
-                <dd>協助釐清結算與例外規則（滿千發放、畸零數承接、異動重算），做出可預覽並沿用原業務版型匯出 Excel 的工作台。</dd>
-              </dl>
-              <div class="project-meta-chips">
-                <span>真實 .xlsx 解析匯出</span><span>月結／季結分段重算</span><span>畸零數跨期稽核</span>
-              </div>
-              <span class="project-cta">立即試玩：載入範例 Excel 匯入，預覽並下載結算表 →</span>
-            </div>
-          </a>
-        </article>
-      </div>
-    </section>
-
-    <footer class="portfolio-footer glass-surface">
-      <p>說明：所有作品均由本人負責痛點發掘、規則定義、邊界條件與驗收把關，並結合 AI 協作完成開發；本網站展示內容皆已替換為去識別化模擬資料，於瀏覽器本機獨立運行。</p>
-    </footer>
   </main>
 
   <!-- 創意 iPhone 聯絡名片彈窗（點擊反灰背景可關閉） -->
@@ -290,10 +714,10 @@
           </div>
           <span class="iphone-kicker">INCOMING CONTACT CARD</span>
           <h2 class="iphone-name" id="iphone-contact-name">Win</h2>
-          <p class="iphone-role" id="iphone-contact-role">Web QA 工程師 · 流程設計 × AI 協作</p>
+          <p class="iphone-role" id="iphone-contact-role">軟體 QA 工程師｜金融服務 × AI 協作工具</p>
         </div>
 
-        <!-- 電話 / Email / 履歷連結 -->
+        <!-- 電話 / Email / 站內履歷連結 -->
         <div class="iphone-cards">
           <div class="iphone-info-card">
             <div class="iphone-info-icon phone" aria-hidden="true">
@@ -301,7 +725,7 @@
             </div>
             <div class="iphone-info-body">
               <span class="iphone-info-label">行動電話</span>
-              <a class="iphone-info-value" id="iphone-phone-link" href="tel:0912345678">0912-345-678</a>
+              <a class="iphone-info-value" id="iphone-phone-link" href="tel:0936936939">0936-936-939</a>
             </div>
             <button type="button" class="iphone-copy-btn" data-copy-target="phone" aria-label="複製電話號碼">複製</button>
           </div>
@@ -312,29 +736,29 @@
             </div>
             <div class="iphone-info-body">
               <span class="iphone-info-label">電子信箱</span>
-              <a class="iphone-info-value" id="iphone-email-link" href="mailto:win.qa.contact@example.com">win.qa.contact@example.com</a>
+              <a class="iphone-info-value" id="iphone-email-link" href="mailto:st25580209@gmail.com">st25580209@gmail.com</a>
             </div>
             <button type="button" class="iphone-copy-btn" data-copy-target="email" aria-label="複製電子信箱">複製</button>
           </div>
 
-          <a class="iphone-resume-card" id="iphone-resume-link" href="https://pda.104.com.tw/" target="_blank" rel="noopener noreferrer">
+          <a class="iphone-resume-card" id="iphone-resume-link" href="#resume">
             <div class="iphone-info-icon resume" aria-hidden="true">
               <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
             </div>
             <div class="iphone-info-body">
-              <span class="iphone-info-label">履歷連結</span>
-              <span class="iphone-info-value" id="iphone-resume-label">開啟 Win 的完整履歷 ↗</span>
+              <span class="iphone-info-label">互動履歷</span>
+              <span class="iphone-info-value" id="iphone-resume-label">檢視 Win 的履歷表 →</span>
             </div>
           </a>
         </div>
 
         <!-- iOS 底部通話快捷操作列 -->
         <div class="iphone-dock-actions">
-          <a class="iphone-circle-btn call" id="iphone-call-action" href="tel:0912345678" aria-label="撥打電話">
+          <a class="iphone-circle-btn call" id="iphone-call-action" href="tel:0936936939" aria-label="撥打電話">
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             <span>撥號</span>
           </a>
-          <a class="iphone-circle-btn mail" id="iphone-mail-action" href="mailto:win.qa.contact@example.com" aria-label="寄送 Email">
+          <a class="iphone-circle-btn mail" id="iphone-mail-action" href="mailto:st25580209@gmail.com" aria-label="寄送 Email">
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
             <span>寄信</span>
           </a>

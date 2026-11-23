@@ -178,17 +178,17 @@ body {
   width: min(1200px, calc(100% - 48px));
   margin: auto;
   min-height: 58px;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  justify-content: space-between;
   gap: 14px;
-  flex-wrap: wrap;
   padding: 8px 0;
 }
 .hud-brand {
   display: flex;
   align-items: center;
   gap: 10px;
+  justify-self: start;
 }
 .live-pulse {
   width: 8px;
@@ -213,6 +213,7 @@ body {
 .hud-controls {
   display: flex;
   align-items: center;
+  justify-self: end;
   gap: 10px;
   flex-wrap: wrap;
 }
@@ -916,16 +917,30 @@ body {
 .iphone-modal-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 200;
+  z-index: 9999;
+  isolation: isolate;
+  transform: translateZ(600px);
   display: grid;
   place-items: center;
   padding: 20px;
-  background: rgba(2, 6, 18, 0.76);
-  backdrop-filter: blur(12px) saturate(130%);
-  -webkit-backdrop-filter: blur(12px) saturate(130%);
+  background: rgba(2, 6, 18, 0.88);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.28s ease;
+}
+body.modal-open .portfolio,
+body.modal-open .hud-bar,
+body.modal-open #growth-bg-stage {
+  filter: blur(6px);
+  opacity: 0.28;
+  pointer-events: none;
+}
+body.modal-open .project-card,
+body.modal-open .projects {
+  transform: none !important;
+  perspective: none !important;
 }
 .iphone-modal-backdrop[hidden] {
   display: none;
@@ -1357,5 +1372,1025 @@ body {
   .project-card, .project-viewport, .project-viewport img {
     transition: none !important;
     transform: none !important;
+  }
+}
+
+
+/* ==========================================================================
+   雙視圖切換、左側成長舞台劇院、精簡作品集標頭與互動履歷樣式
+   ========================================================================== */
+.tab-view[hidden],
+.filter-pills[hidden],
+.resume-hud-actions[hidden] {
+  display: none !important;
+}
+
+.main-view-tabs {
+  justify-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px;
+  border-radius: 999px;
+  background: rgba(4, 12, 28, 0.9);
+  border: 1.5px solid rgba(56, 189, 248, 0.45);
+  box-shadow:
+    0 8px 28px rgba(2, 6, 23, 0.7),
+    0 0 20px rgba(34, 211, 238, 0.16),
+    inset 0 1px 0 rgba(186, 230, 253, 0.18);
+}
+.main-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 124px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #cbd5e1;
+  border-radius: 999px;
+  padding: 9px 30px;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.22s ease;
+}
+.main-tab-btn:hover {
+  color: #ffffff;
+  background: rgba(56, 189, 248, 0.12);
+}
+.main-tab-btn.is-active {
+  color: #ffffff;
+  background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 55%, #22d3ee 100%);
+  border-color: rgba(165, 243, 252, 0.8);
+  box-shadow:
+    0 4px 18px rgba(14, 165, 233, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.resume-hud-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.resume-print-btn {
+  border-color: rgba(52, 211, 153, 0.48);
+  background: rgba(16, 185, 129, 0.14);
+  color: #a7f3d0;
+}
+.resume-print-btn:hover {
+  border-color: #34d399;
+  color: #ffffff;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.35);
+}
+
+/* 作品集頂部標題與篩選列（精簡無干擾） */
+.portfolio-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px 20px;
+  margin-bottom: 24px;
+}
+.portfolio-main-title {
+  margin: 0;
+  font-size: clamp(26px, 3.2vw, 36px);
+  line-height: 1.15;
+  font-weight: 850;
+  letter-spacing: -0.03em;
+  background: linear-gradient(120deg, #ffffff 22%, #38bdf8 62%, #818cf8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 16px rgba(34, 211, 238, 0.25));
+}
+
+/* 履歷專屬：柔和環境光暈背景（隨成長階段切換色調，無文字遮擋） */
+.growth-bg-stage {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.45s ease, background 0.6s ease;
+}
+body[data-active-view="resume"] .growth-bg-stage {
+  opacity: 1;
+}
+.growth-bg-stage[data-active-stage="1"] {
+  background: radial-gradient(circle at 18% 35%, rgba(251, 191, 36, 0.08), transparent 55%);
+}
+.growth-bg-stage[data-active-stage="2"] {
+  background: radial-gradient(circle at 18% 35%, rgba(56, 189, 248, 0.09), transparent 55%);
+}
+.growth-bg-stage[data-active-stage="3"] {
+  background: radial-gradient(circle at 18% 35%, rgba(129, 140, 248, 0.1), transparent 55%);
+}
+.growth-bg-stage[data-active-stage="4"] {
+  background: radial-gradient(circle at 18% 35%, rgba(52, 211, 153, 0.09), transparent 55%);
+}
+.growth-bg-stage[data-active-stage="5"] {
+  background: radial-gradient(circle at 18% 35%, rgba(34, 211, 238, 0.11), transparent 58%);
+}
+
+/* 履歷整體雙欄布局 */
+.resume-layout {
+  display: grid;
+  grid-template-columns: 330px minmax(0, 1fr);
+  gap: 26px;
+  align-items: start;
+}
+.resume-view .glass-panel {
+  background: linear-gradient(135deg, rgba(14, 30, 58, 0.42) 0%, rgba(6, 12, 26, 0.68) 100%);
+}
+
+/* 左欄：無遮擋成長動畫舞台 + 黏性錨點導覽軌 */
+.resume-anchor-rail {
+  position: sticky;
+  top: 84px;
+  border-radius: 18px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.anchor-stage-card {
+  padding: 13px 14px;
+  border-radius: 14px;
+  background: rgba(6, 16, 36, 0.8);
+  border: 1px solid rgba(56, 189, 248, 0.34);
+  box-shadow: inset 0 1px 0 rgba(186, 230, 253, 0.14);
+}
+.anchor-stage-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.rail-stage-code {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--cyber-cyan);
+}
+.rail-stage-title {
+  margin: 0 0 2px;
+  font-size: 15.5px;
+  font-weight: 800;
+  color: #f8fafc;
+}
+.rail-stage-state {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #7dd3fc;
+}
+
+/* 獨立無遮擋的成長動畫舞台畫布視窗 */
+.growth-theater-viewport {
+  position: relative;
+  width: 100%;
+  height: 188px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 10px 0;
+  background: radial-gradient(circle at 50% 62%, rgba(34, 211, 238, 0.16), rgba(3, 8, 20, 0.94) 76%);
+  border: 1px solid rgba(56, 189, 248, 0.38);
+  box-shadow: inset 0 0 24px rgba(34, 211, 238, 0.14);
+}
+#growth-walker-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.theater-mode-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(34, 211, 238, 0.55);
+  background: rgba(6, 16, 36, 0.85);
+  color: #a5f3fc;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+  transition: all 0.25s ease;
+}
+.theater-mode-badge.mode-present {
+  border-color: rgba(34, 211, 238, 0.72);
+  color: #67e8f9;
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.25);
+}
+.theater-mode-badge.mode-rewind {
+  border-color: rgba(167, 139, 250, 0.65);
+  background: rgba(30, 20, 58, 0.85);
+  color: #ddd6fe;
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.25);
+}
+.theater-mode-badge.mode-showcase {
+  border-color: rgba(251, 191, 36, 0.75);
+  background: rgba(40, 24, 6, 0.85);
+  color: #fde68a;
+  box-shadow: 0 0 14px rgba(251, 191, 36, 0.35);
+}
+
+.growth-progress-bar {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  overflow: hidden;
+}
+.growth-progress-fill {
+  height: 100%;
+  width: 20%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #fbbf24, #38bdf8, #34d399, #22d3ee);
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.55);
+  transition: width 0.28s ease;
+}
+
+.resume-anchor-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.anchor-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  text-decoration: none;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+.anchor-dot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.45);
+  transition: all 0.2s ease;
+}
+.anchor-link:hover {
+  color: var(--text-main);
+  background: rgba(56, 189, 248, 0.08);
+}
+.anchor-link.is-active {
+  color: #ecfeff;
+  background: rgba(34, 211, 238, 0.14);
+  border-color: rgba(34, 211, 238, 0.45);
+  box-shadow: 0 0 16px rgba(34, 211, 238, 0.16);
+}
+.anchor-link.is-active .anchor-dot {
+  background: var(--cyber-cyan);
+  box-shadow: 0 0 10px var(--cyber-cyan);
+  transform: scale(1.25);
+}
+
+.rail-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(56, 189, 248, 0.22);
+}
+.rail-replay-btn,
+.rail-pdf-btn {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.rail-replay-btn {
+  background: rgba(34, 211, 238, 0.14);
+  border: 1px solid rgba(34, 211, 238, 0.45);
+  color: var(--cyber-bright);
+}
+.rail-replay-btn:hover {
+  background: rgba(34, 211, 238, 0.26);
+  transform: translateY(-1px);
+  box-shadow: 0 0 14px rgba(34, 211, 238, 0.24);
+}
+.rail-replay-btn.is-playing {
+  border-color: rgba(251, 191, 36, 0.72);
+  background: rgba(251, 191, 36, 0.18);
+  color: #fde68a;
+  box-shadow: 0 0 16px rgba(251, 191, 36, 0.26);
+}
+.rail-pdf-btn {
+  background: rgba(16, 185, 129, 0.14);
+  border: 1px solid rgba(52, 211, 153, 0.44);
+  color: #a7f3d0;
+}
+.rail-pdf-btn:hover {
+  background: rgba(16, 185, 129, 0.25);
+  color: #ffffff;
+}
+
+/* 右欄：履歷卡片內容 */
+.resume-content-col {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  min-width: 0;
+}
+.resume-hero-card,
+.timeline-stage-card,
+.resume-edu-bio-grid {
+  border-radius: 18px;
+  padding: 24px 26px;
+  scroll-margin-top: 90px;
+}
+
+.resume-identity-bar {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+}
+.resume-avatar-box {
+  flex: none;
+  width: 96px;
+  height: 96px;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 2px solid rgba(34, 211, 238, 0.6);
+  box-shadow: 0 10px 28px rgba(2, 6, 23, 0.65), 0 0 24px rgba(34, 211, 238, 0.24);
+}
+.resume-avatar-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.resume-id-main {
+  flex: 1;
+  min-width: 0;
+}
+.resume-id-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.inline-print-btn {
+  border: 1px solid rgba(52, 211, 153, 0.5);
+  background: rgba(16, 185, 129, 0.16);
+  color: #a7f3d0;
+  border-radius: 999px;
+  padding: 5px 13px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.inline-print-btn:hover {
+  background: rgba(16, 185, 129, 0.28);
+  color: #ffffff;
+}
+.resume-name {
+  margin: 0 0 4px;
+  font-size: clamp(26px, 3vw, 34px);
+  font-weight: 850;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+.resume-en-name {
+  font-size: 0.62em;
+  font-weight: 600;
+  color: var(--cyber-cyan);
+  margin-left: 6px;
+}
+.resume-headline {
+  margin: 0 0 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #bae6fd;
+}
+.resume-status-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 10px;
+}
+.r-badge {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  color: var(--text-soft);
+}
+.r-badge.is-primary {
+  background: rgba(34, 211, 238, 0.18);
+  border-color: rgba(34, 211, 238, 0.55);
+  color: #ecfeff;
+}
+.resume-contact-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.resume-contact-chips a {
+  color: var(--cyber-bright);
+  text-decoration: none;
+  font-weight: 600;
+}
+.resume-contact-chips a:hover {
+  text-decoration: underline;
+}
+
+.resume-block-heading {
+  margin: 0 0 12px;
+  font-size: 16px;
+  font-weight: 800;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.resume-block-heading span {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--cyber-cyan);
+}
+.resume-summary-section {
+  margin-top: 20px;
+}
+.resume-pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.pillar-item {
+  padding: 13px 15px;
+  border-radius: 12px;
+  background: rgba(8, 18, 38, 0.62);
+  border: 1px solid rgba(56, 189, 248, 0.22);
+}
+.pillar-item.is-featured {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.16), rgba(34, 211, 238, 0.08));
+  border-color: rgba(34, 211, 238, 0.48);
+}
+.pillar-item h3 {
+  margin: 0 0 5px;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--cyber-bright);
+}
+.pillar-item p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-soft);
+}
+
+.resume-skill-section {
+  margin-top: 20px;
+}
+.resume-skill-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.skill-group {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(6, 14, 30, 0.56);
+  border: 1px solid rgba(56, 189, 248, 0.18);
+}
+.skill-group.is-ai-group {
+  background: rgba(14, 165, 233, 0.12);
+  border-color: rgba(34, 211, 238, 0.44);
+}
+.skill-group h3 {
+  margin: 0 0 7px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--cyber-cyan);
+}
+.skill-group p {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-soft);
+}
+.tool-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tool-chip {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  color: var(--text-soft);
+}
+.tool-chip.is-ai {
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.26), rgba(34, 211, 238, 0.16));
+  border-color: rgba(34, 211, 238, 0.65);
+  color: #ecfeff;
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.2);
+}
+
+.timeline-section-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-top: 4px;
+}
+.timeline-section-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-main);
+}
+.timeline-order-note {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--cyber-bright);
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(34, 211, 238, 0.1);
+  border: 1px solid rgba(34, 211, 238, 0.28);
+}
+
+.resume-timeline-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.timeline-stage-card {
+  position: relative;
+  border-left: 3px solid rgba(56, 189, 248, 0.35);
+  transition: border-color 0.28s ease, box-shadow 0.28s ease, transform 0.28s ease;
+}
+.timeline-stage-card.is-in-view {
+  border-color: rgba(34, 211, 238, 0.65);
+  box-shadow:
+    inset 0 1px 0 var(--glass-highlight),
+    0 20px 50px -10px rgba(2, 6, 23, 0.8),
+    0 0 28px -6px rgba(34, 211, 238, 0.26);
+}
+.timeline-stage-card[data-growth-stage="1"].is-in-view { border-left-color: #fbbf24; }
+.timeline-stage-card[data-growth-stage="2"].is-in-view { border-left-color: #38bdf8; }
+.timeline-stage-card[data-growth-stage="3"].is-in-view { border-left-color: #818cf8; }
+.timeline-stage-card[data-growth-stage="4"].is-in-view { border-left-color: #34d399; }
+.timeline-stage-card[data-growth-stage="5"].is-in-view { border-left-color: #22d3ee; }
+
+.stage-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.stage-badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.stage-pill {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  background: rgba(56, 189, 248, 0.14);
+  color: #ecfeff;
+}
+.stage-pill.stage-1 { border-color: rgba(251, 191, 36, 0.55); background: rgba(251, 191, 36, 0.14); color: #fde68a; }
+.stage-pill.stage-2 { border-color: rgba(56, 189, 248, 0.55); background: rgba(56, 189, 248, 0.16); color: #bae6fd; }
+.stage-pill.stage-3 { border-color: rgba(129, 140, 248, 0.6); background: rgba(99, 102, 241, 0.2); color: #c7d2fe; }
+.stage-pill.stage-4 { border-color: rgba(52, 211, 153, 0.55); background: rgba(16, 185, 129, 0.16); color: #a7f3d0; }
+.stage-pill.stage-5 { border-color: rgba(34, 211, 238, 0.72); background: rgba(34, 211, 238, 0.2); color: #a5f3fc; }
+
+.locomotion-pill {
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 6px;
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  color: var(--text-muted);
+}
+.stage-period {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--cyber-bright);
+}
+.stage-title-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.stage-title-row h3 {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 800;
+  color: #ffffff;
+}
+.stage-location {
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+.stage-growth-narrative {
+  margin: 0 0 12px;
+  padding: 10px 13px;
+  border-radius: 10px;
+  background: rgba(34, 211, 238, 0.08);
+  border-left: 3px solid rgba(34, 211, 238, 0.55);
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: #e0f2fe;
+}
+.stage-bullets {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13.5px;
+  line-height: 1.68;
+  color: var(--text-soft);
+}
+.stage-bullets strong {
+  color: #f8fafc;
+}
+.sub-bullets {
+  margin: 6px 0 2px;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 13px;
+  line-height: 1.62;
+  color: #cbd5e1;
+}
+.sub-bullets em {
+  font-style: normal;
+  font-weight: 700;
+  color: var(--cyber-bright);
+}
+.sandbox-jump-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.stage-sandbox-jump {
+  border: 1px solid rgba(34, 211, 238, 0.45);
+  background: rgba(34, 211, 238, 0.12);
+  color: var(--cyber-bright);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.stage-sandbox-jump:hover {
+  background: rgba(34, 211, 238, 0.26);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* 經歷內部結構化卡片與產品明細 */
+.stage-subgrid {
+  display: grid;
+  gap: 12px;
+  margin-top: 10px;
+}
+.stage-subgrid.single-col {
+  grid-template-columns: 1fr;
+}
+.stage-subgrid.two-col {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.stage-subgrid.three-col {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.sub-block,
+.product-detail-box,
+.bio-chapter {
+  padding: 13px 15px;
+  border-radius: 12px;
+  background: rgba(6, 14, 30, 0.54);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+}
+.product-detail-box {
+  margin-top: 12px;
+}
+.sub-block h4,
+.product-detail-box h4,
+.bio-chapter h4 {
+  margin: 0 0 8px;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--cyber-bright);
+}
+.product-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.pd-item h5 {
+  margin: 0 0 6px;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--cyber-cyan);
+}
+.pd-item ul,
+.bio-chapter ul {
+  margin: 0;
+  padding-left: 17px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 12.8px;
+  line-height: 1.62;
+  color: var(--text-soft);
+}
+.pd-item strong,
+.bio-chapter strong {
+  color: #f8fafc;
+}
+
+/* 學歷、證照與完整自傳 */
+.resume-edu-bio-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.edu-cert-row {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 22px;
+}
+.edu-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.edu-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(6, 14, 30, 0.56);
+  border: 1px solid rgba(56, 189, 248, 0.18);
+}
+.edu-list strong {
+  font-size: 13.5px;
+  color: #f8fafc;
+}
+.edu-list span {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.cert-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.cert-chips span {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.24);
+  color: var(--text-soft);
+}
+.lang-note {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-soft);
+}
+.bio-chapters {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.bio-chapter p {
+  margin: 0 0 8px;
+  font-size: 13.5px;
+  line-height: 1.72;
+  color: var(--text-soft);
+}
+.bio-chapter p:last-child {
+  margin-bottom: 0;
+}
+
+/* 履歷版面響應式調整 */
+@media (max-width: 960px) {
+  .hud-inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  .main-view-tabs {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+  }
+  .resume-layout {
+    grid-template-columns: 1fr;
+  }
+  .resume-anchor-rail {
+    position: static;
+  }
+  .anchor-stage-card {
+    position: sticky;
+    top: 74px;
+    z-index: 35;
+  }
+  .growth-theater-viewport {
+    height: 120px;
+  }
+  .resume-pillars-grid,
+  .resume-skill-grid,
+  .stage-subgrid.two-col,
+  .stage-subgrid.three-col,
+  .product-detail-grid,
+  .edu-cert-row {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 600px) {
+  .main-tab-btn {
+    min-width: 96px;
+    padding: 7px 18px;
+    font-size: 14px;
+  }
+  .resume-identity-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .resume-hero-card,
+  .timeline-stage-card,
+  .resume-edu-bio-grid {
+    padding: 18px 16px;
+  }
+}
+
+/* ==========================================================================
+   純白 A4 列印 / 另存 PDF 樣式 (@media print)
+   ========================================================================== */
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm 15mm;
+  }
+  html, body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    font-size: 10.5pt;
+  }
+  .ambient-stage,
+  .cyber-perspective-grid,
+  #tech-canvas,
+  #growth-bg-stage,
+  .bg-grid,
+  .crt-scanlines,
+  .dof-foreground-hud,
+  .hud-bar,
+  #view-portfolio,
+  .resume-anchor-rail,
+  .portfolio-footer,
+  .iphone-modal-backdrop,
+  .stage-sandbox-jump,
+  .no-print {
+    display: none !important;
+  }
+  .portfolio {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  #view-resume {
+    display: block !important;
+  }
+  .resume-layout {
+    display: block !important;
+  }
+  .resume-hero-card,
+  .timeline-stage-card,
+  .resume-edu-bio-grid,
+  .pillar-item,
+  .skill-group,
+  .sub-block,
+  .product-detail-box,
+  .bio-chapter,
+  .edu-list li {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    color: #0f172a !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .resume-hero-card,
+  .timeline-stage-card,
+  .resume-edu-bio-grid {
+    padding: 14px 16px !important;
+    margin-bottom: 12px !important;
+  }
+  .resume-name,
+  .resume-block-heading,
+  .stage-title-row h3,
+  .stage-bullets strong,
+  .pd-item strong,
+  .bio-chapter strong,
+  .edu-list strong {
+    color: #0f172a !important;
+  }
+  .resume-en-name,
+  .resume-block-heading span,
+  .stage-period,
+  .sub-bullets em,
+  .resume-contact-chips a,
+  .pd-item h5 {
+    color: #0369a1 !important;
+  }
+  .resume-headline,
+  .pillar-item h3,
+  .skill-group h3,
+  .sub-block h4,
+  .product-detail-box h4,
+  .bio-chapter h4 {
+    color: #1e293b !important;
+  }
+  .pillar-item p,
+  .skill-group p,
+  .stage-bullets,
+  .sub-bullets,
+  .pd-item ul,
+  .bio-chapter p,
+  .bio-chapter ul,
+  .edu-list span,
+  .lang-note,
+  .resume-contact-chips,
+  .stage-location {
+    color: #334155 !important;
+  }
+  .eyebrow,
+  .r-badge,
+  .stage-pill,
+  .locomotion-pill,
+  .cert-chips span,
+  .tool-chip {
+    background: #f1f5f9 !important;
+    border-color: #cbd5e1 !important;
+    color: #0f172a !important;
+  }
+  .stage-growth-narrative {
+    background: #f8fafc !important;
+    border-left: 3px solid #0284c7 !important;
+    color: #1e293b !important;
   }
 }
