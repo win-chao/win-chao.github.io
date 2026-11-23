@@ -435,7 +435,7 @@
     role: 'Web QA 工程師 · 流程設計 × AI 協作',
     phone: '0936-936-939',
     email: 'st25580209@gmail.com',
-    resumeUrl: 'https://pda.104.com.tw/profile/share/ia4BlMtDcQbjzSte0yujfkwPynpxI8xT',
+    resumeUrl: 'https://pda.104.com.tw/profile/share/ia5i1Ve3TbCIf8pOZd889H0pQWWzHPXW',
     resumeLabel: '開啟 Win 的 104 履歷 ↗',
     avatarUrl: './avatar.png'
   };
