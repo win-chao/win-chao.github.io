@@ -873,8 +873,10 @@ body {
   cursor: pointer;
   box-shadow: 0 6px 20px rgba(14, 165, 233, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.35);
   transition: transform 0.2s ease, box-shadow 0.22s ease, filter 0.2s ease;
+  animation: contactBtnBuzz 3.4s ease-in-out infinite;
 }
 .contact-win-btn:hover {
+  animation-play-state: paused;
   transform: translateY(-2px);
   filter: brightness(1.08);
   box-shadow: 0 10px 26px rgba(14, 165, 233, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.45);
@@ -903,8 +905,10 @@ body {
   cursor: pointer;
   box-shadow: 0 10px 28px rgba(2, 132, 199, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.32);
   transition: transform 0.2s ease, box-shadow 0.22s ease, filter 0.2s ease;
+  animation: contactBtnBuzz 3.4s ease-in-out 0.3s infinite;
 }
 .hero-contact-btn:hover {
+  animation-play-state: paused;
   transform: translateY(-2px);
   filter: brightness(1.08);
   box-shadow: 0 14px 34px rgba(14, 165, 233, 0.52), inset 0 1px 0 rgba(255, 255, 255, 0.45);
@@ -928,6 +932,15 @@ body {
   0% { transform: scale(1); opacity: 0.75; }
   75% { transform: scale(1.12, 1.28); opacity: 0; }
   100% { transform: scale(1.12, 1.28); opacity: 0; }
+}
+@keyframes contactBtnBuzz {
+  0%, 76%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  79% { transform: translate3d(-2px, 0, 0) rotate(-1.2deg); }
+  82% { transform: translate3d(2px, 0, 0) rotate(1.2deg); }
+  85% { transform: translate3d(-2px, 0, 0) rotate(-1deg); }
+  88% { transform: translate3d(2px, 0, 0) rotate(1deg); }
+  91% { transform: translate3d(-1px, 0, 0) rotate(-0.5deg); }
+  94% { transform: translate3d(0, 0, 0) rotate(0deg); }
 }
 @keyframes phoneRingWiggle {
   0%, 72%, 100% { transform: rotate(0deg); }
