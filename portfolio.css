@@ -853,6 +853,489 @@ body {
   color: var(--text-muted);
 }
 
+/* ==========================================================================
+   聯絡Win 按鈕與擬真 iPhone 16 Pro 聯絡名片彈窗
+   ========================================================================== */
+.contact-win-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(34, 211, 238, 0.72);
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.3), rgba(34, 211, 238, 0.22));
+  color: #f0f9ff;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(34, 211, 238, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  transition: transform 0.2s ease, box-shadow 0.25s ease, border-color 0.2s ease;
+}
+.contact-win-btn::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
+  border: 1px solid rgba(56, 189, 248, 0.48);
+  animation: contactBtnPulse 2.4s ease-out infinite;
+  pointer-events: none;
+}
+.contact-win-btn:hover {
+  transform: translateY(-2px);
+  border-color: #a5f3fc;
+  box-shadow: 0 0 28px rgba(34, 211, 238, 0.58), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+.phone-ring-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #67e8f9;
+  animation: phoneRingWiggle 2.8s ease-in-out infinite;
+}
+@keyframes contactBtnPulse {
+  0% { transform: scale(1); opacity: 0.75; }
+  75% { transform: scale(1.12, 1.28); opacity: 0; }
+  100% { transform: scale(1.12, 1.28); opacity: 0; }
+}
+@keyframes phoneRingWiggle {
+  0%, 72%, 100% { transform: rotate(0deg); }
+  76% { transform: rotate(-16deg); }
+  80% { transform: rotate(16deg); }
+  84% { transform: rotate(-12deg); }
+  88% { transform: rotate(10deg); }
+  92% { transform: rotate(0deg); }
+}
+
+/* 反灰模糊背景（點擊任意處關閉） */
+.iphone-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(2, 6, 18, 0.76);
+  backdrop-filter: blur(12px) saturate(130%);
+  -webkit-backdrop-filter: blur(12px) saturate(130%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s ease;
+}
+.iphone-modal-backdrop[hidden] {
+  display: none;
+}
+.iphone-modal-backdrop.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* 大尺寸 iPhone 鈦金屬機身 */
+.iphone-device {
+  position: relative;
+  width: min(404px, 92vw);
+  max-height: 90vh;
+  padding: 13px;
+  border-radius: 54px;
+  background: linear-gradient(145deg, #4b5563 0%, #1f2937 22%, #0f172a 55%, #334155 88%, #64748b 100%);
+  box-shadow:
+    0 34px 90px rgba(0, 0, 0, 0.88),
+    0 0 60px rgba(34, 211, 238, 0.24),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.22),
+    inset 0 0 0 5px #070b14;
+  transform: translateY(28px) scale(0.9) rotateX(8deg);
+  transition: transform 0.42s cubic-bezier(0.22, 1.15, 0.36, 1);
+  perspective: 1200px;
+}
+.iphone-modal-backdrop.is-open .iphone-device {
+  transform: translateY(0) scale(1) rotateX(0deg);
+  animation: iphoneIncomingBuzz 0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97) 0.12s;
+}
+@keyframes iphoneIncomingBuzz {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  18% { transform: translate3d(-3px, 0, 0) rotate(-0.8deg); }
+  36% { transform: translate3d(3px, 0, 0) rotate(0.8deg); }
+  54% { transform: translate3d(-2px, 0, 0) rotate(-0.5deg); }
+  72% { transform: translate3d(2px, 0, 0) rotate(0.5deg); }
+}
+
+/* 側邊實體按鍵 */
+.iphone-btn-silent, .iphone-btn-vol-up, .iphone-btn-vol-down, .iphone-btn-power {
+  position: absolute;
+  background: linear-gradient(180deg, #64748b, #1e293b);
+  border-radius: 3px;
+  pointer-events: none;
+}
+.iphone-btn-silent { left: -4px; top: 108px; width: 4px; height: 28px; }
+.iphone-btn-vol-up { left: -4px; top: 156px; width: 4px; height: 52px; }
+.iphone-btn-vol-down { left: -4px; top: 222px; width: 4px; height: 52px; }
+.iphone-btn-power { right: -4px; top: 184px; width: 4px; height: 82px; }
+
+/* 螢幕面板 */
+.iphone-screen {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: min(748px, calc(90vh - 26px));
+  max-height: calc(90vh - 26px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-radius: 42px;
+  padding: 16px 20px 14px;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(34, 211, 238, 0.24), transparent 52%),
+    radial-gradient(circle at 82% 75%, rgba(59, 130, 246, 0.2), transparent 50%),
+    linear-gradient(175deg, #061329 0%, #030a18 56%, #051126 100%);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  color: #f8fafc;
+  scrollbar-width: none;
+}
+.iphone-screen::-webkit-scrollbar { display: none; }
+
+.iphone-screen-glare {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(118deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.02) 26%, transparent 48%);
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* iOS 狀態列與動態島 */
+.iphone-status-bar {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.iphone-time {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #f8fafc;
+  min-width: 44px;
+}
+.iphone-dynamic-island {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: #02040a;
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.7), inset 0 0 8px rgba(34, 211, 238, 0.14);
+  transition: all 0.25s ease;
+}
+.iphone-dynamic-island.is-feedback {
+  border-color: #34d399;
+  box-shadow: 0 0 18px rgba(52, 211, 153, 0.45);
+}
+.island-wave {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 12px;
+}
+.island-wave i {
+  display: block;
+  width: 2.5px;
+  height: 100%;
+  border-radius: 2px;
+  background: #22d3ee;
+  animation: islandWave 1.1s ease-in-out infinite;
+}
+.island-wave i:nth-child(2) { animation-delay: 0.18s; background: #38bdf8; }
+.island-wave i:nth-child(3) { animation-delay: 0.36s; background: #34d399; }
+.island-wave i:nth-child(4) { animation-delay: 0.24s; background: #22d3ee; }
+@keyframes islandWave {
+  0%, 100% { transform: scaleY(0.35); }
+  50% { transform: scaleY(1); }
+}
+.island-text {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #bae6fd;
+  white-space: nowrap;
+}
+.iphone-status-icons {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 44px;
+  justify-content: flex-end;
+}
+.signal-5g {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #e2e8f0;
+}
+.battery-icon {
+  position: relative;
+  width: 21px;
+  height: 11px;
+  border: 1.5px solid rgba(248, 250, 252, 0.75);
+  border-radius: 3.5px;
+  padding: 1.5px;
+}
+.battery-icon::after {
+  content: "";
+  position: absolute;
+  right: -3.5px;
+  top: 2.5px;
+  width: 2px;
+  height: 4px;
+  border-radius: 0 2px 2px 0;
+  background: rgba(248, 250, 252, 0.75);
+}
+.battery-icon span {
+  display: block;
+  width: 82%;
+  height: 100%;
+  border-radius: 1.5px;
+  background: #34d399;
+}
+
+/* 大頭貼 + 姓名 */
+.iphone-profile {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.iphone-avatar-wrap {
+  position: relative;
+  width: 112px;
+  height: 112px;
+  margin-bottom: 14px;
+  display: grid;
+  place-items: center;
+}
+.avatar-sonar {
+  position: absolute;
+  inset: -6px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(34, 211, 238, 0.55);
+  animation: avatarSonar 2.6s ease-out infinite;
+  pointer-events: none;
+}
+.avatar-sonar.s2 {
+  animation-delay: 1.3s;
+}
+@keyframes avatarSonar {
+  0% { transform: scale(0.95); opacity: 0.85; }
+  100% { transform: scale(1.36); opacity: 0; }
+}
+#iphone-avatar-img, .iphone-avatar-fallback {
+  position: relative;
+  z-index: 2;
+  width: 106px;
+  height: 106px;
+  border-radius: 999px;
+  object-fit: cover;
+  border: 2.5px solid rgba(103, 232, 249, 0.85);
+  box-shadow: 0 12px 30px rgba(2, 6, 23, 0.7), 0 0 24px rgba(34, 211, 238, 0.35);
+}
+.iphone-avatar-fallback {
+  display: grid;
+  place-items: center;
+  font-family: var(--mono);
+  font-size: 40px;
+  font-weight: 800;
+  color: #ecfeff;
+  background: radial-gradient(circle at 30% 25%, #0ea5e9, #1d4ed8 65%, #0f172a 100%);
+}
+.iphone-kicker {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #67e8f9;
+  margin-bottom: 4px;
+}
+.iphone-name {
+  margin: 0 0 4px;
+  font-size: 27px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+.iphone-role {
+  margin: 0;
+  font-size: 13px;
+  color: #bae6fd;
+  opacity: 0.9;
+}
+
+/* 聯絡資訊與履歷卡片 */
+.iphone-cards {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: 11px;
+  margin-bottom: 20px;
+}
+.iphone-info-card, .iphone-resume-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  background: rgba(15, 29, 58, 0.72);
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  backdrop-filter: blur(12px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.iphone-resume-card {
+  text-decoration: none;
+  color: inherit;
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.24), rgba(37, 99, 235, 0.24));
+  border-color: rgba(56, 189, 248, 0.56);
+}
+.iphone-info-card:hover, .iphone-resume-card:hover {
+  transform: translateY(-2px);
+  border-color: #67e8f9;
+  background: rgba(18, 38, 76, 0.86);
+}
+.iphone-info-icon {
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+}
+.iphone-info-icon.phone { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+.iphone-info-icon.mail { background: rgba(56, 189, 248, 0.2); color: #38bdf8; }
+.iphone-info-icon.resume { background: rgba(99, 102, 241, 0.26); color: #a5b4fc; }
+
+.iphone-info-body {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.iphone-info-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+}
+.iphone-info-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #f8fafc;
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.iphone-copy-btn {
+  flex: 0 0 auto;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  background: rgba(34, 211, 238, 0.14);
+  color: #67e8f9;
+  border-radius: 10px;
+  padding: 5px 10px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+.iphone-copy-btn:hover {
+  background: rgba(34, 211, 238, 0.3);
+  color: #ffffff;
+}
+
+/* iOS 底部通話操作列 */
+.iphone-dock-actions {
+  position: relative;
+  z-index: 2;
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  padding-top: 6px;
+}
+.iphone-circle-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 0;
+  color: #e2e8f0;
+  text-decoration: none;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.iphone-circle-btn svg {
+  width: 56px;
+  height: 56px;
+  padding: 16px;
+  border-radius: 999px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.iphone-circle-btn:hover svg {
+  transform: scale(1.07);
+}
+.iphone-circle-btn.call svg {
+  background: linear-gradient(145deg, #22c55e, #16a34a);
+  color: #ffffff;
+  box-shadow: 0 10px 24px rgba(34, 197, 94, 0.42);
+}
+.iphone-circle-btn.mail svg {
+  background: linear-gradient(145deg, #0ea5e9, #2563eb);
+  color: #ffffff;
+  box-shadow: 0 10px 24px rgba(14, 165, 233, 0.42);
+}
+.iphone-circle-btn.hangup svg {
+  background: linear-gradient(145deg, #ef4444, #dc2626);
+  color: #ffffff;
+  box-shadow: 0 10px 24px rgba(239, 68, 68, 0.42);
+}
+.iphone-dismiss-hint {
+  margin: 14px 0 8px;
+  text-align: center;
+  font-size: 11.5px;
+  color: rgba(186, 230, 253, 0.65);
+}
+.iphone-home-indicator {
+  width: 128px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(248, 250, 252, 0.68);
+  margin: 2px auto 0;
+}
+
+@media (max-width: 480px) {
+  .iphone-device {
+    width: min(370px, 95vw);
+    border-radius: 44px;
+    padding: 10px;
+  }
+  .iphone-screen {
+    border-radius: 35px;
+    min-height: min(670px, calc(92vh - 20px));
+    padding: 14px 16px 12px;
+  }
+}
+
 /* Responsive */
 @media (max-width: 960px) {
   .hero-grid { grid-template-columns: 1fr; }

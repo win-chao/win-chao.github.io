@@ -203,3 +203,9 @@ dialog::backdrop { background: #26342e58; }
 .diag-table .fail { color: #b91c1c; font-weight: 700; }
 .diag-table .pass { color: #15803d; font-weight: 700; }
 .diag-console { background: #1e293b; color: #e2e8f0; padding: 10px 12px; border-radius: 7px; font-size: 12px; overflow-x: auto; margin: 6px 0 0; }
+@media (max-width: 640px) {
+  html, body { overflow-x: hidden; max-width: 100%; }
+  .shell, .workspace, .panel, .stage { min-width: 0; max-width: 100%; }
+  .flow-list { max-height: 280px; overflow-y: auto; }
+  .diag-table { display: block; overflow-x: auto; }
+}

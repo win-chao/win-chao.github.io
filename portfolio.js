@@ -426,5 +426,133 @@
     if (reducedMotion) drawCanvas();
   });
 
+  // ---------------------------------------------------------
+  // 5. 聯絡Win iPhone 16 Pro 彈窗設定與互動
+  // ---------------------------------------------------------
+  // TODO: 若要替換成您的真實聯絡資料與大頭貼，直接修改下方物件即可
+  const WIN_CONTACT_PROFILE = {
+    name: 'Win',
+    role: 'Web QA 工程師 · 流程設計 × AI 協作',
+    phone: '0912-345-678',
+    email: 'win.qa.contact@example.com',
+    resumeUrl: 'https://pda.104.com.tw/',
+    resumeLabel: '開啟 Win 的 104 履歷 ↗',
+    avatarUrl: '' // 可填入 './avatar.jpg' 或圖片路徑
+  };
+
+  const contactModal = $('#iphone-contact-modal');
+  const contactDevice = $('#iphone-device');
+  const openPhoneBtn = $('#open-contact-phone');
+  const closePhoneBtn = $('#close-contact-phone');
+  const islandEl = $('#iphone-island');
+  const islandText = $('#iphone-island-text');
+  let islandTimer = null;
+
+  function applyContactProfile() {
+    const nameEl = $('#iphone-contact-name');
+    const roleEl = $('#iphone-contact-role');
+    const phoneLink = $('#iphone-phone-link');
+    const callAction = $('#iphone-call-action');
+    const emailLink = $('#iphone-email-link');
+    const mailAction = $('#iphone-mail-action');
+    const resumeLink = $('#iphone-resume-link');
+    const resumeLabel = $('#iphone-resume-label');
+    const avatarImg = $('#iphone-avatar-img');
+    const avatarFallback = $('#iphone-avatar-fallback');
+
+    if (nameEl) nameEl.textContent = WIN_CONTACT_PROFILE.name;
+    if (roleEl) roleEl.textContent = WIN_CONTACT_PROFILE.role;
+    const rawTel = WIN_CONTACT_PROFILE.phone.replace(/[^\d+]/g, '');
+    if (phoneLink) {
+      phoneLink.textContent = WIN_CONTACT_PROFILE.phone;
+      phoneLink.href = `tel:${rawTel}`;
+    }
+    if (callAction) callAction.href = `tel:${rawTel}`;
+    if (emailLink) {
+      emailLink.textContent = WIN_CONTACT_PROFILE.email;
+      emailLink.href = `mailto:${WIN_CONTACT_PROFILE.email}`;
+    }
+    if (mailAction) mailAction.href = `mailto:${WIN_CONTACT_PROFILE.email}`;
+    if (resumeLink) resumeLink.href = WIN_CONTACT_PROFILE.resumeUrl;
+    if (resumeLabel) resumeLabel.textContent = WIN_CONTACT_PROFILE.resumeLabel;
+
+    if (WIN_CONTACT_PROFILE.avatarUrl && avatarImg && avatarFallback) {
+      avatarImg.src = WIN_CONTACT_PROFILE.avatarUrl;
+      avatarImg.hidden = false;
+      avatarFallback.style.display = 'none';
+    }
+  }
+
+  function updateIphoneClock() {
+    const clockEl = $('#iphone-clock');
+    if (!clockEl) return;
+    const now = new Date();
+    const hh = String(now.getHours()).padStart(2, '0');
+    const mm = String(now.getMinutes()).padStart(2, '0');
+    clockEl.textContent = `${hh}:${mm}`;
+  }
+
+  function showIslandFeedback(msg) {
+    if (!islandEl || !islandText) return;
+    clearTimeout(islandTimer);
+    islandEl.classList.add('is-feedback');
+    islandText.textContent = msg;
+    islandTimer = setTimeout(() => {
+      islandEl.classList.remove('is-feedback');
+      islandText.textContent = `CONNECTING · ${WIN_CONTACT_PROFILE.name.toUpperCase()}`;
+    }, 1800);
+  }
+
+  function openContactModal() {
+    if (!contactModal) return;
+    updateIphoneClock();
+    contactModal.hidden = false;
+    requestAnimationFrame(() => {
+      contactModal.classList.add('is-open');
+    });
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeContactModal() {
+    if (!contactModal) return;
+    contactModal.classList.remove('is-open');
+    document.body.style.overflow = '';
+    setTimeout(() => {
+      if (!contactModal.classList.contains('is-open')) {
+        contactModal.hidden = true;
+      }
+    }, 260);
+  }
+
+  applyContactProfile();
+  openPhoneBtn?.addEventListener('click', openContactModal);
+  closePhoneBtn?.addEventListener('click', closeContactModal);
+
+  // 點擊手機以外的反灰背景即可關閉
+  contactModal?.addEventListener('click', (e) => {
+    if (contactDevice && !contactDevice.contains(e.target)) {
+      closeContactModal();
+    }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && contactModal && !contactModal.hidden) {
+      closeContactModal();
+    }
+  });
+
+  // 複製電話 / Email 並於動態島顯示回饋
+  $$('[data-copy-target]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const target = btn.dataset.copyTarget;
+      const value = target === 'phone' ? WIN_CONTACT_PROFILE.phone : WIN_CONTACT_PROFILE.email;
+      try {
+        await navigator.clipboard.writeText(value);
+        showIslandFeedback(target === 'phone' ? '✓ 已複製電話號碼' : '✓ 已複製 Email');
+      } catch {
+        showIslandFeedback(`✓ ${value}`);
+      }
+    });
+  });
+
   runTelemetry('01');
 })();

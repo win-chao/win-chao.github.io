@@ -6,8 +6,8 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' file:; style-src 'self' file: 'unsafe-inline'; img-src 'self' file: data:; connect-src 'none'; base-uri 'none'">
   <link rel="icon" href="data:,">
   <title>Qa-Win的作品集</title>
-  <link rel="stylesheet" href="./portfolio.css?v=cyber1">
-  <script src="./portfolio.js?v=cyber1" defer></script>
+  <link rel="stylesheet" href="./portfolio.css?v=cyber2">
+  <script src="./portfolio.js?v=cyber2" defer></script>
 </head>
 <body>
   <!-- Matrix 多層次光學景深舞台 -->
@@ -39,6 +39,14 @@
         <button type="button" class="theme-toggle" id="theme-toggle" aria-label="切換科技藍光強度">
           <span class="theme-dot" aria-hidden="true"></span>
           <span id="theme-label">CYBER_CORE</span>
+        </button>
+        <button type="button" class="contact-win-btn" id="open-contact-phone" aria-haspopup="dialog" aria-controls="iphone-contact-modal">
+          <span class="phone-ring-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+          </span>
+          <span>聯絡Win</span>
         </button>
       </div>
     </div>
@@ -244,5 +252,101 @@
       <p>說明：所有作品均由本人負責痛點發掘、規則定義、邊界條件與驗收把關，並結合 AI 協作完成開發；本網站展示內容皆已替換為去識別化模擬資料，於瀏覽器本機獨立運行。</p>
     </footer>
   </main>
+
+  <!-- 創意 iPhone 聯絡名片彈窗（點擊反灰背景可關閉） -->
+  <div class="iphone-modal-backdrop" id="iphone-contact-modal" role="dialog" aria-modal="true" aria-labelledby="iphone-contact-name" hidden>
+    <div class="iphone-device" id="iphone-device">
+      <!-- 機身實體側鍵 -->
+      <span class="iphone-btn-silent" aria-hidden="true"></span>
+      <span class="iphone-btn-vol-up" aria-hidden="true"></span>
+      <span class="iphone-btn-vol-down" aria-hidden="true"></span>
+      <span class="iphone-btn-power" aria-hidden="true"></span>
+
+      <div class="iphone-screen">
+        <!-- 玻璃流光反射 -->
+        <div class="iphone-screen-glare" aria-hidden="true"></div>
+
+        <!-- iOS 狀態列 + 動態島 -->
+        <div class="iphone-status-bar">
+          <span class="iphone-time" id="iphone-clock">15:30</span>
+          <div class="iphone-dynamic-island" id="iphone-island">
+            <span class="island-wave" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <span class="island-text" id="iphone-island-text">CONNECTING · WIN</span>
+          </div>
+          <div class="iphone-status-icons" aria-hidden="true">
+            <span class="signal-5g">5G</span>
+            <span class="battery-icon"><span></span></span>
+          </div>
+        </div>
+
+        <!-- 聯絡人主視覺：大頭貼 + 姓名 -->
+        <div class="iphone-profile">
+          <div class="iphone-avatar-wrap">
+            <span class="avatar-sonar s1" aria-hidden="true"></span>
+            <span class="avatar-sonar s2" aria-hidden="true"></span>
+            <img id="iphone-avatar-img" src="" alt="Win 的大頭貼" hidden>
+            <div class="iphone-avatar-fallback" id="iphone-avatar-fallback" aria-hidden="true">W</div>
+          </div>
+          <span class="iphone-kicker">INCOMING CONTACT CARD</span>
+          <h2 class="iphone-name" id="iphone-contact-name">Win</h2>
+          <p class="iphone-role" id="iphone-contact-role">Web QA 工程師 · 流程設計 × AI 協作</p>
+        </div>
+
+        <!-- 電話 / Email / 履歷連結 -->
+        <div class="iphone-cards">
+          <div class="iphone-info-card">
+            <div class="iphone-info-icon phone" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </div>
+            <div class="iphone-info-body">
+              <span class="iphone-info-label">行動電話</span>
+              <a class="iphone-info-value" id="iphone-phone-link" href="tel:0912345678">0912-345-678</a>
+            </div>
+            <button type="button" class="iphone-copy-btn" data-copy-target="phone" aria-label="複製電話號碼">複製</button>
+          </div>
+
+          <div class="iphone-info-card">
+            <div class="iphone-info-icon mail" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            </div>
+            <div class="iphone-info-body">
+              <span class="iphone-info-label">電子信箱</span>
+              <a class="iphone-info-value" id="iphone-email-link" href="mailto:win.qa.contact@example.com">win.qa.contact@example.com</a>
+            </div>
+            <button type="button" class="iphone-copy-btn" data-copy-target="email" aria-label="複製電子信箱">複製</button>
+          </div>
+
+          <a class="iphone-resume-card" id="iphone-resume-link" href="https://pda.104.com.tw/" target="_blank" rel="noopener noreferrer">
+            <div class="iphone-info-icon resume" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+            <div class="iphone-info-body">
+              <span class="iphone-info-label">履歷連結</span>
+              <span class="iphone-info-value" id="iphone-resume-label">開啟 Win 的完整履歷 ↗</span>
+            </div>
+          </a>
+        </div>
+
+        <!-- iOS 底部通話快捷操作列 -->
+        <div class="iphone-dock-actions">
+          <a class="iphone-circle-btn call" id="iphone-call-action" href="tel:0912345678" aria-label="撥打電話">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span>撥號</span>
+          </a>
+          <a class="iphone-circle-btn mail" id="iphone-mail-action" href="mailto:win.qa.contact@example.com" aria-label="寄送 Email">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            <span>寄信</span>
+          </a>
+          <button type="button" class="iphone-circle-btn hangup" id="close-contact-phone" aria-label="關閉手機畫面">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            <span>關閉</span>
+          </button>
+        </div>
+
+        <p class="iphone-dismiss-hint">點擊手機以外的反灰區域即可關閉</p>
+        <div class="iphone-home-indicator" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

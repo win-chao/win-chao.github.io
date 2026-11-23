@@ -3,6 +3,7 @@
 const { complete, unitName, acceptedEdit, confirmedChange, confirmedTask, referenceURLs } = window.pmoRules;
 const project = 'demo';
 const initialMessage = '這張卡已測試完成，可以開始驗收了，謝謝！';
+const MESSAGE_STORAGE_KEY = 'pmo_demo_saved_message';
 const testRecipient = 'QA 本人';
 const defaultRecipients = {
   '產品企劃': '林晴',
@@ -26,7 +27,15 @@ const displayMinute = new Intl.DateTimeFormat('sv-SE', {
 
 let state;
 
-function reset() {
+function reset(clearSavedMessage = false) {
+  if (clearSavedMessage) {
+    try { localStorage.removeItem(MESSAGE_STORAGE_KEY); } catch {}
+  }
+  let savedMessage = initialMessage;
+  try {
+    const stored = localStorage.getItem(MESSAGE_STORAGE_KEY);
+    if (stored !== null) savedMessage = stored;
+  } catch {}
   state = {
     enabled: true,
     testMode: false,
@@ -42,7 +51,7 @@ function reset() {
     messages: []
   };
   lookup('manual-urls').value = 'https://pmo.example.test/projects/demo/tasks/42';
-  lookup('manual-message').value = initialMessage;
+  lookup('manual-message').value = savedMessage;
   lookup('audit-drawer').hidden = true;
   lookup('btn-audit').setAttribute('aria-expanded', 'false');
   lookup('replay').disabled = true;
@@ -191,10 +200,11 @@ function processAutoNotify(row, edit) {
 
   state.handled.add(edit.sequence);
   const links = referenceURLs([row.url], project);
+  const autoText = lookup('manual-message').value.trim() || initialMessage;
   deliver(
     targetName,
     `${row.key} · ${row.title}`,
-    initialMessage,
+    autoText,
     links,
     state.testMode ? '自動通知（測試模式）' : 'Chrome 擴充自動觸發 → 桌面 App 送出',
     effectiveUnit
@@ -281,6 +291,10 @@ lookup('replay').addEventListener('click', () => {
   if (row) processAutoNotify(row, state.lastEdit);
 });
 
+lookup('manual-message').addEventListener('input', (e) => {
+  try { localStorage.setItem(MESSAGE_STORAGE_KEY, e.target.value); } catch {}
+});
+
 lookup('manual-form').addEventListener('submit', (e) => {
   e.preventDefault();
   const unitKey = lookup('manual-recipient').value;
@@ -343,5 +357,5 @@ dialog.addEventListener('click', (e) => {
   if (e.target.closest('[data-close]')) dialog.close();
 });
 
-lookup('reset').addEventListener('click', reset);
+lookup('reset').addEventListener('click', () => reset(true));
 reset();

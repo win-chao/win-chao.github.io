@@ -1039,7 +1039,7 @@
     return `<div class="eyebrow">Administration · Audit trail</div><h1>系統操作</h1>
       <p class="eyebrow" style="margin-bottom:14px">重大管理操作與指定卡片事件依時間倒序排列；此頁只供查閱。</p>
       <section class="card">
-        ${state.audits.map((a) => {
+        ${[...state.audits].sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))).map((a) => {
           const actor = userById(a.actorId);
           return `<article style="padding:12px 0;border-bottom:1px solid var(--line)">
             <div class="toolbar"><strong>${esc(a.eventType)} · ${esc(a.entityId)}</strong><span class="eyebrow">${a.createdAt.slice(0, 16).replace('T', ' ')}</span></div>
@@ -1170,9 +1170,11 @@
           <div class="detail-property"><span class="eyebrow">Parent</span><span>${parent ? `<a href="#issue/${esc(parent.issueKey)}" class="issue-key">${esc(parent.issueKey)}</a>` : '—'}</span></div>
           <div class="detail-property"><span class="eyebrow">Estimate (h)</span>
             <input type="number" class="input" style="width:90px" min="0" step="0.5" value="${issue.estimatedHours ?? ''}" data-detail-field="estimatedHours" data-key="${esc(issue.issueKey)}"></div>
-          <div class="detail-property"><span class="eyebrow">排程區間</span>
-            <input type="date" class="input" value="${esc(issue.plannedStartAt || '')}" data-detail-field="plannedStartAt" data-key="${esc(issue.issueKey)}">
-            <input type="date" class="input" value="${esc(issue.plannedEndAt || '')}" data-detail-field="plannedEndAt" data-key="${esc(issue.issueKey)}"></div>
+          <div class="detail-property" style="align-items:start"><span class="eyebrow">排程區間</span>
+            <div style="display:grid;gap:6px;width:100%">
+              <input type="date" class="input" value="${esc(issue.plannedStartAt || '')}" data-detail-field="plannedStartAt" data-key="${esc(issue.issueKey)}">
+              <input type="date" class="input" value="${esc(issue.plannedEndAt || '')}" data-detail-field="plannedEndAt" data-key="${esc(issue.issueKey)}">
+            </div></div>
         </aside>
       </div>
     </div>`;
