@@ -6,30 +6,68 @@
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
   // ---------------------------------------------------------
-  // 1. 3-Plane Depth-of-Field Digital World Code Stream Canvas
+  // 1. Matrix 3-Plane Depth-of-Field Digital Rain & Code Engine
   // ---------------------------------------------------------
   const canvas = $('#tech-canvas');
   const ctx = canvas?.getContext('2d');
   const pointer = { x: window.innerWidth / 2, y: window.innerHeight / 2, nx: 0, ny: 0, active: false };
   const smoothParallax = { x: 0, y: 0 };
 
+  const MATRIX_GLYPHS = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789ABCDEF<>+*:=';
   const CODE_SNIPPETS = [
+    'WAKE_UP :: QA_WIN',
     'await expect(page).toPass()',
-    'assert(http === 200 && biz.ok)',
+    'MATRIX.ASSERT(HTTP === 200)',
     'HANDOFF :: RD -> QA [READY]',
-    'CAPTURE :: FULL_PNG (NO_BLUR)',
-    'XLSX.recalc(carryover, month)',
-    'DEDUP_GUARD :: seq #104 OK',
-    '0x7F9A :: TRACE_TIMELINE',
-    'workflow.verifyBoundary()',
-    'statusOwner = REVIEWER',
-    'NET_LOG :: 200 OK (96ms)'
+    'CAPTURE :: FULL_PNG (RAW)',
+    'XLSX.recalc(carryover)',
+    'DEDUP_GUARD :: seq #104',
+    '0x00FF41 :: CONSTRUCT_LIVE'
   ];
-  const MATRIX_CHARS = '01ABCDEF0123456789<>{}[]=+-/*;:';
 
-  let streams = [];
+  let farStreams = [];
+  let midStreams = [];
+  let nearStreams = [];
   let floatingSnippets = [];
-  let nodes = [];
+
+  function makeStream(colIdx, totalCols, w, h, layer) {
+    const xBase = (colIdx + 0.25 + Math.random() * 0.5) * (w / totalCols);
+    if (layer === 'far') {
+      const len = 8 + Math.floor(Math.random() * 10);
+      return {
+        x: xBase,
+        y: Math.random() * h,
+        speed: 0.45 + Math.random() * 0.55,
+        depth: 0.22 + Math.random() * 0.2,
+        fontSize: 10,
+        alpha: 0.22,
+        chars: Array.from({ length: len }, () => MATRIX_GLYPHS[Math.floor(Math.random() * MATRIX_GLYPHS.length)])
+      };
+    }
+    if (layer === 'mid') {
+      const len = 10 + Math.floor(Math.random() * 12);
+      return {
+        x: xBase,
+        y: Math.random() * h,
+        speed: 1.25 + Math.random() * 1.65,
+        depth: 0.6 + Math.random() * 0.35,
+        fontSize: 14,
+        alpha: 0.52,
+        chars: Array.from({ length: len }, () => MATRIX_GLYPHS[Math.floor(Math.random() * MATRIX_GLYPHS.length)])
+      };
+    }
+    // near bokeh layer
+    const len = 5 + Math.floor(Math.random() * 5);
+    return {
+      x: xBase,
+      y: Math.random() * h,
+      speed: 2.1 + Math.random() * 1.9,
+      depth: 1.35 + Math.random() * 0.5,
+      fontSize: 24,
+      alpha: 0.2,
+      chars: Array.from({ length: len }, () => MATRIX_GLYPHS[Math.floor(Math.random() * MATRIX_GLYPHS.length)])
+    };
+  }
 
   function initCanvas() {
     if (!canvas || !ctx) return;
@@ -40,120 +78,98 @@
     canvas.height = h * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    // 垂直數位代碼雨（遠景 + 中景）
-    const colCount = Math.min(44, Math.max(18, Math.floor(w / 34)));
-    streams = Array.from({ length: colCount }, (_, idx) => {
-      const isMid = idx % 3 !== 0;
-      const depth = isMid ? (0.58 + Math.random() * 0.32) : (0.25 + Math.random() * 0.2);
-      const len = isMid ? (7 + Math.floor(Math.random() * 8)) : (5 + Math.floor(Math.random() * 6));
-      return {
-        x: (idx + 0.3 + Math.random() * 0.4) * (w / colCount),
-        y: Math.random() * h,
-        speed: isMid ? (1.1 + Math.random() * 1.4) : (0.4 + Math.random() * 0.45),
-        depth,
-        fontSize: isMid ? 12 : 10,
-        alpha: isMid ? 0.32 : 0.14,
-        palette: idx % 4 === 0 ? 'violet' : idx % 3 === 0 ? 'emerald' : 'cyan',
-        chars: Array.from({ length: len }, () => MATRIX_CHARS[Math.floor(Math.random() * MATRIX_CHARS.length)])
-      };
-    });
+    const farCount = Math.min(40, Math.max(18, Math.floor(w / 36)));
+    const midCount = Math.min(32, Math.max(14, Math.floor(w / 46)));
+    const nearCount = Math.min(10, Math.max(5, Math.floor(w / 150)));
 
-    // 橫向流動的 QA / 系統程式碼片段（中景 + 近景散景景深）
-    const snippetCount = Math.min(20, Math.max(10, Math.floor(w / 85)));
+    farStreams = Array.from({ length: farCount }, (_, i) => makeStream(i, farCount, w, h, 'far'));
+    midStreams = Array.from({ length: midCount }, (_, i) => makeStream(i, midCount, w, h, 'mid'));
+    nearStreams = Array.from({ length: nearCount }, (_, i) => makeStream(i, nearCount, w, h, 'near'));
+
+    const snippetCount = Math.min(14, Math.max(7, Math.floor(w / 110)));
     floatingSnippets = Array.from({ length: snippetCount }, (_, idx) => {
       const isNear = idx % 3 === 0;
-      const depth = isNear ? (1.25 + Math.random() * 0.45) : (0.65 + Math.random() * 0.25);
       return {
         x: Math.random() * w,
-        y: 60 + Math.random() * (h - 120),
-        vx: (isNear ? 0.55 : 0.28) + Math.random() * 0.35,
-        depth,
+        y: 70 + Math.random() * (h - 140),
+        vx: (isNear ? 0.55 : 0.28) + Math.random() * 0.3,
+        depth: isNear ? 1.45 : 0.75,
         isNear,
-        fontSize: isNear ? (15 + Math.random() * 4) : 11.5,
-        text: CODE_SNIPPETS[idx % CODE_SNIPPETS.length],
-        color: idx % 3 === 0 ? 'cyan' : idx % 2 === 0 ? 'violet' : 'emerald'
+        fontSize: isNear ? 16 : 11.5,
+        text: CODE_SNIPPETS[idx % CODE_SNIPPETS.length]
       };
     });
-
-    // 科技節點
-    const nodeCount = Math.min(42, Math.max(18, Math.floor((w * h) / 36000)));
-    nodes = Array.from({ length: nodeCount }, () => ({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      vx: (Math.random() - 0.5) * 0.32,
-      vy: (Math.random() - 0.5) * 0.32,
-      depth: 0.4 + Math.random() * 0.9,
-      r: 1.2 + Math.random() * 1.4
-    }));
   }
 
-  function colorRgb(name, isLight) {
-    if (isLight) {
-      if (name === 'violet') return '109, 40, 217';
-      if (name === 'emerald') return '5, 150, 105';
-      return '2, 132, 199';
+  function drawStreamGroup(group, w, h, overdrive, isNear = false) {
+    const boost = overdrive ? 1.3 : 1;
+    for (const s of group) {
+      const px = s.x + smoothParallax.x * 36 * s.depth;
+      const pyBase = s.y + smoothParallax.y * 24 * s.depth;
+
+      ctx.save();
+      ctx.font = `700 ${s.fontSize}px ui-monospace, SFMono-Regular, Menlo, monospace`;
+      if (isNear) {
+        ctx.shadowColor = 'rgba(0, 255, 65, 0.75)';
+        ctx.shadowBlur = 20;
+      }
+
+      for (let i = 0; i < s.chars.length; i++) {
+        const cy = pyBase - i * (s.fontSize + 4);
+        if (cy < -30 || cy > h + 30) continue;
+        const fade = (1 - i / s.chars.length) * s.alpha * boost;
+        if (i === 0) {
+          ctx.fillStyle = isNear
+            ? `rgba(210, 255, 218, ${Math.min(0.42, s.alpha * 1.9 * boost)})`
+            : `rgba(230, 255, 234, ${Math.min(0.95, s.alpha * 2.1 * boost)})`;
+        } else {
+          ctx.fillStyle = `rgba(0, 255, 65, ${Math.min(0.85, fade).toFixed(3)})`;
+        }
+        ctx.fillText(s.chars[i], px, cy);
+      }
+      ctx.restore();
+
+      if (!reducedMotion) {
+        s.y += s.speed;
+        if (Math.random() < 0.08) {
+          const idx = Math.floor(Math.random() * s.chars.length);
+          s.chars[idx] = MATRIX_GLYPHS[Math.floor(Math.random() * MATRIX_GLYPHS.length)];
+        }
+        if (s.y - s.chars.length * (s.fontSize + 4) > h + 30) {
+          s.y = -12;
+        }
+      }
     }
-    if (name === 'violet') return '167, 139, 250';
-    if (name === 'emerald') return '52, 211, 153';
-    return '34, 211, 238';
   }
 
   function drawCanvas() {
     if (!canvas || !ctx) return;
     const w = window.innerWidth;
     const h = window.innerHeight;
-    const isLight = document.documentElement.dataset.theme === 'light';
+    const overdrive = document.documentElement.dataset.theme === 'overdrive';
 
     smoothParallax.x += (pointer.nx - smoothParallax.x) * 0.06;
     smoothParallax.y += (pointer.ny - smoothParallax.y) * 0.06;
 
     ctx.clearRect(0, 0, w, h);
 
-    // 1) 遠景 & 中景：垂直數位代碼雨
-    for (const s of streams) {
-      const px = s.x + smoothParallax.x * 26 * s.depth;
-      const pyBase = s.y + smoothParallax.y * 18 * s.depth;
-      const rgb = colorRgb(s.palette, isLight);
-      ctx.font = `600 ${s.fontSize}px ui-monospace, SFMono-Regular, Menlo, monospace`;
+    // 1) 遠景層（失焦細字慢速代碼雨）
+    drawStreamGroup(farStreams, w, h, overdrive, false);
 
-      for (let i = 0; i < s.chars.length; i++) {
-        const cy = pyBase - i * (s.fontSize + 4);
-        if (cy < -20 || cy > h + 20) continue;
-        const fade = (1 - i / s.chars.length) * s.alpha;
-        if (i === 0) {
-          ctx.fillStyle = isLight ? `rgba(${rgb}, ${Math.min(0.85, s.alpha * 2.2)})` : `rgba(224, 247, 255, ${Math.min(0.9, s.alpha * 2.4)})`;
-        } else {
-          ctx.fillStyle = `rgba(${rgb}, ${fade.toFixed(3)})`;
-        }
-        ctx.fillText(s.chars[i], px, cy);
-      }
+    // 2) 中景層（清晰發光經典 Matrix 代碼雨 + 漂浮系統指令）
+    drawStreamGroup(midStreams, w, h, overdrive, false);
 
-      if (!reducedMotion) {
-        s.y += s.speed;
-        if (Math.random() < 0.04) {
-          const idx = Math.floor(Math.random() * s.chars.length);
-          s.chars[idx] = MATRIX_CHARS[Math.floor(Math.random() * MATRIX_CHARS.length)];
-        }
-        if (s.y - s.chars.length * (s.fontSize + 4) > h + 20) {
-          s.y = -10;
-        }
-      }
-    }
-
-    // 2) 中景 & 近景散景：橫向漂浮程式碼片段（深淺景深）
     for (const f of floatingSnippets) {
-      const px = f.x + smoothParallax.x * 48 * f.depth;
-      const py = f.y + smoothParallax.y * 32 * f.depth;
-      const rgb = colorRgb(f.color, isLight);
-
+      const px = f.x + smoothParallax.x * 46 * f.depth;
+      const py = f.y + smoothParallax.y * 30 * f.depth;
       ctx.save();
       ctx.font = `${f.isNear ? 700 : 500} ${f.fontSize}px ui-monospace, SFMono-Regular, Menlo, monospace`;
       if (f.isNear) {
-        ctx.shadowColor = `rgba(${rgb}, 0.55)`;
+        ctx.shadowColor = 'rgba(0, 255, 65, 0.7)';
         ctx.shadowBlur = 14;
-        ctx.fillStyle = `rgba(${rgb}, ${isLight ? 0.36 : 0.42})`;
+        ctx.fillStyle = `rgba(125, 255, 155, ${overdrive ? 0.38 : 0.28})`;
       } else {
-        ctx.fillStyle = `rgba(${rgb}, ${isLight ? 0.24 : 0.26})`;
+        ctx.fillStyle = `rgba(0, 255, 65, ${overdrive ? 0.3 : 0.22})`;
       }
       ctx.fillText(f.text, px, py);
       ctx.restore();
@@ -162,41 +178,13 @@
         f.x += f.vx;
         if (f.x > w + 40) {
           f.x = -260;
-          f.y = 60 + Math.random() * (h - 120);
+          f.y = 70 + Math.random() * (h - 140);
         }
       }
     }
 
-    // 3) 節點與游標雷達引力連線
-    const lineRgb = isLight ? '2, 132, 199' : '56, 189, 248';
-    for (let i = 0; i < nodes.length; i++) {
-      const a = nodes[i];
-      if (!reducedMotion) {
-        a.x += a.vx;
-        a.y += a.vy;
-        if (a.x < 0 || a.x > w) a.vx *= -1;
-        if (a.y < 0 || a.y > h) a.vy *= -1;
-      }
-      const ax = a.x + smoothParallax.x * 30 * a.depth;
-      const ay = a.y + smoothParallax.y * 22 * a.depth;
-
-      ctx.beginPath();
-      ctx.arc(ax, ay, a.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${lineRgb}, ${(0.25 + a.depth * 0.3).toFixed(2)})`;
-      ctx.fill();
-
-      if (pointer.active) {
-        const pdist = Math.hypot(ax - pointer.x, ay - pointer.y);
-        if (pdist < 185) {
-          ctx.beginPath();
-          ctx.moveTo(ax, ay);
-          ctx.lineTo(pointer.x, pointer.y);
-          ctx.strokeStyle = `rgba(${lineRgb}, ${(1 - pdist / 185) * 0.38})`;
-          ctx.lineWidth = 1.1;
-          ctx.stroke();
-        }
-      }
-    }
+    // 3) 近景散景層（巨型近距離失焦字元，大幅度視差）
+    drawStreamGroup(nearStreams, w, h, overdrive, true);
 
     if (!reducedMotion) requestAnimationFrame(drawCanvas);
   }
@@ -222,9 +210,31 @@
   drawCanvas();
 
   // ---------------------------------------------------------
-  // 2. Glass Card Micro-Wave Flip + Cursor Ripple Engine
+  // 2. Glass Card Micro-Wave Flip + Ripple + Matrix Decrypt
   // ---------------------------------------------------------
   const cards = $$('.project-card');
+
+  function scrambleText(el, finalStr) {
+    if (!el || reducedMotion) return;
+    let frame = 0;
+    const total = 10;
+    clearInterval(el._decryptTimer);
+    el._decryptTimer = setInterval(() => {
+      frame++;
+      const progress = frame / total;
+      const revealed = Math.floor(progress * finalStr.length);
+      let out = '';
+      for (let i = 0; i < finalStr.length; i++) {
+        if (i < revealed || finalStr[i] === ' ') out += finalStr[i];
+        else out += MATRIX_GLYPHS[Math.floor(Math.random() * MATRIX_GLYPHS.length)];
+      }
+      el.textContent = out;
+      if (frame >= total) {
+        clearInterval(el._decryptTimer);
+        el.textContent = finalStr;
+      }
+    }, 32);
+  }
 
   function spawnRipple(card, x, y) {
     if (reducedMotion) return;
@@ -248,6 +258,9 @@
       const y = e.clientY - rect.top;
       card.style.setProperty('--mx', `${x}px`);
       card.style.setProperty('--my', `${y}px`);
+
+      const sysEl = $('[data-decrypt-text]', card);
+      if (sysEl) scrambleText(sysEl, sysEl.dataset.decryptText);
 
       if (!reducedMotion) {
         card.classList.remove('is-waving');
@@ -286,7 +299,7 @@
   });
 
   // ---------------------------------------------------------
-  // 3. Interactive Telemetry Console (Live Rule & QA Simulator)
+  // 3. Matrix Telemetry Console (Live Rule & QA Simulator)
   // ---------------------------------------------------------
   const TELEMETRY = {
     '01': {
@@ -391,7 +404,7 @@
   });
 
   // ---------------------------------------------------------
-  // 4. Category Filter Pills & Theme Toggle
+  // 4. Category Filter Pills & Matrix Overdrive Toggle
   // ---------------------------------------------------------
   $$('.pill-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -407,9 +420,9 @@
   const themeBtn = $('#theme-toggle');
   const themeLabel = $('#theme-label');
   themeBtn?.addEventListener('click', () => {
-    const next = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+    const next = document.documentElement.dataset.theme === 'overdrive' ? 'matrix' : 'overdrive';
     document.documentElement.dataset.theme = next;
-    themeLabel.textContent = next === 'light' ? 'Frost Glass' : 'Dark Glass';
+    themeLabel.textContent = next === 'overdrive' ? 'OVERDRIVE' : 'MATRIX_CORE';
     if (reducedMotion) drawCanvas();
   });
 

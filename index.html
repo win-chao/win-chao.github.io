@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-Hant" data-theme="dark">
+<html lang="zh-Hant" data-theme="matrix">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,56 +10,47 @@
   <script src="./portfolio.js" defer></script>
 </head>
 <body>
-  <!-- SVG 微波動折射濾鏡定義 -->
-  <svg class="svg-defs" aria-hidden="true" width="0" height="0">
-    <defs>
-      <filter id="glass-wave-filter">
-        <feTurbulence type="fractalNoise" baseFrequency="0.015 0.03" numOctaves="2" seed="7" result="noise"/>
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G"/>
-      </filter>
-    </defs>
-  </svg>
-
-  <!-- 多層次科技背景：漂浮流光球 + 3D 透視地平線網格 + 三層景深數位代碼畫布 + 景深暗角 -->
+  <!-- Matrix 多層次光學景深舞台 -->
   <div class="ambient-stage" aria-hidden="true">
-    <div class="ambient-orb orb-cyan"></div>
-    <div class="ambient-orb orb-violet"></div>
-    <div class="ambient-orb orb-emerald"></div>
+    <div class="ambient-orb orb-core"></div>
+    <div class="ambient-orb orb-deep"></div>
+    <div class="ambient-orb orb-edge"></div>
   </div>
   <div class="cyber-perspective-grid" aria-hidden="true"></div>
   <canvas id="tech-canvas" aria-hidden="true"></canvas>
   <div class="bg-grid" aria-hidden="true"></div>
+  <div class="crt-scanlines" aria-hidden="true"></div>
   <div class="dof-foreground-hud" aria-hidden="true"></div>
 
-  <!-- 頂部半透明玻璃指揮列 -->
+  <!-- 頂部半透明綠曜石玻璃指揮列 -->
   <header class="hud-bar glass-surface">
     <div class="hud-inner">
       <div class="hud-brand">
         <span class="live-pulse" aria-hidden="true"></span>
-        <span class="hud-code">QA-WIN // WORKFLOW &amp; AUTOMATION LAB</span>
+        <span class="hud-code">MATRIX // QA-WIN :: WORKFLOW_CONSTRUCT</span>
       </div>
       <div class="hud-controls">
         <nav class="filter-pills" aria-label="系統分類篩選">
-          <button type="button" class="pill-btn is-active" data-filter="all">全部系統 <span>04</span></button>
+          <button type="button" class="pill-btn is-active" data-filter="all">全部節點 <span>04</span></button>
           <button type="button" class="pill-btn" data-filter="automation">測試自動化</button>
           <button type="button" class="pill-btn" data-filter="workflow">跨角色協作</button>
           <button type="button" class="pill-btn" data-filter="settlement">業務結算引擎</button>
         </nav>
-        <button type="button" class="theme-toggle" id="theme-toggle" aria-label="切換玻璃模式主題">
+        <button type="button" class="theme-toggle" id="theme-toggle" aria-label="切換母體磷光強度">
           <span class="theme-dot" aria-hidden="true"></span>
-          <span id="theme-label">Dark Glass</span>
+          <span id="theme-label">MATRIX_CORE</span>
         </button>
       </div>
     </div>
   </header>
 
   <main class="portfolio">
-    <!-- 雙欄科技感 Hero -->
-    <section class="hero-grid" aria-label="個人定位與系統遙測終端">
+    <!-- 雙欄式 Matrix Hero -->
+    <section class="hero-grid" aria-label="個人定位與母體遙測終端">
       <div class="hero-copy">
         <div class="eyebrow-row">
           <span class="eyebrow">[ WEB_QA_ENGINEER × WORKFLOW_ARCHITECT ]</span>
-          <span class="status-tag">SANDBOX_ONLINE</span>
+          <span class="status-tag">SYSTEM_CONNECTED</span>
         </div>
         <h1 class="hero-title">Qa-Win的作品集</h1>
         <p class="lead">專注於 Web 產品與跨系統流程驗證（前台服務、線上申辦、後台審核與跨系統介接）。在日常測試中不只回報單點 Bug，更習慣主動觀察團隊與跨部門的重複作業、溝通斷點，由我梳理業務規則、例外邊界與驗收標準，並結合 AI 協作將解法做成可實際操作、可留存證據的工具。</p>
@@ -83,12 +74,12 @@
         </div>
       </div>
 
-      <!-- 右欄：半透明玻璃互動終端機 -->
+      <!-- 右欄：Matrix 半透明玻璃互動終端機 -->
       <aside class="telemetry-console glass-panel" aria-label="互動式規則引擎與 QA 診斷模擬器">
         <div class="console-header">
           <div class="window-dots" aria-hidden="true"><span></span><span></span><span></span></div>
-          <span class="console-title">telemetry://qa-rule-simulator</span>
-          <button type="button" class="console-run-btn" id="console-replay">▶ 重新模擬</button>
+          <span class="console-title">matrix://qa-rule-simulator</span>
+          <button type="button" class="console-run-btn" id="console-replay">▶ EXECUTE</button>
         </div>
         <div class="console-tabs" role="tablist" aria-label="選擇檢視系統">
           <button type="button" role="tab" aria-selected="true" class="console-tab is-active" data-sys-tab="01">SYS-01 AutoQA</button>
@@ -99,7 +90,7 @@
         <div class="console-body" id="console-output" aria-live="polite"></div>
         <div class="console-footer">
           <span class="console-metric" id="console-metric">ASSERTIONS: 4/4 PASSED · 0.31s</span>
-          <a class="console-launch" id="console-launch" href="./04-pocket-qa/index.html">啟動互動沙盒 ↗</a>
+          <a class="console-launch" id="console-launch" href="./04-pocket-qa/index.html">ENTER_SANDBOX ↗</a>
         </div>
       </aside>
     </section>
@@ -108,15 +99,15 @@
     <section aria-labelledby="projects-heading" class="projects-section">
       <div class="section-bar">
         <div>
-          <span class="section-kicker">INTERACTIVE_SANDBOXES // GLASS_CARDS</span>
+          <span class="section-kicker">CONSTRUCT_NODES // GLASS_PROJECTION</span>
           <h2 id="projects-heading">互動作品展示（點擊即可在瀏覽器直接操作）</h2>
         </div>
-        <p>去識別化純前端沙盒 · 無須登入 · 滑鼠移上卡片體驗玻璃折射與微波翻轉</p>
+        <p>去識別化純前端沙盒 · 滑鼠移上卡片觸發 3D 微波翻轉、水波紋與全彩解碼還原</p>
       </div>
 
       <div class="projects" aria-label="作品清單">
         <!-- SYS-01 AutoQA -->
-        <article class="project-card glass-panel" data-category="automation" data-sys="01" data-accent="cyan">
+        <article class="project-card glass-panel" data-category="automation" data-sys="01" data-accent="matrix">
           <span class="corner-bracket tl" aria-hidden="true"></span>
           <span class="corner-bracket tr" aria-hidden="true"></span>
           <span class="corner-bracket bl" aria-hidden="true"></span>
@@ -125,12 +116,12 @@
           <div class="glass-prism-sweep" aria-hidden="true"></div>
           <a class="project-link" href="./04-pocket-qa/index.html">
             <div class="project-top-bar">
-              <span class="sys-id">SYS-01 // TEST_RUNNER</span>
+              <span class="sys-id" data-decrypt-text="SYS-01 // TEST_RUNNER">SYS-01 // TEST_RUNNER</span>
               <span class="sys-badge">自動化測試與診斷</span>
             </div>
             <div class="project-viewport">
               <img src="./驗收截圖/04-Pocket-QA-測試工作台.png" alt="AutoQA Desktop 的測試流程清單與執行安排">
-              <div class="viewport-overlay"><span>點擊啟動 AutoQA 互動沙盒 ↗</span></div>
+              <div class="viewport-overlay"><span>DECODE &amp; ENTER AutoQA ↗</span></div>
             </div>
             <div class="project-copy">
               <h3>AutoQA Desktop 自動化測試工作台</h3>
@@ -149,7 +140,7 @@
         </article>
 
         <!-- SYS-02 Relay -->
-        <article class="project-card glass-panel" data-category="workflow" data-sys="02" data-accent="violet">
+        <article class="project-card glass-panel" data-category="workflow" data-sys="02" data-accent="matrix">
           <span class="corner-bracket tl" aria-hidden="true"></span>
           <span class="corner-bracket tr" aria-hidden="true"></span>
           <span class="corner-bracket bl" aria-hidden="true"></span>
@@ -158,12 +149,12 @@
           <div class="glass-prism-sweep" aria-hidden="true"></div>
           <a class="project-link" href="./01-relay/index.html">
             <div class="project-top-bar">
-              <span class="sys-id">SYS-02 // WORKFLOW_ENGINE</span>
+              <span class="sys-id" data-decrypt-text="SYS-02 // WORKFLOW_ENGINE">SYS-02 // WORKFLOW_ENGINE</span>
               <span class="sys-badge">跨角色協作流程設計</span>
             </div>
             <div class="project-viewport">
               <img src="./驗收截圖/01-Relay-雙角色工作台.png" alt="Relay 的工作總覽、專案看板與雙指派接球介面">
-              <div class="viewport-overlay"><span>點擊啟動 Relay 互動沙盒 ↗</span></div>
+              <div class="viewport-overlay"><span>DECODE &amp; ENTER Relay ↗</span></div>
             </div>
             <div class="project-copy">
               <h3>Relay 專案與交接工作台</h3>
@@ -182,7 +173,7 @@
         </article>
 
         <!-- SYS-03 PMO-Slack -->
-        <article class="project-card glass-panel" data-category="automation" data-sys="03" data-accent="sky">
+        <article class="project-card glass-panel" data-category="automation" data-sys="03" data-accent="matrix">
           <span class="corner-bracket tl" aria-hidden="true"></span>
           <span class="corner-bracket tr" aria-hidden="true"></span>
           <span class="corner-bracket bl" aria-hidden="true"></span>
@@ -191,12 +182,12 @@
           <div class="glass-prism-sweep" aria-hidden="true"></div>
           <a class="project-link" href="./02-pmo-slack/index.html">
             <div class="project-top-bar">
-              <span class="sys-id">SYS-03 // EVENT_NOTIFIER</span>
+              <span class="sys-id" data-decrypt-text="SYS-03 // EVENT_NOTIFIER">SYS-03 // EVENT_NOTIFIER</span>
               <span class="sys-badge">驗收通知自動化</span>
             </div>
             <div class="project-viewport">
               <img src="./驗收截圖/02-PMO-Slack-測試完成通知.png" alt="PMO 驗收通知設定與模擬 Slack 訊息">
-              <div class="viewport-overlay"><span>點擊啟動通知自動化沙盒 ↗</span></div>
+              <div class="viewport-overlay"><span>DECODE &amp; ENTER Notifier ↗</span></div>
             </div>
             <div class="project-copy">
               <h3>PMO 測試完成 Slack 通知</h3>
@@ -215,7 +206,7 @@
         </article>
 
         <!-- SYS-04 KOL Payroll -->
-        <article class="project-card glass-panel" data-category="settlement" data-sys="04" data-accent="emerald">
+        <article class="project-card glass-panel" data-category="settlement" data-sys="04" data-accent="matrix">
           <span class="corner-bracket tl" aria-hidden="true"></span>
           <span class="corner-bracket tr" aria-hidden="true"></span>
           <span class="corner-bracket bl" aria-hidden="true"></span>
@@ -224,12 +215,12 @@
           <div class="glass-prism-sweep" aria-hidden="true"></div>
           <a class="project-link" href="./03-excel-payroll/index.html">
             <div class="project-top-bar">
-              <span class="sys-id">SYS-04 // SETTLEMENT_CORE</span>
+              <span class="sys-id" data-decrypt-text="SYS-04 // SETTLEMENT_CORE">SYS-04 // SETTLEMENT_CORE</span>
               <span class="sys-badge">實際上線使用中</span>
             </div>
             <div class="project-viewport">
               <img src="./驗收截圖/03-KOL薪獎-匯入範例.png" alt="KOL 薪獎工作台的 Excel 匯入畫面">
-              <div class="viewport-overlay"><span>點擊啟動薪獎結算沙盒 ↗</span></div>
+              <div class="viewport-overlay"><span>DECODE &amp; ENTER Payroll ↗</span></div>
             </div>
             <div class="project-copy">
               <h3>KOL Excel 薪獎工作台</h3>
