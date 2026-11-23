@@ -525,7 +525,9 @@
   }
 
   applyContactProfile();
-  openPhoneBtn?.addEventListener('click', openContactModal);
+  $$('[data-open-contact-phone]').forEach((btn) => {
+    btn.addEventListener('click', openContactModal);
+  });
   closePhoneBtn?.addEventListener('click', closeContactModal);
 
   // 點擊手機以外的反灰背景即可關閉

@@ -860,40 +860,69 @@ body {
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 7px 16px;
+  gap: 9px;
+  padding: 9px 20px;
   border-radius: 999px;
-  border: 1px solid rgba(34, 211, 238, 0.72);
-  background: linear-gradient(135deg, rgba(14, 165, 233, 0.3), rgba(34, 211, 238, 0.22));
-  color: #f0f9ff;
+  border: 1px solid rgba(125, 211, 252, 0.85);
+  background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 55%, #06b6d4 100%);
+  color: #ffffff;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: 14.5px;
   font-weight: 800;
   letter-spacing: 0.03em;
   cursor: pointer;
-  box-shadow: 0 0 20px rgba(34, 211, 238, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.28);
-  transition: transform 0.2s ease, box-shadow 0.25s ease, border-color 0.2s ease;
-}
-.contact-win-btn::after {
-  content: "";
-  position: absolute;
-  inset: -4px;
-  border-radius: inherit;
-  border: 1px solid rgba(56, 189, 248, 0.48);
-  animation: contactBtnPulse 2.4s ease-out infinite;
-  pointer-events: none;
+  box-shadow: 0 6px 20px rgba(14, 165, 233, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.22s ease, filter 0.2s ease;
 }
 .contact-win-btn:hover {
   transform: translateY(-2px);
-  border-color: #a5f3fc;
-  box-shadow: 0 0 28px rgba(34, 211, 238, 0.58), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  filter: brightness(1.08);
+  box-shadow: 0 10px 26px rgba(14, 165, 233, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
+
+.hero-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 20px;
+}
+.hero-contact-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  padding: 13px 24px;
+  border-radius: 14px;
+  border: 1px solid rgba(125, 211, 252, 0.85);
+  background: linear-gradient(135deg, #0369a1 0%, #0284c7 48%, #0891b2 100%);
+  color: #ffffff;
+  font-family: var(--sans);
+  font-size: 16.5px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: 0 10px 28px rgba(2, 132, 199, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.32);
+  transition: transform 0.2s ease, box-shadow 0.22s ease, filter 0.2s ease;
+}
+.hero-contact-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+  box-shadow: 0 14px 34px rgba(14, 165, 233, 0.52), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+.hero-contact-sub {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #e0f2fe;
+  padding-left: 10px;
+  border-left: 1px solid rgba(255, 255, 255, 0.32);
+}
+
 .phone-ring-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #67e8f9;
-  animation: phoneRingWiggle 2.8s ease-in-out infinite;
+  color: #ffffff;
+  animation: phoneRingWiggle 3.2s ease-in-out infinite;
 }
 @keyframes contactBtnPulse {
   0% { transform: scale(1); opacity: 0.75; }
