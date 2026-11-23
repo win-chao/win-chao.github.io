@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' file:; style-src 'self' file:; img-src 'self' file: data:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+  <link rel="icon" href="data:,">
+  <title>PMO Slack 驗收通知 · 互動 Demo</title>
+  <link rel="stylesheet" href="./popup.css">
+  <link rel="stylesheet" href="./demo.css">
+  <script src="./rules.js" defer></script>
+  <script src="./demo.js" defer></script>
+</head>
+<body>
+  <header class="page-header">
+    <div class="page-header-inner">
+      <a href="../index.html" class="back-link">← 作品集</a>
+      <span class="demo-label">Demo · 模擬資料</span>
+      <button type="button" id="reset" class="secondary">重置 Demo</button>
+    </div>
+  </header>
+  <main>
+    <h1>PMO 測試完成後的 Slack 通知</h1>
+    <p class="intro">在左側選好卡片與收件人，將狀態改為「測試完成」並儲存。右側會顯示收到的私訊。</p>
+    <div class="workspace">
+      <section class="panel notifier" aria-labelledby="notifier-heading">
+        <div class="notifier-head">
+          <span class="notifier-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.93 3.16a1 1 0 0 1 .89 1.26l-4.66 16a1 1 0 0 1-1.6.49l-4.4-3.84-2.53 2.51a.7.7 0 0 1-1.19-.5v-4.52L2.6 12.28a1 1 0 0 1 .06-1.85L20.48 3.24a1 1 0 0 1 .45-.08Zm-3.4 3.67-8.6 6.2.87.5 7.73-6.7Z"/></svg></span>
+          <div><h2 id="notifier-heading">PMO 驗收通知</h2><p class="muted">Slack 驗收通知 · 模擬卡片</p></div>
+          <button type="button" class="secondary small" id="settings-open">設定</button>
+        </div>
+        <form id="task-form">
+          <div class="form-grid">
+            <label>PMO 卡片<select name="card" id="task-card" aria-label="PMO 卡片"></select></label>
+            <label>狀態<select name="status" id="task-status"><option>測試中</option><option>測試完成</option></select></label>
+            <label class="full">卡片標題<input name="title" maxlength="100" required></label>
+            <label class="full">卡片網址<input type="url" name="url" autocomplete="off" required></label>
+            <label>需求單位<select name="unit" id="task-unit"><option value="（未指定）">（未指定）</option><option>產品企劃</option><option>營運支援</option><option>需求驗證</option></select></label>
+            <label>收件人<select name="recipient" id="recipient" aria-label="收件人"></select></label>
+            <label class="full">通知內容<textarea id="message" name="message" rows="3" maxlength="300"></textarea></label>
+          </div>
+          <div class="task-actions"><button type="submit" name="action" value="save" class="primary">儲存異動</button><button type="submit" name="action" value="send" class="secondary">模擬送出</button></div>
+          <p class="task-message" id="task-message" role="status"></p>
+          <details class="automation-panel">
+            <summary>自動通知規則</summary>
+            <div class="extension">
+              <header><h2>PMO 自動通知</h2><span id="state"></span></header>
+              <p>由 win 儲存「測試完成」時觸發，需求單位空白則沿用母卡。</p>
+              <div class="form-grid">
+                <label>操作人<select id="actor" name="actor"><option value="win">win</option><option value="demo-qa">其他示範帳號</option></select></label>
+                <label>母卡需求單位<input id="parent-unit" type="text" readonly></label>
+              </div>
+              <div class="actions"><button id="toggle" type="button">暫停自動通知</button><button id="check" type="button">檢查 PMO 連線</button><button id="replay" type="button" disabled>重新讀取異動</button></div>
+              <p id="check-result" role="status" hidden></p>
+            </div>
+          </details>
+        </form>
+      </section>
+
+      <section class="panel inbox" aria-labelledby="preview-heading">
+        <div class="inbox-head">
+          <span class="inbox-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 5h16v11h-9l-4 4v-4H4z"/><path stroke-linecap="round" d="M8 9h8m-8 3h5"/></svg></span>
+          <div><h2 id="preview-heading">Slack 私訊</h2><p>模擬收件匣</p></div>
+          <span class="inbox-count" id="sent-count">0 則</span>
+        </div>
+        <div class="inbox-layout">
+          <nav id="conversations" class="conversation-list" aria-label="選擇私訊收件人"></nav>
+          <section class="conversation" id="conversation" aria-live="polite" aria-label="私訊內容"></section>
+        </div>
+      </section>
+    </div>
+  </main>
+  <dialog id="settings-dialog" aria-labelledby="settings-title">
+    <form id="settings-form">
+      <div class="panel-head"><h2 id="settings-title">設定</h2><button type="button" class="secondary small" data-close aria-label="關閉設定">×</button></div>
+      <section class="settings-group"><h3>Slack 發送者</h3><p class="muted">PMO 驗收通知 · 模擬連線</p></section>
+      <section class="settings-group"><h3>自動通知測試</h3><label class="switch"><input type="checkbox" name="testMode">測試模式只傳給示範帳號</label><button type="button" id="test-send" class="secondary small">發測試私訊給示範帳號</button></section>
+      <section class="settings-group"><h3>需求單位收件人</h3><div id="recipients"></div></section>
+      <div class="dialog-actions"><button type="button" class="secondary" data-close>取消</button><button type="submit" class="primary">完成</button></div>
+    </form>
+  </dialog>
+</body>
+</html>

@@ -1,0 +1,130 @@
+/* Layout adjustments for the browser-only walkthrough. */
+[hidden] { display: none !important; }
+a, button, select, input, textarea { -webkit-tap-highlight-color: transparent; }
+button, select { font-family: inherit; }
+.navigation-icon { display: inline-flex !important; flex: none; }
+.topbar-user select { border: 0; background: transparent; color: inherit; font: inherit; max-width: 140px; }
+.nav-link svg { flex: none; }
+.nav-unread { margin-left: auto; font-weight: 700; }
+.notification-bell { display: inline-flex; align-items: center; min-width: auto; gap: 5px; }
+.notification-bell strong { font-size: 11px; }
+.demo-help { display: flex; align-items: center; flex-wrap: wrap; gap: 5px 10px; margin: 0 0 19px; padding: 9px 13px; border: 1px solid #e4dbf6; border-radius: 10px; background: #faf7ff; color: #605177; font-size: 13px; line-height: 1.5; }
+.demo-help b { color: #6f56ca; }
+.demo-link, .card-title-button { background: transparent; border: 0; padding: 0; font: inherit; color: inherit; text-align: left; cursor: pointer; }
+.demo-link { color: var(--accent); font-weight: 700; }
+.card-title-button { display: block; width: 100%; }
+.demo-link:hover, .card-title-button:hover { text-decoration: underline; }
+.kanban { min-height: 0; }
+.kanban-col { min-height: 0; height: max(500px, calc(100dvh - 435px)); }
+.issue-card { touch-action: pan-x; }
+.issue-card.is-dragging { opacity: .43; }
+.kanban-title > span { flex: 1; }
+.kanban-title svg, .issue-card-top svg { opacity: .65; }
+.kanban-title { cursor: default; }
+.kanban-col:not(.is-over) { cursor: default; }
+.kanban .issue-card .issue-title { overflow-wrap: anywhere; }
+.kanban .issue-card .issue-meta { gap: 6px; align-items: center; }
+.kanban .status-badge { font-size: 11px; }
+.kanban .kanban-assign-pair { display: inline-flex; gap: 5px; }
+.kanban .demo-featured { border-color: #bfaef5; }
+.kanban-empty { margin: 10px 2px; color: #8a7d9d; font-size: 12px; }
+.demo-description { margin-bottom: 18px; }
+.demo-description p { line-height: 1.7; color: var(--muted); }
+.demo-handoff { margin-bottom: 18px; }
+.demo-handoff .field { margin-bottom: 12px; }
+.demo-handoff .status-badge { margin-left: 4px; }
+.demo-handoff p { line-height: 1.6; }
+.demo-handoff h2, .demo-description h2 { margin: 0 0 11px; }
+.demo-rounds { margin-top: 16px; }
+.demo-rounds summary { color: var(--accent); cursor: pointer; font-size: 14px; }
+.demo-detail h1 { margin-bottom: 14px; }
+.demo-detail .field { font-weight: 550; margin: 10px 0; }
+.demo-detail aside h2 { margin: 0 0 8px; }
+.demo-updated { white-space: pre-wrap; }
+.demo-toast { position: fixed; z-index: 120; bottom: 24px; right: 22px; max-width: min(420px, calc(100vw - 44px)); border: 1px solid #e7dcff; border-radius: 12px; background: #3e3057; color: white; padding: 12px 17px; box-shadow: 0 8px 30px #30274435; line-height: 1.55; }
+.dialog-actions { margin-top: 20px; justify-content: flex-end; }
+#accept-form .actions { flex-wrap: wrap; }
+dialog::backdrop { background: #2a1b455e; }
+.dashboard-metric .metric-card { display: block; border: 0; border-radius: 12px; background: transparent; color: inherit; }
+.dashboard-metric .metric-card:focus-visible { outline: 2px solid var(--accent); }
+.demo-metrics { margin-bottom: 20px; }
+.demo-notice { width: 100%; text-align: left; margin: 0 0 10px; cursor: pointer; font: inherit; color: inherit; }
+.demo-notice-read { opacity: .81; }
+.demo-notice b { color: var(--accent); }
+.demo-filters { display: flex; align-items: end; flex-wrap: wrap; gap: 10px; margin: 0 0 14px; padding: 11px; }
+.demo-filters .field { flex: 1 1 120px; }
+.demo-list-title { padding: 0; background: none; border: 0; color: #6b51c7; text-align: left; font: inherit; cursor: pointer; }
+.demo-list-title:hover { text-decoration: underline; }
+@media (max-width: 700px) {
+  .demo-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .topbar-user { padding-left: 6px; }
+  .topbar-user select { width: 79px; }
+  .topbar-caption { display: none; }
+  .kanban { grid-auto-columns: minmax(205px, 235px); }
+  .kanban-col { min-height: 430px; }
+  .demo-detail .issue-layout { display: flex; flex-direction: column; }
+  .demo-detail .issue-layout > * { width: 100%; }
+  .demo-detail .issue-layout > aside { order: 1; }
+  .demo-filters .field { flex-basis: 100%; }
+  .demo-help { font-size: 12px; }
+  .demo-detail h1 { font-size: 23px; }
+}
+@media (max-width: 390px) {
+  .topbar-avatar { display: none; }
+}
+
+/* Both participants are visible and share the same cards. */
+.workspaces-title { margin-bottom: 13px; }
+.role-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 17px; align-items: stretch; }
+.role-workspace {
+  --role-color: #694cbb; --role-soft: #f1eafe; --role-edge: #e4d8f5;
+  padding: 0; border-top: 3px solid var(--role-color); min-width: 0; overflow: hidden;
+}
+.role-workspace.role-qa { --role-color: #8e6225; --role-soft: #fff4dc; --role-edge: #f1e1ba; }
+.role-workspace.is-drop-target { box-shadow: 0 0 0 3px var(--role-color); }
+.role-head { display: flex; gap: 10px; justify-content: space-between; align-items: start; padding: 15px; border-bottom: 1px solid var(--role-edge); background: var(--role-soft); }
+.role-head h2 { margin: 0; font-size: 18px; }
+.role-head p { margin: 3px 0 0; color: var(--muted); font-size: 12px; }
+.role-identity { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.role-avatar { display: grid; place-items: center; width: 37px; height: 37px; background: #fff; color: var(--role-color); border: 1px solid var(--role-edge); border-radius: 50%; font-weight: 750; flex: none; }
+.role-head-actions { display: grid; justify-items: end; gap: 5px; }
+.role-select-label .select { padding: 6px 26px 6px 8px; min-width: 104px; min-height: auto; font-size: 13px; }
+.role-head-actions .role-notifications { display: inline-flex; align-items: center; gap: 4px; padding: 3px 7px; font-size: 11px; min-height: 24px; }
+.role-note { color: var(--role-color); border-bottom: 1px solid var(--role-edge); background: var(--role-soft); font-size: 12px; font-weight: 650; margin: 0; padding: 8px 15px; }
+.role-body { padding: 14px; display: grid; gap: 11px; }
+.role-current h3 { margin: 0 0 8px; font-size: 14px; }
+.role-empty { font-size: 13px; color: var(--muted); padding: 10px; background: #f7f6fa; border-radius: 8px; margin: 0; }
+.role-card { padding: 0; margin: 0 0 7px; box-shadow: none; }
+.role-card[draggable=false] { cursor: default; }
+.role-card.is-selected { border-color: var(--role-color); background: color-mix(in srgb, var(--role-soft) 57%, white); }
+.role-card.is-arrival { animation: relay-arrival .55s ease-out; }
+@keyframes relay-arrival { from { box-shadow: 0 0 0 4px var(--role-edge); } to { box-shadow: none; } }
+.role-card-link { display: flex; width: 100%; justify-content: space-between; align-items: center; text-align: left; gap: 10px; background: transparent; border: 0; color: inherit; border-radius: 7px; padding: 9px 11px; font: inherit; cursor: pointer; }
+.role-card-link:hover { background: var(--role-soft); }
+.role-card-main { display: grid; gap: 3px; min-width: 0; }
+.role-card-main strong { font-size: 14px; overflow-wrap: anywhere; }
+.role-card-meta { font-size: 11px; color: var(--muted); }
+.role-card-status { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+.role-card-status .status-badge { font-size: 11px; padding: 3px 7px; }
+.role-card-status svg { color: var(--muted); width: 13px; }
+.role-detail { padding: 12px; border: 1px solid var(--role-edge); border-radius: 10px; background: #fff; min-width: 0; }
+.role-detail-head { display: flex; align-items: start; justify-content: space-between; gap: 10px; }
+.role-detail h3 { font-size: 15px; margin: 4px 0 0; }
+.role-detail > p, .role-detail form > p { font-size: 12px; line-height: 1.6; margin: 7px 0; }
+.role-detail .actions { flex-wrap: wrap; margin-top: 9px; }
+.role-detail .btn { padding: 7px 10px; font-size: 13px; }
+.role-detail .field, .role-detail .select { font-size: 12px; }
+.role-detail .select { padding: 7px 8px; }
+.role-assignment { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 8px 0; }
+.role-queue summary { cursor: pointer; color: var(--muted); font-size: 13px; font-weight: 650; margin-bottom: 7px; }
+.role-queue summary span { border-radius: 999px; background: var(--role-soft); color: var(--role-color); font-size: 10px; padding: 2px 6px; }
+.role-detail .demo-rounds { margin-top: 9px; }
+.role-detail .demo-rounds p { margin-bottom: 3px; font-size: 12px; }
+@media (max-width: 760px) {
+  .role-grid { grid-template-columns: minmax(0, 1fr); }
+  .role-head { padding: 11px; }
+  .role-body { padding: 11px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .role-card.is-arrival { animation: none; }
+}

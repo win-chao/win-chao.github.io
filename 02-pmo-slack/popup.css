@@ -1,0 +1,19 @@
+.extension {
+  color-scheme: light;
+  font: 13px system-ui, sans-serif;
+  --accent: light-dark(#155bbd, #8fb7ff);
+  --button-ink: light-dark(white, #15253f);
+  --rule: color-mix(in srgb, CanvasText 15%, Canvas);
+}
+.extension { margin: 0; padding: 18px; width: auto; color: CanvasText; background: Canvas; }
+.extension header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.extension h2 { margin: 0; font-size: 18px; }
+.extension #state { font-weight: 600; color: var(--accent); }
+.extension p { line-height: 1.65; margin: 12px 0; }
+.extension button { border: 0; border-radius: 7px; background: var(--accent); color: var(--button-ink); padding: 9px 14px; font: inherit; font-weight: 600; }
+.extension button:enabled { cursor: pointer; }
+.extension button:disabled { opacity: .55; }
+.extension .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.extension #check { background: transparent; color: CanvasText; box-shadow: inset 0 0 0 1px var(--rule); }
+.extension #check-result { overflow-wrap: anywhere; }
+.extension #last-run { border-top: 1px solid var(--rule); padding-top: 10px; margin-bottom: 0; overflow-wrap: anywhere; }
