@@ -325,6 +325,8 @@
     role: '軟體 QA 工程師',
     phone: '0936-936-939',
     email: 'st25580209@gmail.com',
+    lineId: 'st84923',
+    lineUrl: 'https://line.me/ti/p/~st84923',
     resumeUrl: '#resume',
     resumeLabel: '檢視 Win 的履歷表 →',
     avatarUrl: './avatar.png?v=cyber15'
@@ -333,6 +335,10 @@
   const contactModal = $('#iphone-contact-modal');
   const contactDevice = $('#iphone-device');
   const closePhoneBtn = $('#close-contact-phone');
+  const lineQrModal = $('#line-qr-modal');
+  const lineQrDialog = $('#line-qr-dialog');
+  const closeLineQrBtn = $('#close-line-qr');
+  const copyLineQrBtn = $('#copy-line-qr-id');
   const islandEl = $('#iphone-island');
   const islandText = $('#iphone-island-text');
   let islandTimer = null;
@@ -344,6 +350,9 @@
     const callAction = $('#iphone-call-action');
     const emailLink = $('#iphone-email-link');
     const mailAction = $('#iphone-mail-action');
+    const lineIdEl = $('#iphone-line-id');
+    const lineQrIdEl = $('#line-qr-id-text');
+    const lineQrDirectLink = $('#line-qr-direct-link');
     const resumeLink = $('#iphone-resume-link');
     const resumeLabel = $('#iphone-resume-label');
     const avatarImg = $('#iphone-avatar-img');
@@ -362,6 +371,12 @@
       emailLink.href = `mailto:${WIN_CONTACT_PROFILE.email}`;
     }
     if (mailAction) mailAction.href = `mailto:${WIN_CONTACT_PROFILE.email}`;
+    if (lineIdEl) lineIdEl.textContent = WIN_CONTACT_PROFILE.lineId;
+    if (lineQrIdEl) lineQrIdEl.textContent = WIN_CONTACT_PROFILE.lineId;
+    if (lineQrDirectLink) lineQrDirectLink.href = WIN_CONTACT_PROFILE.lineUrl;
+    $$('[data-line-action]').forEach((el) => {
+      if (el.tagName === 'A') el.href = WIN_CONTACT_PROFILE.lineUrl;
+    });
     if (resumeLink) {
       resumeLink.href = WIN_CONTACT_PROFILE.resumeUrl;
       resumeLink.removeAttribute('target');
@@ -375,6 +390,39 @@
       avatarFallback.style.display = 'none';
     }
     if (islandText) islandText.textContent = WIN_CONTACT_PROFILE.islandIdleText;
+  }
+
+  function isMobileLineDevice() {
+    const ua = navigator.userAgent || '';
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua)) {
+      return true;
+    }
+    return navigator.maxTouchPoints > 1 && window.innerWidth <= 1024;
+  }
+
+  function openLineQrModal() {
+    if (!lineQrModal) return;
+    document.body.classList.add('modal-open');
+    lineQrModal.hidden = false;
+    requestAnimationFrame(() => {
+      lineQrModal.classList.add('is-open');
+    });
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLineQrModal() {
+    if (!lineQrModal) return;
+    lineQrModal.classList.remove('is-open');
+    const keepPhoneModalOpen = contactModal && !contactModal.hidden;
+    if (!keepPhoneModalOpen) {
+      document.body.classList.remove('modal-open');
+      document.body.style.overflow = '';
+    }
+    setTimeout(() => {
+      if (!lineQrModal.classList.contains('is-open')) {
+        lineQrModal.hidden = true;
+      }
+    }, 240);
   }
 
   function updateIphoneClock() {
@@ -438,22 +486,54 @@
       closeContactModal();
     }
   });
+  closeLineQrBtn?.addEventListener('click', closeLineQrModal);
+  lineQrModal?.addEventListener('click', (e) => {
+    if (lineQrDialog && !lineQrDialog.contains(e.target)) {
+      closeLineQrModal();
+    }
+  });
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && contactModal && !contactModal.hidden) {
+    if (e.key !== 'Escape') return;
+    if (lineQrModal && !lineQrModal.hidden) {
+      closeLineQrModal();
+    } else if (contactModal && !contactModal.hidden) {
       closeContactModal();
     }
   });
 
-  // 複製電話 / Email 並於動態島顯示回饋
+  // LINE 聯絡行為：手機直接開啟 LINE 加好友連結，電腦開啟 QR Code 彈窗
+  $$('[data-line-action]').forEach((el) => {
+    el.addEventListener('click', (e) => {
+      if (isMobileLineDevice()) return;
+      e.preventDefault();
+      openLineQrModal();
+    });
+  });
+
+  // 複製電話 / Email / LINE ID 並於動態島或按鈕顯示回饋
   $$('[data-copy-target]').forEach((btn) => {
     btn.addEventListener('click', async () => {
       const target = btn.dataset.copyTarget;
-      const value = target === 'phone' ? WIN_CONTACT_PROFILE.phone : WIN_CONTACT_PROFILE.email;
+      const value = target === 'phone'
+        ? WIN_CONTACT_PROFILE.phone
+        : target === 'line'
+          ? WIN_CONTACT_PROFILE.lineId
+          : WIN_CONTACT_PROFILE.email;
+      const msg = target === 'phone'
+        ? '✓ 已複製電話號碼'
+        : target === 'line'
+          ? '✓ 已複製 LINE ID'
+          : '✓ 已複製 Email';
       try {
         await navigator.clipboard.writeText(value);
-        showIslandFeedback(target === 'phone' ? '✓ 已複製電話號碼' : '✓ 已複製 Email');
       } catch {
-        showIslandFeedback(`✓ ${value}`);
+        // Fallback: still show user feedback
+      }
+      showIslandFeedback(msg);
+      if (btn === copyLineQrBtn) {
+        const orig = btn.textContent;
+        btn.textContent = '已複製 ✓';
+        setTimeout(() => { btn.textContent = orig; }, 1600);
       }
     });
   });

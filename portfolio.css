@@ -1204,20 +1204,30 @@ body.modal-open .projects {
   position: relative;
   z-index: 2;
   display: grid;
-  gap: 11px;
-  margin-bottom: 20px;
+  gap: 9px;
+  margin-bottom: 14px;
 }
 .iphone-info-card, .iphone-resume-card {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 14px;
+  padding: 10px 14px;
   border-radius: 18px;
   background: rgba(15, 29, 58, 0.72);
   border: 1px solid rgba(56, 189, 248, 0.28);
   backdrop-filter: blur(12px);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
   transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.iphone-info-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
 }
 .iphone-resume-card {
   text-decoration: none;
@@ -1240,6 +1250,7 @@ body.modal-open .projects {
 }
 .iphone-info-icon.phone { background: rgba(16, 185, 129, 0.2); color: #34d399; }
 .iphone-info-icon.mail { background: rgba(56, 189, 248, 0.2); color: #38bdf8; }
+.iphone-info-icon.line { background: rgba(6, 199, 85, 0.2); color: #22c55e; }
 .iphone-info-icon.resume { background: rgba(99, 102, 241, 0.26); color: #a5b4fc; }
 
 .iphone-info-body {
@@ -1287,8 +1298,9 @@ body.modal-open .projects {
   margin-top: auto;
   display: flex;
   justify-content: center;
-  gap: 24px;
-  padding-top: 6px;
+  gap: 16px;
+  padding-top: 4px;
+  margin-bottom: 10px;
 }
 .iphone-circle-btn {
   display: flex;
@@ -1324,6 +1336,11 @@ body.modal-open .projects {
   color: #ffffff;
   box-shadow: 0 10px 24px rgba(14, 165, 233, 0.42);
 }
+.iphone-circle-btn.line svg {
+  background: linear-gradient(145deg, #06c755, #059669);
+  color: #ffffff;
+  box-shadow: 0 10px 24px rgba(6, 199, 85, 0.42);
+}
 .iphone-circle-btn.hangup svg {
   background: linear-gradient(145deg, #ef4444, #dc2626);
   color: #ffffff;
@@ -1354,6 +1371,144 @@ body.modal-open .projects {
     min-height: min(670px, calc(92vh - 20px));
     padding: 14px 16px 12px;
   }
+}
+
+/* 電腦版 LINE QR Code 彈窗 */
+.line-qr-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10020;
+  isolation: isolate;
+  transform: translateZ(700px);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(2, 6, 18, 0.84);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.24s ease;
+}
+.line-qr-backdrop[hidden] {
+  display: none;
+}
+.line-qr-backdrop.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.line-qr-dialog {
+  width: min(360px, 92vw);
+  padding: 22px;
+  border-radius: 24px;
+  background: linear-gradient(165deg, rgba(10, 22, 46, 0.96), rgba(4, 12, 28, 0.98));
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.82), 0 0 42px rgba(6, 199, 85, 0.18);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  color: #f8fafc;
+}
+.line-qr-head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.line-qr-brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.line-qr-brand h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  color: #ffffff;
+}
+.line-qr-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 8px;
+  border-radius: 8px;
+  background: #06c755;
+  color: #ffffff;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+.line-qr-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(15, 29, 58, 0.72);
+  color: #e2e8f0;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+.line-qr-close:hover {
+  background: rgba(56, 189, 248, 0.25);
+  color: #ffffff;
+}
+.line-qr-frame {
+  width: 224px;
+  height: 224px;
+  padding: 12px;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35), 0 0 0 3px rgba(6, 199, 85, 0.35);
+  display: grid;
+  place-items: center;
+}
+.line-qr-frame img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.line-qr-id-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgba(15, 29, 58, 0.78);
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  font-size: 13.5px;
+  color: #cbd5e1;
+}
+.line-qr-id-row strong {
+  color: #4ade80;
+  font-family: var(--mono);
+  font-size: 14px;
+}
+.line-qr-hint {
+  margin: 0;
+  text-align: center;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #bae6fd;
+}
+.line-qr-direct-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: #67e8f9;
+  text-decoration: none;
+  opacity: 0.9;
+}
+.line-qr-direct-link:hover {
+  text-decoration: underline;
+  opacity: 1;
 }
 
 /* Responsive */
@@ -2454,6 +2609,7 @@ body[data-active-view="resume"] .growth-bg-stage {
   .resume-anchor-rail,
   .portfolio-footer,
   .iphone-modal-backdrop,
+  .line-qr-backdrop,
   .stage-sandbox-jump,
   .no-print {
     display: none !important;
